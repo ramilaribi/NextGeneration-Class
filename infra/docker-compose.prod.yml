@@ -1,6 +1,9 @@
-# Production on one small VPS (docs/03-conception/01-ARCHITECTURE.md).
-# Usage, from infra/: cp .env.example .env (fill it), build the web app, then
-#   docker compose -f docker-compose.prod.yml up -d --build
+# Production on one small VPS (docs/03-conception/01-ARCHITECTURE.md, docs/04-delivery/05-DEPLOYMENT.md).
+# Two ways start it, with the same command: ./infra/deploy.sh ubuntu@SERVER from a Mac (settings in infra/.env,
+# written by make-env.sh on the server), or the CI/CD pipeline (.github/workflows/ci.yml, job "deploy", settings
+# from the repository's variables and secrets). By hand, from infra/: build the web app
+# (cd app && flutter build web --release --pwa-strategy=none), then
+#   docker compose -f docker-compose.prod.yml up -d --build --wait
 name: ngclass
 
 # Container logs are capped, so months of logs never fill the disk.
@@ -58,14 +61,26 @@ services:
       TEACHER_LAST_NAME: ${TEACHER_LAST_NAME:-}
     volumes:
       - files:/data/files
+    # Healthy once Spring answers UP; Caddy waits for it, and `up --wait` fails the deploy if it never does.
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 10
 
   # HTTPS with automatic Let's Encrypt certificates; serves the Flutter web build and proxies /api.
+  # The image is caddy:2-alpine with the web build copied in (app/web.Dockerfile), so a deploy ships the app as one piece.
   caddy:
-    image: caddy:2-alpine
+    build:
+      context: ../app
+      dockerfile: web.Dockerfile
+    image: ngclass-web
     restart: unless-stopped
     logging: *logging
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     ports:
       - "80:80"
       - "443:443"
@@ -74,7 +89,6 @@ services:
       DOMAIN: ${DOMAIN:?DOMAIN is required}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - ../app/build/web:/srv:ro
       - caddy-data:/data
       - caddy-config:/config
 

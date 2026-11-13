@@ -1,6 +1,6 @@
 # Delivery 05. Deployment strategy
 
-Decided with the user on 2026-11-12. The step-by-step guide for buying and setting up is `05-DEPLOYMENT_GUIDE.pdf` (same folder).
+Decided with the user on 2026-11-12. The step-by-step guide for buying and setting up is `05-DEPLOYMENT_GUIDE.pdf` (same folder). Mohamed's deployment track (CI/CD with GitHub Actions, his rehearsals) is in `05-DEPLOYMENT_HANDOVER.md`; both use the same production files (combined on 2026-11-13, see "Two ways to deploy").
 
 ## Decision
 
@@ -28,7 +28,7 @@ Decided with the user on 2026-11-12. The step-by-step guide for buying and setti
 
 One server, three Docker containers (`infra/docker-compose.prod.yml`):
 
-- **Caddy**: HTTPS certificate (automatic and renewed), serves the Flutter web build, forwards `/api/*` to the API, `/health` for the uptime alert, `www.` sends visitors to the main address.
+- **Caddy**: HTTPS certificate (automatic and renewed), serves the Flutter web build (baked into its image by `app/web.Dockerfile`, so a deploy ships the app in one piece), forwards `/api/*` to the API, `/health` for the uptime alert, `www.` sends visitors to the main address. Starts only once the API is healthy.
 - **API**: Spring Boot, profile `prod`, uploaded files in the `files` volume (`STORAGE_DIR=/data/files`).
 - **PostgreSQL 16**: data in the `db-data` volume, never exposed to the internet.
 
@@ -37,6 +37,7 @@ One server, three Docker containers (`infra/docker-compose.prod.yml`):
 | Risk | Protection |
 |---|---|
 | A container crashes | `restart: unless-stopped` |
+| A deploy that does not start | health checks (PostgreSQL ready, the API answers UP); `up --wait` stops the deploy with an error instead of leaving a half-started site |
 | The server reboots | Docker starts with the system and the containers come back |
 | Java takes all the memory | API capped at 1.5 GB (heap 75 % of it) |
 | Memory peak | 2 GB swap file, `vm.swappiness=10` |
@@ -59,6 +60,22 @@ A single server is up about 99.9 % of the time (rare short outages, usually OVHc
 | `backup.sh` | the server, every night (cron) | Database dump + files archive in `/var/backups/ngclass`, 30 days kept, optional off-site copy |
 
 The SSH key for the server is `~/.ssh/ngclass_ovh` on the Mac (`SSH_KEY` overrides it).
+
+## Two ways to deploy
+
+Both start the same stack with the same command (`docker compose -f docker-compose.prod.yml up -d --build --wait`), so the site is the same either way. Use one per server.
+
+| | `./infra/deploy.sh ubuntu@IP` (this guide) | The GitHub pipeline (Mohamed, `.github/workflows/ci.yml`) |
+|---|---|---|
+| Started by | you, from the Mac | a push to `main`, once the tests are green |
+| Tests first | run them on the Mac before | always: backend and app jobs on GitHub's machines |
+| Settings | `infra/.env` on the server, written by `make-env.sh` | the repository's variables (`DEPLOY_DOMAIN`, usernames) and secrets (passwords, `JWT_SECRET`) |
+| Where it runs | over SSH on the server | a "self-hosted runner" labelled `ngclass-deploy`: Mohamed's PC for the rehearsal, the server later |
+| Switched on | always | only when the repository variable `DEPLOY_ENABLED` is `true` |
+
+**Today**: the OVHcloud server is set up with `deploy.sh` (simplest to start). To let GitHub deploy it later: install the runner on the server, copy the values of the server's `infra/.env` into the repository's variables and secrets (the same `DB_PASSWORD` and `JWT_SECRET`, or the database and sessions break), then set `DEPLOY_ENABLED=true`. Every push to `main` then deploys, after the tests.
+
+CI runs on every push and pull request (all branches): the backend tests on a real PostgreSQL, `flutter analyze`, `flutter test`, a release web build.
 
 ## Restore a backup
 

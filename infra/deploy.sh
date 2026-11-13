@@ -25,6 +25,8 @@ send --exclude target --exclude data --exclude .env "$ROOT/backend/" "$SERVER:$R
 send --exclude .env --exclude dev-tools "$ROOT/infra/" "$SERVER:$REMOTE/infra/"
 remote "mkdir -p $REMOTE/app/build"
 send "$ROOT/app/build/web/" "$SERVER:$REMOTE/app/build/web/"
+# The web server's image is Caddy with the web build inside (app/web.Dockerfile), as in the GitHub pipeline.
+rsync -az -e "ssh ${SSH_OPTS[*]}" "$ROOT/app/web.Dockerfile" "$ROOT/app/.dockerignore" "$SERVER:$REMOTE/app/"
 
 echo "4/5 First time only: server setup and settings"
 if ! remote "command -v docker >/dev/null && test -f /etc/cron.d/ngclass-backup"; then
@@ -35,13 +37,12 @@ if ! remote "test -f $REMOTE/infra/.env"; then
 fi
 
 echo "5/5 Starting the platform (the first build takes about 5 minutes)"
-remote_tty "$COMPOSE up -d --build --remove-orphans && sudo docker image prune -f >/dev/null"
-echo "Waiting for the API..."
-if remote "$COMPOSE exec -T api sh -c 'for i in \$(seq 60); do wget -qO- http://localhost:8080/actuator/health 2>/dev/null | grep -q UP && exit 0; sleep 5; done; exit 1'"; then
+# --wait: done only once the API answers UP and the web server is running (health checks in the compose file).
+if remote_tty "$COMPOSE up -d --build --wait --wait-timeout 300 --remove-orphans && sudo docker image prune -f >/dev/null"; then
 	DOMAIN="$(remote "sed -n 's/^DOMAIN=//p' $REMOTE/infra/.env")"
 	echo "Done: https://$DOMAIN is up."
 else
-	echo "The API did not start. Its last lines:"
+	echo "The platform did not start. The API's last lines:"
 	remote "$COMPOSE logs --tail 80 api"
 	exit 1
 fi
