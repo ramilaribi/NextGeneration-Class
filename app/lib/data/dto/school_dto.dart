@@ -2,6 +2,7 @@ import '../../domain/model/clock_time.dart';
 import '../../domain/model/group.dart';
 import '../../domain/model/reference.dart';
 import '../../domain/model/session.dart';
+import 'content_dto.dart' show fileKind;
 import 'user_dto.dart';
 
 typedef Json = Map<String, dynamic>;
@@ -184,9 +185,27 @@ class SessionDetailDto {
               startsAt: instant(previous['startsAt'])!,
               sessionNote: previous['sessionNote'] as String?,
               quickNote: previous['quickNote'] as String?,
+              covered: coveredOf(previous['covered']),
+              absent: previous['absent'] as int? ?? 0,
+              late: previous['late'] as int? ?? 0,
+              homework: [for (final h in previous['homework'] as List? ?? const []) '$h'],
             ),
+      covered: coveredOf(json['covered']),
     );
   }
+}
+
+Covered? coveredOf(Object? value) {
+  if (value is! Json) return null;
+  return Covered(
+    chapterId: value['chapterId'] as String?,
+    chapterTitle: value['chapterTitle'] as String?,
+    details: value['details'] as String?,
+    documents: [
+      for (final d in jsonList(value['documents']))
+        CoveredDocument(id: d['id'] as String, title: d['title'] as String? ?? '', kind: fileKind(d['kind'])),
+    ],
+  );
 }
 
 class MySessionDto {

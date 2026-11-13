@@ -11,6 +11,7 @@ import com.ngclass.backend.content.domain.FileAsset;
 import com.ngclass.backend.content.domain.FileKind;
 import com.ngclass.backend.content.dto.ContentDtos.ChapterRef;
 import com.ngclass.backend.content.dto.ContentDtos.ContentViewResponse;
+import com.ngclass.backend.content.dto.ContentDtos.CoveredChapter;
 import com.ngclass.backend.content.dto.ContentDtos.MyContentItem;
 import com.ngclass.backend.content.dto.ContentDtos.SubjectRef;
 import com.ngclass.backend.content.repository.ChapterRepository;
@@ -22,6 +23,8 @@ import com.ngclass.backend.groups.repository.ClassGroupRepository;
 import com.ngclass.backend.groups.repository.GroupMemberRepository;
 import com.ngclass.backend.people.domain.Student;
 import com.ngclass.backend.people.service.FamilyAccess;
+import com.ngclass.backend.planning.domain.ClassSession;
+import com.ngclass.backend.planning.repository.ClassSessionRepository;
 import com.ngclass.backend.school.domain.Subject;
 import com.ngclass.backend.school.repository.SubjectRepository;
 import com.ngclass.backend.work.service.MyHomeworkService;
@@ -30,6 +33,8 @@ import java.time.Instant;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,6 +66,7 @@ public class MyContentService {
 	private final FileLinks links;
 	private final PageService pages;
 	private final MyHomeworkService homework;
+	private final ClassSessionRepository sessions;
 	private final Clock clock;
 
 	/** [studentId] is required for a parent (one of their children) and ignored for a pupil. */
@@ -172,6 +178,27 @@ public class MyContentService {
 	}
 
 	/** The children's current groups, archived groups left out. */
+	/**
+	 * The chapters a pupil's groups covered in class, latest first ("Vu en classe" in Cours). Only finished sessions
+	 * of the groups the pupil is in today.
+	 */
+	@Transactional(readOnly = true)
+	public List<CoveredChapter> covered(AuthenticatedUser user, UUID studentId) {
+		List<UUID> groupIds = activeGroups(List.of(family.child(user, studentId)));
+		if (groupIds.isEmpty()) {
+			return List.of();
+		}
+		Map<UUID, ClassSession> latest = new LinkedHashMap<>();
+		Map<UUID, Set<UUID>> contents = new HashMap<>();
+		for (ClassSession s : sessions.findCovered(groupIds)) {
+			latest.putIfAbsent(s.getCoveredChapterId(), s);
+			contents.computeIfAbsent(s.getCoveredChapterId(), k -> new LinkedHashSet<>()).addAll(s.getCoveredContentIds());
+		}
+		return latest.values().stream()
+				.map(s -> new CoveredChapter(s.getCoveredChapterId(), s.getStartsAt(), s.getCoveredDetails(), List.copyOf(contents.get(s.getCoveredChapterId()))))
+				.toList();
+	}
+
 	private List<UUID> activeGroups(List<Student> children) {
 		List<UUID> ids = members.findById_StudentIdInAndLeftAtIsNull(children.stream().map(Student::getId).toList()).stream()
 				.map(m -> m.getId().getGroupId())

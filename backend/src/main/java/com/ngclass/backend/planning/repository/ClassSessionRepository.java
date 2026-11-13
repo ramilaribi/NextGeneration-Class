@@ -27,6 +27,14 @@ public interface ClassSessionRepository extends JpaRepository<ClassSession, UUID
 			order by s.startsAt desc limit 1""")
 	List<ClassSession> findPreviousDone(@Param("groupId") UUID groupId, @Param("before") Instant before);
 
+	/** Finished sessions of [groupIds] that say what they covered, latest first (families' Cours, "Chapitres vus"). */
+	@Query("""
+			select s from ClassSession s
+			where s.groupId in :groupIds and s.status = com.ngclass.backend.planning.domain.SessionStatus.DONE
+			and s.coveredChapterId is not null
+			order by s.startsAt desc""")
+	List<ClassSession> findCovered(@Param("groupIds") Collection<UUID> groupIds);
+
 	/** Sessions of [groupIds] overlapping [from, to), except cancelled ones and [excluded]: the overlap warning. */
 	@Query("""
 			select s from ClassSession s

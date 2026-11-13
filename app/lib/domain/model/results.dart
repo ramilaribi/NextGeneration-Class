@@ -53,6 +53,7 @@ class SubjectResult extends Equatable {
     this.trend,
     this.attendanceRate,
     this.grades = const [],
+    this.chaptersSeen = const [],
   });
 
   final SubjectRef subject;
@@ -72,14 +73,38 @@ class SubjectResult extends Equatable {
   /// Latest first.
   final List<GradeItem> grades;
 
+  /// The chapters covered in class this year (Release 4, "Fin de séance"), first covered first.
+  final List<String> chaptersSeen;
+
   @override
-  List<Object?> get props => [subject, average, gradeCount, trend, submitted, due, attendanceRate, grades];
+  List<Object?> get props => [subject, average, gradeCount, trend, submitted, due, attendanceRate, grades, chaptersSeen];
+}
+
+/// One month of the school year so far, all subjects (Release 4, "Chaque mois"): homework sent out of due, and
+/// attendance in % (null without a counted session).
+class MonthProgress extends Equatable {
+  const MonthProgress({required this.month, required this.submitted, required this.due, this.attendanceRate});
+
+  /// The first day of the month.
+  final DateTime month;
+  final int submitted;
+  final int due;
+  final int? attendanceRate;
+
+  /// In %, null when nothing was due.
+  int? get homeworkRate => due == 0 ? null : (submitted * 100 / due).round();
+
+  @override
+  List<Object?> get props => [month, submitted, due, attendanceRate];
 }
 
 class MyResults extends Equatable {
-  const MyResults({this.subjects = const []});
+  const MyResults({this.subjects = const [], this.months = const []});
 
   final List<SubjectResult> subjects;
+
+  /// September to this month.
+  final List<MonthProgress> months;
 
   /// Every grade and absence, latest first.
   List<GradeItem> get grades => [for (final s in subjects) ...s.grades]..sort((a, b) => b.date.compareTo(a.date));
@@ -96,5 +121,5 @@ class MyResults extends Equatable {
   int get due => subjects.fold(0, (sum, s) => sum + s.due);
 
   @override
-  List<Object?> get props => [subjects];
+  List<Object?> get props => [subjects, months];
 }

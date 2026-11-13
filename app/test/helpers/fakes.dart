@@ -319,15 +319,20 @@ class FakePlanningRepository implements PlanningRepository {
   Future<SessionDetail> start(String sessionId) async => detailResult!;
 
   @override
-  Future<SessionDetail> end(String sessionId) async {
+  Future<SessionDetail> end(String sessionId, {SessionEnd? end}) async {
     ends++;
+    if (end != null) endings.add(end);
     final d = detailResult!;
     final s = d.session;
     return SessionDetail(
       session: Session(id: s.id, group: s.group, startsAt: s.startsAt, endsAt: s.endsAt, mode: s.mode, status: SessionStatus.done),
       roster: d.roster,
+      sessionNote: end?.sessionNote,
     );
   }
+
+  /// What "Fin de séance" sent.
+  final List<SessionEnd> endings = [];
 
   @override
   Future<SessionDetail> saveAttendance(String sessionId, Map<String, AttendanceStatus> marks) async {

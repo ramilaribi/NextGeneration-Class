@@ -2,6 +2,7 @@ import '../../core/config/app_config.dart';
 import '../../domain/model/content.dart';
 import '../../domain/repositories/content_repository.dart';
 import '../dto/content_dto.dart';
+import '../dto/school_dto.dart' show instant;
 import '../files/image_shrinker.dart';
 import '../remote/content_api.dart';
 import 'api_guard.dart';
@@ -58,4 +59,17 @@ class ContentRepositoryImpl implements ContentRepository {
   @override
   Future<List<SharedDocument>> mine({String? studentId}) =>
       guard(() async => [for (final d in await _api.mine(studentId: studentId)) sharedDocumentOf(d)]);
+
+  @override
+  Future<List<CoveredChapter>> covered({String? studentId}) => guard(
+    () async => [
+      for (final c in await _api.covered(studentId: studentId))
+        CoveredChapter(
+          chapterId: c['chapterId'] as String,
+          coveredOn: instant(c['coveredOn'])!,
+          details: c['details'] as String?,
+          contentIds: {for (final id in c['contentIds'] as List? ?? const []) '$id'},
+        ),
+    ],
+  );
 }

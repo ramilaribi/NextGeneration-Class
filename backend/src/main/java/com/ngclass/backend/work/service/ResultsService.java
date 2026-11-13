@@ -1,7 +1,9 @@
 package com.ngclass.backend.work.service;
 
 import com.ngclass.backend.auth.service.AuthenticatedUser;
+import com.ngclass.backend.content.domain.Chapter;
 import com.ngclass.backend.content.domain.ContentItem;
+import com.ngclass.backend.content.repository.ChapterRepository;
 import com.ngclass.backend.content.dto.ContentDtos.SubjectRef;
 import com.ngclass.backend.content.repository.ContentItemRepository;
 import com.ngclass.backend.groups.domain.ClassGroup;
@@ -11,6 +13,8 @@ import com.ngclass.backend.people.domain.Student;
 import com.ngclass.backend.people.service.FamilyAccess;
 import com.ngclass.backend.people.service.StudentService;
 import com.ngclass.backend.planning.domain.AttendanceStatus;
+import com.ngclass.backend.planning.domain.ClassSession;
+import com.ngclass.backend.planning.repository.ClassSessionRepository;
 import com.ngclass.backend.planning.repository.AttendanceRepository;
 import com.ngclass.backend.planning.service.AttendanceStats.Summary;
 import com.ngclass.backend.school.domain.Subject;
@@ -21,6 +25,7 @@ import com.ngclass.backend.work.domain.HomeworkStatus;
 import com.ngclass.backend.work.domain.Submission;
 import com.ngclass.backend.work.domain.SubmissionMode;
 import com.ngclass.backend.work.dto.ResultsDtos.GradeItem;
+import com.ngclass.backend.work.dto.ResultsDtos.MonthProgress;
 import com.ngclass.backend.work.dto.ResultsDtos.MyResults;
 import com.ngclass.backend.work.dto.ResultsDtos.SubjectResult;
 import com.ngclass.backend.work.repository.AssignmentRecipientRepository;
@@ -34,6 +39,8 @@ import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -66,6 +73,8 @@ public class ResultsService {
 	private final HomeworkService homework;
 	private final EvaluationRepository evaluations;
 	private final EvaluationGradeRepository evaluationGrades;
+	private final ClassSessionRepository sessions;
+	private final ChapterRepository chapters;
 	private final AppProperties properties;
 	private final Clock clock;
 
@@ -100,6 +109,7 @@ public class ResultsService {
 		Map<UUID, List<GradeItem>> tests = evaluationGrades(studentId);
 		subjectIds.addAll(tests.keySet());
 		Map<UUID, Integer> attendanceBySubject = attendanceBySubject(studentId);
+		Map<UUID, List<String>> seen = chaptersSeen(groupIds);
 
 		return new MyResults(subjects.findAllById(subjectIds).stream()
 				.sorted(Comparator.comparingInt(Subject::getPosition).thenComparing(s -> s.name().fr(), String.CASE_INSENSITIVE_ORDER))
@@ -107,13 +117,69 @@ public class ResultsService {
 					List<AssignmentRecipient> mine = work.stream()
 							.filter(r -> subject.getId().equals(subjectOfItem.get(byId.get(r.getAssignmentId()).getContentItemId())))
 							.toList();
-					return result(subject, mine, byId, latest, tests.getOrDefault(subject.getId(), List.of()), attendanceBySubject.get(subject.getId()), now);
+					return result(subject, mine, byId, latest, tests.getOrDefault(subject.getId(), List.of()), attendanceBySubject.get(subject.getId()),
+							seen.getOrDefault(subject.getId(), List.of()), now);
 				})
-				.toList());
+				.toList(),
+				months(studentId, work, byId, latest, now));
+	}
+
+	/** The chapters the pupil's groups covered in class, by subject, oldest first. */
+	private Map<UUID, List<String>> chaptersSeen(List<UUID> groupIds) {
+		if (groupIds.isEmpty()) {
+			return Map.of();
+		}
+		List<ClassSession> covered = sessions.findCovered(groupIds).reversed();
+		Map<UUID, Chapter> byId = chapters.findByIdIn(covered.stream().map(ClassSession::getCoveredChapterId).collect(Collectors.toSet())).stream()
+				.collect(Collectors.toMap(Chapter::getId, Function.identity()));
+		Map<UUID, Set<String>> out = new HashMap<>();
+		for (ClassSession s : covered) {
+			Chapter c = byId.get(s.getCoveredChapterId());
+			if (c != null) {
+				out.computeIfAbsent(c.getSubjectId(), k -> new LinkedHashSet<>()).add(c.getTitle());
+			}
+		}
+		Map<UUID, List<String>> lists = new HashMap<>();
+		out.forEach((k, v) -> lists.put(k, List.copyOf(v)));
+		return lists;
+	}
+
+	/** September of this school year to this month: homework sent out of due, and attendance, all subjects. */
+	private List<MonthProgress> months(UUID studentId, List<AssignmentRecipient> rows, Map<UUID, Assignment> byId, Map<UUID, HomeworkService.Sent> latest,
+			Instant now) {
+		ZoneId zone = properties.zoneId();
+		YearMonth current = YearMonth.from(now.atZone(zone));
+		YearMonth first = YearMonth.of(current.getMonthValue() >= 9 ? current.getYear() : current.getYear() - 1, 9);
+		Map<YearMonth, int[]> work = new HashMap<>();
+		for (AssignmentRecipient r : rows) {
+			Assignment a = byId.get(r.getAssignmentId());
+			YearMonth month = YearMonth.from(a.getDeadlineAt().atZone(zone));
+			boolean sent = r.getStatus() == HomeworkStatus.SUBMITTED || r.getStatus() == HomeworkStatus.LATE
+					|| (r.getStatus() == HomeworkStatus.CORRECTED && latest.containsKey(r.getId()));
+			int[] c = work.computeIfAbsent(month, m -> new int[2]);
+			if (sent || !a.getDeadlineAt().isAfter(now) || r.getStatus() == HomeworkStatus.CORRECTED) {
+				c[1]++;
+			}
+			if (sent) {
+				c[0]++;
+			}
+		}
+		Map<YearMonth, int[]> marks = new HashMap<>();
+		for (Object[] row : attendance.marksSince(studentId, first.atDay(1).atStartOfDay(zone).toInstant())) {
+			YearMonth month = YearMonth.from(((Instant) row[0]).atZone(zone));
+			marks.computeIfAbsent(month, m -> new int[3])[((AttendanceStatus) row[1]).ordinal()]++;
+		}
+		List<MonthProgress> out = new ArrayList<>();
+		for (YearMonth m = first; !m.isAfter(current); m = m.plusMonths(1)) {
+			int[] w = work.getOrDefault(m, new int[2]);
+			int[] a = marks.get(m);
+			out.add(new MonthProgress(m.toString(), w[0], w[1], a == null ? null : new Summary(a[0], a[1], a[2]).rate()));
+		}
+		return out;
 	}
 
 	private static SubjectResult result(Subject subject, List<AssignmentRecipient> rows, Map<UUID, Assignment> byId, Map<UUID, HomeworkService.Sent> latest,
-			List<GradeItem> tests, Integer attendanceRate, Instant now) {
+			List<GradeItem> tests, Integer attendanceRate, List<String> chaptersSeen, Instant now) {
 		List<GradeItem> grades = java.util.stream.Stream.concat(
 						rows.stream()
 								.filter(r -> r.getStatus() == HomeworkStatus.CORRECTED && r.getScore() != null)
@@ -150,7 +216,8 @@ public class ResultsService {
 				submitted,
 				due,
 				attendanceRate,
-				grades);
+				grades,
+				chaptersSeen);
 	}
 
 	/** The pupil's paper evaluations, by the subject of their group: a score on /20, or absent. */

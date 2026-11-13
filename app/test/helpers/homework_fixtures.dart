@@ -327,8 +327,14 @@ MyResults sampleResults() => MyResults(
         GradeItem(assignmentId: 'a-b', title: 'Série B', date: at(2, 9), score: 10, maxScore: 20, score20: 10),
         GradeItem(assignmentId: 'a-a', title: 'Série A', date: at(1, 9), score: 5, maxScore: 10, score20: 10),
       ],
+      chaptersSeen: const ['Les fractions', 'La multiplication'],
     ),
     const SubjectResult(subject: lectureRef, submitted: 1, due: 1),
+  ],
+  // Release 4: September and October, the month of `now`.
+  months: [
+    MonthProgress(month: DateTime.utc(2026, 9), submitted: 2, due: 2, attendanceRate: 100),
+    MonthProgress(month: DateTime.utc(2026, 10), submitted: 3, due: 4, attendanceRate: 90),
   ],
 );
 

@@ -56,7 +56,14 @@ GoRouter buildRouter(AuthCubit auth) => GoRouter(
     // Session mode takes the whole screen, without the shell.
     GoRoute(
       path: Routes.sessionMode(':id'),
-      builder: (context, state) => SessionModeScreen(sessionId: state.pathParameters['id']!),
+      // "Fin de séance" reads the group's subject and level; "Donner un devoir" opens "Nouveau devoir".
+      builder: (context, state) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => sl.get<GroupsCubit>()..load()),
+          BlocProvider(create: (_) => sl.get<ReferenceCubit>()..load()),
+        ],
+        child: SessionModeScreen(sessionId: state.pathParameters['id']!),
+      ),
     ),
     // A document takes the whole screen; the teacher's comes with her library, groups and lists
     // (details, sharing, editing).

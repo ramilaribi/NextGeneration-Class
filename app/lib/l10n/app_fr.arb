@@ -2619,5 +2619,68 @@
       }
     }
   },
-  "worksheetShort": "Fiche"
+  "worksheetShort": "Fiche",
+  "endSessionPanel": "Fin de séance",
+  "coveredLabel": "Ce qui a été vu",
+  "coveredChapterHint": "Choisir un chapitre",
+  "coveredNoDocuments": "Aucun document dans ce chapitre.",
+  "coveredDetailsHint": "Ex. : exercices 1 à 4, page 32",
+  "coveredFamiliesHint": "Les élèves et les parents le voient dans Cours : « Vu en classe le {day} ».",
+  "@coveredFamiliesHint": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "dayContentDocument": "Contenu du jour",
+  "sessionNoteLabel": "Note de séance",
+  "sessionNoteHint": "Ex. : revoir la simplification avec Rayen",
+  "endThen": "Ensuite",
+  "endGiveHomework": "Donner un devoir",
+  "endGiveHomeworkHint": "S'ouvre avec ce groupe et ce chapitre, après « Terminer ».",
+  "endNextInSeries": "Les séances suivantes sont déjà au planning, chaque semaine.",
+  "endPlanNext": "Planifier la prochaine séance",
+  "endPlanNextHint": "Proposée le même jour la semaine suivante, à la même heure.",
+  "nextSessionPlanned": "Prochaine séance ajoutée au planning.",
+  "previousCovered": "Vu · {chapter}",
+  "@previousCovered": {
+    "placeholders": {
+      "chapter": {
+        "type": "String"
+      }
+    }
+  },
+  "previousHomework": "Devoir donné : {titles}",
+  "@previousHomework": {
+    "placeholders": {
+      "titles": {
+        "type": "String"
+      }
+    }
+  },
+  "seenInClass": "Vu en classe",
+  "seenInClassOn": "Vu en classe le {day}",
+  "@seenInClassOn": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "chaptersSeen": "Chapitres vus",
+  "chartGradesTitle": "Les notes au fil de l'année",
+  "chartGradesHint": "Chaque point est une note, ramenée sur 20.",
+  "chartOneGrade": "La courbe apparaît dès la deuxième note.",
+  "chartTapHint": "Touchez un point pour voir la note.",
+  "chartMonthlyTitle": "Chaque mois",
+  "chartMonthlyHint": "Les devoirs rendus et la présence, toutes matières.",
+  "chartHomework": "Devoirs rendus",
+  "chartAttendance": "Présence",
+  "showAsTable": "Voir en tableau",
+  "gradesTableTitle": "Les notes en tableau",
+  "tableGrades": "Notes",
+  "tableMonths": "Chaque mois",
+  "tableSameNumbers": "Les mêmes chiffres que les graphiques, pour les lire un par un.",
+  "monthNoData": "Pas encore de chiffres ce mois-ci."
 }

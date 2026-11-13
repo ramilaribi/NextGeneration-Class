@@ -35,6 +35,26 @@ MyResults myResultsOf(Json json) => MyResults(
               absent: g['absent'] as bool? ?? false,
             ),
         ],
+        chaptersSeen: [for (final c in s['chaptersSeen'] as List? ?? const []) '$c'],
       ),
   ],
+  months: [
+    for (final m in jsonList(json['months']))
+      if (_month(m['month']) case final month?)
+        MonthProgress(
+          month: month,
+          submitted: (m['submitted'] as num? ?? 0).toInt(),
+          due: (m['due'] as num? ?? 0).toInt(),
+          attendanceRate: (m['attendanceRate'] as num?)?.toInt(),
+        ),
+  ],
 );
+
+/// "2026-09" as the first day of the month.
+DateTime? _month(Object? value) {
+  final parts = '$value'.split('-');
+  if (parts.length != 2) return null;
+  final year = int.tryParse(parts[0]);
+  final month = int.tryParse(parts[1]);
+  return year == null || month == null ? null : DateTime.utc(year, month);
+}

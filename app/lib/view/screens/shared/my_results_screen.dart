@@ -21,6 +21,7 @@ import '../../widgets/cards.dart';
 import '../../widgets/classmates.dart';
 import '../../widgets/feedback.dart';
 import '../../widgets/page_frame.dart';
+import '../../widgets/progress_charts.dart';
 
 /// "Résultats" (spec 07 and 09, design `r2/CorrectionPhone.png`): per subject the average on /20, the trend,
 /// homework sent, attendance, and each grade with the teacher's word. A pupil's tab; a parent opens it from
@@ -129,10 +130,14 @@ class MyResultsView extends StatelessWidget {
     } else if (results.subjects.isEmpty) {
       body = [SectionCard(child: EmptyState(message: parent ? l10n.resultsEmptyParent(name) : l10n.resultsEmpty, scale: 0.45))];
     } else {
+      final now = sl.get<Now>()();
       body = [
+        // Release 4 (designs `r4/Progression.png`, `r4/ProgressionPhone.png`): the year at a glance, then each subject.
+        GradesChartCard(results: results, now: now, onTable: () => GradesTablePanel.open(context, results)),
         CardColumns(
           gap: 20,
           children: [
+            if (results.months.isNotEmpty) MonthlyChartCard(months: results.months),
             for (final (i, subject) in results.subjects.indexed)
               FadeRise(
                 index: i,
@@ -236,6 +241,18 @@ class SubjectCard extends StatelessWidget {
               stat(r.attendanceRate == null ? l10n.noValue : l10n.percentValue(r.attendanceRate!), l10n.attendanceLabel),
             ],
           ),
+          if (r.chaptersSeen.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text: l10n.chaptersSeen, style: text.style(13, FontWeight.w700)),
+                  TextSpan(text: '${l10n.dotSeparator}${r.chaptersSeen.map(isolated).join(l10n.listSeparator)}'),
+                ],
+              ),
+              style: text.style(13, FontWeight.w500, color: BrandColors.slate, height: 1.5),
+            ),
+          ],
           if (r.grades.isNotEmpty) ...[
             const SizedBox(height: 14),
             Text(text.upper(l10n.gradesTitle), style: text.overline(size: 11)),

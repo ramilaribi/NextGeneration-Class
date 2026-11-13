@@ -24,6 +24,7 @@ import '../../../widgets/feedback.dart';
 import '../../../widgets/labels.dart';
 import '../../../widgets/page_frame.dart';
 import '../../../widgets/panels.dart';
+import '../../../widgets/progress_charts.dart';
 import '../../../widgets/school_widgets.dart';
 import '../../../widgets/text_field.dart';
 import '../../shared/my_results_screen.dart' show SubjectCard;
@@ -734,7 +735,8 @@ class _ResultsPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final subjects = context.watch<ResultsCubit>().state.results?.subjects ?? const [];
+    final results = context.watch<ResultsCubit>().state.results;
+    final subjects = results?.subjects ?? const [];
     final name = isolated(firstName);
     return SidePanel(
       icon: LucideIcons.chartColumn,
@@ -744,6 +746,12 @@ class _ResultsPanel extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // The same charts as the pupil's Résultats (Release 4).
+          if (results != null && subjects.isNotEmpty) ...[
+            GradesChartCard(results: results, now: sl.get<Now>()(), onTable: () => GradesTablePanel.open(context, results)),
+            const SizedBox(height: 14),
+            if (results.months.isNotEmpty) ...[MonthlyChartCard(months: results.months), const SizedBox(height: 14)],
+          ],
           for (final (i, subject) in subjects.indexed) ...[if (i > 0) const SizedBox(height: 14), SubjectCard(result: subject)],
         ],
       ),

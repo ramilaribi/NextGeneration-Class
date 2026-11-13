@@ -20,7 +20,8 @@ abstract interface class PlanningRepository {
 
   Future<SessionDetail> start(String sessionId);
 
-  Future<SessionDetail> end(String sessionId);
+  /// "Terminer la séance", with what was covered ("Fin de séance", Release 4) when given.
+  Future<SessionDetail> end(String sessionId, {SessionEnd? end});
 
   Future<SessionDetail> saveAttendance(String sessionId, Map<String, AttendanceStatus> marks);
 

@@ -42,6 +42,8 @@ import 'package:ngclass/view/screens/student/student_home_screen.dart';
 import 'package:ngclass/view/screens/teacher/contents/contents_screen.dart';
 import 'package:ngclass/view/screens/teacher/contents/page/page_editor_screen.dart';
 import 'package:ngclass/view/widgets/worksheet_preview.dart';
+import 'package:ngclass/view/widgets/progress_charts.dart';
+import 'package:ngclass/view/screens/teacher/planning/end_session_panel.dart';
 import 'package:ngclass/view/screens/teacher/contents/worksheet_screen.dart';
 import 'package:ngclass/domain/services/worksheet_maker.dart';
 import 'package:ngclass/view/widgets/buttons.dart';
@@ -141,13 +143,32 @@ void main() {
             RosterEntry(studentId: 'a', firstName: 'Yasmine', lastName: 'Ben Abdallah Trabelsi'),
             RosterEntry(studentId: 'b', firstName: 'Omar', lastName: 'Saidi'),
           ],
+          // Release 4: "Dernière séance" with what it covered.
+          previous: PreviousSession(
+            startsAt: at(5, 10),
+            sessionNote: 'Revoir la simplification avec Rayen.',
+            covered: const Covered(
+              chapterId: 'ch-fr',
+              chapterTitle: 'Les fractions et leur comparaison',
+              details: 'Exercices 1 à 4, la comparaison au même dénominateur.',
+              documents: [CoveredDocument(id: 'serie2', title: 'Série 2 : les fractions, exercices de comparaison', kind: FileKind.pdf)],
+            ),
+            absent: 2,
+            late: 1,
+            homework: const ['Série 3 : les fractions, pour jeudi'],
+          ),
         ),
     );
     sl.registerSingleton<StudentRepository>(
       FakeStudentRepository()..students = [student('1', 'Yasmine', 'Ben Abdallah Trabelsi', rate: 94)],
     );
     sl.registerFactory<TeachersCubit>(() => TeachersCubit(FakeAdminRepository(accounts: accounts())));
-    registerContentServices().repository.views['page1'] = samplePageView();
+    registerContentServices().repository
+      ..views['page1'] = samplePageView()
+      // Release 4: "Vu en classe" in Cours.
+      ..coveredChapters = [
+        CoveredChapter(chapterId: 'ch-fr', coveredOn: at(5, 10), details: 'Exercices 1 à 4, la comparaison au même dénominateur.', contentIds: const {'serie3'}),
+      ];
     sl.registerSingleton<PageRepository>(FakePageRepository());
     sl.registerSingleton<QuizRepository>(FakeQuizRepository(timeLimitMin: 15));
     sl.registerSingleton<AnnouncementRepository>(FakeAnnouncementRepository());
@@ -601,6 +622,20 @@ void main() {
           size,
         );
         expect(tester.takeException(), isNull);
+        // Release 4: the charts, a point touched, the table.
+        expect(find.byType(GradesChartCard), findsOneWidget);
+        final chart = find.descendant(of: find.byType(GradesChartCard), matching: find.byType(CustomPaint)).last;
+        await tester.ensureVisible(chart);
+        await tester.pumpAndSettle();
+        final box = tester.getRect(chart);
+        await tester.tapAt(box.center);
+        await tester.pump();
+        expect(tester.takeException(), isNull, reason: 'a point touched');
+        await tester.ensureVisible(find.byKey(const Key('grades-table')));
+        await tester.tap(find.byKey(const Key('grades-table')));
+        await tester.pumpAndSettle();
+        expect(find.byType(GradesTablePanel), findsOneWidget);
+        expect(tester.takeException(), isNull, reason: 'the table');
         await pumpShell(
           tester,
           AdaptiveShell(destinations: parentDestinations(), location: Routes.parentResults, child: const MyResultsScreen()),
@@ -637,6 +672,11 @@ void main() {
           size: size,
         );
         expect(tester.takeException(), isNull);
+        // "Fin de séance" (Release 4).
+        await tester.tap(find.byKey(const Key('end-session')));
+        await tester.pumpAndSettle();
+        expect(find.byType(EndSessionPanel), findsOneWidget);
+        expect(tester.takeException(), isNull, reason: 'Fin de séance');
       });
 
       testWidgets('the search fits, its results typed in, $label', (tester) async {

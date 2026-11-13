@@ -29,4 +29,7 @@ abstract interface class ContentRepository {
 
   /// [studentId] is required for a parent (one of their children).
   Future<List<SharedDocument>> mine({String? studentId});
+
+  /// The chapters a pupil's groups covered in class, latest first ([studentId] for a parent).
+  Future<List<CoveredChapter>> covered({String? studentId});
 }

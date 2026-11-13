@@ -28,7 +28,8 @@ import '../../../widgets/text_field.dart';
 class AssignPanel extends StatelessWidget {
   const AssignPanel({super.key});
 
-  static Future<Assignment?> open(BuildContext context, {String? contentItemId, String? groupId}) {
+  /// [chapterId] (from "Fin de séance"): the documents of that chapter come first.
+  static Future<Assignment?> open(BuildContext context, {String? contentItemId, String? groupId, String? chapterId}) {
     final groups = context.read<GroupsCubit>();
     final reference = context.read<ReferenceCubit>();
     return showSidePanel<Assignment>(
@@ -38,7 +39,7 @@ class AssignPanel extends StatelessWidget {
           BlocProvider.value(value: groups),
           BlocProvider.value(value: reference),
           BlocProvider(
-            create: (_) => AssignFormCubit(sl.get(), sl.get(), sl.get(), sl.get(), contentItemId: contentItemId, groupId: groupId)..load(),
+            create: (_) => AssignFormCubit(sl.get(), sl.get(), sl.get(), sl.get(), contentItemId: contentItemId, groupId: groupId, chapterId: chapterId)..load(),
           ),
         ],
         child: const AssignPanel(),
