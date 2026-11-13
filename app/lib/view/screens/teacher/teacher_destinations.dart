@@ -2,7 +2,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/router/routes.dart';
 import '../../widgets/app_destination.dart';
-import '../shared/coming_soon_screen.dart';
+import 'announcements/announcements_screen.dart';
 import 'contents/contents_screen.dart';
 import 'homework/homework_screen.dart';
 import 'planning/planning_screen.dart';
@@ -50,7 +50,7 @@ List<AppDestination> teacherDestinations() => [
     icon: LucideIcons.megaphone,
     label: (l10n) => l10n.navAnnouncements,
     inPhoneBar: false,
-    screen: () => ComingSoonScreen(title: (l10n) => l10n.navAnnouncements, description: (l10n) => l10n.comingAnnouncements, release: 4),
+    screen: () => const AnnouncementsScreen(),
   ),
   AppDestination(
     path: Routes.teacherSettings,

@@ -21,6 +21,8 @@ import com.ngclass.backend.content.repository.FileAssetRepository;
 import com.ngclass.backend.content.service.FileInspector.Inspected;
 import com.ngclass.backend.content.storage.FileStorage;
 import com.ngclass.backend.groups.service.GroupService;
+import com.ngclass.backend.quiz.repository.QuizRepository;
+import com.ngclass.backend.quiz.service.QuizRules;
 import com.ngclass.backend.school.repository.LevelRepository;
 import com.ngclass.backend.school.service.SubjectService;
 import java.io.IOException;
@@ -55,6 +57,7 @@ public class ContentService {
 	private final SubjectService subjectService;
 	private final LevelRepository levels;
 	private final GroupService groupService;
+	private final QuizRepository quizzes;
 	private final CurrentTeacher teacher;
 	private final Clock clock;
 
@@ -165,6 +168,10 @@ public class ContentService {
 			item.setStatus(ContentStatus.DRAFT);
 			shares.deleteAll(shares.findByItemId(id));
 		} else if (!request.draft() && item.getStatus() == ContentStatus.DRAFT) {
+			// A quiz goes out complete: every question answerable and corrected (spec 05).
+			if (item.isQuiz()) {
+				quizzes.findById(id).ifPresent(quiz -> QuizRules.requireComplete(quiz.getQuestions()));
+			}
 			item.setStatus(ContentStatus.PUBLISHED);
 		}
 		items.saveAndFlush(item);
@@ -177,8 +184,40 @@ public class ContentService {
 		if (item.getStatus() != ContentStatus.PUBLISHED && !groupIds.isEmpty()) {
 			throw new ApiException(HttpStatus.CONFLICT, "content_not_published");
 		}
+		// A quiz reaches pupils as homework only: in Cours its answers could be read before the deadline.
+		if (item.isQuiz() && !groupIds.isEmpty()) {
+			throw ApiException.badRequest("quiz_not_shareable");
+		}
 		List<UUID> kept = replaceShares(shares.findByItemId(id), groupIds, groupId -> ContentShare.builder().itemId(id).groupId(groupId));
 		return response(item, kept);
+	}
+
+	/**
+	 * "Dupliquer" (spec 05, duplicate content): a new draft in the same place, shared with nobody. A file is
+	 * shared with its copy (it never changes); a page copies its text and its Corrigé. A quiz duplicates
+	 * through QuizService, with its settings and questions.
+	 */
+	@Transactional
+	public ContentItemResponse duplicate(UUID id) {
+		ContentItem source = own(id);
+		if (source.isQuiz()) {
+			throw ApiException.badRequest("content_not_found");
+		}
+		String title = source.getTitle() + " (copie)";
+		ContentItem copy = items.saveAndFlush(ContentItem.builder()
+				.teacherId(source.getTeacherId())
+				.type(source.getType())
+				.title(title.length() > 160 ? title.substring(0, 160) : title)
+				.subjectId(source.getSubjectId())
+				.levelId(source.getLevelId())
+				.chapterId(source.getChapterId())
+				.status(ContentStatus.DRAFT)
+				.tag(source.getTag())
+				.file(source.getFile())
+				.body(source.getBody() == null ? null : source.getBody().deepCopy())
+				.answerBody(source.getAnswerBody() == null ? null : source.getAnswerBody().deepCopy())
+				.build());
+		return response(copy, List.of());
 	}
 
 	/** Hidden from the library and from every Cours; nothing is deleted (spec 04). */
@@ -200,7 +239,7 @@ public class ContentService {
 	}
 
 	/** Her subject, a level, and a chapter of that same subject and level when one is given. */
-	private void placement(UUID subjectId, UUID levelId, UUID chapterId) {
+	public void placement(UUID subjectId, UUID levelId, UUID chapterId) {
 		subjectService.own(subjectId);
 		levels.findById(levelId).orElseThrow(() -> ApiException.notFound("level_not_found"));
 		if (chapterId != null) {
@@ -233,7 +272,7 @@ public class ContentService {
 		return List.copyOf(target);
 	}
 
-	private static ContentTag tag(String value) {
+	static ContentTag tag(String value) {
 		try {
 			return ContentTag.valueOf(value.trim().toUpperCase(Locale.ROOT));
 		} catch (IllegalArgumentException e) {
@@ -253,7 +292,7 @@ public class ContentService {
 	}
 
 	/** The name as uploaded, without any folder part, shortened to fit. */
-	private static String cleanName(String original) {
+	static String cleanName(String original) {
 		String name = original == null || original.isBlank() ? "document" : original.replace('\\', '/');
 		name = name.substring(name.lastIndexOf('/') + 1).trim();
 		return name.length() > 255 ? name.substring(name.length() - 255) : name;
@@ -285,10 +324,10 @@ public class ContentService {
 				item.getChapterId(),
 				item.getTag().name(),
 				item.getStatus().name(),
-				file.kind().name(),
-				file.getOriginalName(),
-				file.getSizeBytes(),
-				file.getPageCount(),
+				item.kindName(),
+				file == null ? null : file.getOriginalName(),
+				file == null ? 0 : file.getSizeBytes(),
+				item.pageCount(),
 				groupIds,
 				item.getCreatedAt(),
 				item.getUpdatedAt());

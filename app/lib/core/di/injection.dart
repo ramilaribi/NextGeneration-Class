@@ -15,18 +15,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/remote/auth_api.dart';
 import '../../data/remote/content_api.dart';
+import '../../data/remote/announcement_api.dart';
+import '../../data/remote/page_api.dart';
+import '../../data/remote/quiz_api.dart';
 import '../../data/remote/homework_api.dart';
 import '../../data/remote/comments_api.dart';
 import '../../data/remote/results_api.dart';
 import '../../data/remote/search_api.dart';
 import '../../data/remote/student_import_api.dart';
 import '../../data/repository/content_repository_impl.dart';
+import '../../data/repository/announcement_repository_impl.dart';
+import '../../data/repository/page_repository_impl.dart';
+import '../../data/repository/quiz_repository_impl.dart';
 import '../../data/repository/homework_repository_impl.dart';
 import '../../data/repository/comment_repository_impl.dart';
 import '../../data/repository/results_repository_impl.dart';
 import '../../data/repository/search_repository_impl.dart';
 import '../../data/repository/student_import_repository_impl.dart';
 import '../../domain/repositories/content_repository.dart';
+import '../../domain/repositories/announcement_repository.dart';
+import '../../domain/repositories/page_repository.dart';
+import '../../domain/repositories/quiz_repository.dart';
 import '../../domain/repositories/homework_repository.dart';
 import '../../domain/repositories/comment_repository.dart';
 import '../../domain/repositories/results_repository.dart';
@@ -38,7 +47,9 @@ import '../platform/document_printer.dart';
 import '../platform/file_opener.dart';
 import '../platform/photo_source.dart';
 import '../../data/files/scan_processor_impl.dart';
+import '../../data/files/worksheet_pdf.dart';
 import '../../domain/services/scan_processor.dart';
+import '../../domain/services/worksheet_maker.dart';
 import '../../data/remote/planning_api.dart';
 import '../../data/remote/school_api.dart';
 import '../../data/remote/students_api.dart';
@@ -84,6 +95,7 @@ void configureDependencies(AppConfig config) {
   sl.registerLazySingleton<FileChooser>(FilePickerChooser.new);
   sl.registerLazySingleton<FileOpener>(UrlLauncherFileOpener.new);
   sl.registerLazySingleton<DocumentPrinter>(PrintingDocumentPrinter.new);
+  sl.registerLazySingleton<WorksheetMaker>(PdfWorksheetMaker.new);
   sl.registerLazySingleton<PhotoSource>(ImagePickerPhotoSource.new);
   sl.registerLazySingleton<ScanProcessor>(ScanProcessorImpl.new);
   sl.registerLazySingleton<FlutterSecureStorage>(() => const FlutterSecureStorage());
@@ -125,6 +137,14 @@ void configureDependencies(AppConfig config) {
   // ── Contents: the library, Cours, the viewer ──
   sl.registerLazySingleton<ContentApi>(() => ContentApi(sl.get<DioClient>().dio));
   sl.registerLazySingleton<ContentRepository>(() => ContentRepositoryImpl(sl.get(), sl.get()));
+  sl.registerLazySingleton<PageApi>(() => PageApi(sl.get<DioClient>().dio));
+  sl.registerLazySingleton<PageRepository>(() => PageRepositoryImpl(sl.get(), sl.get()));
+  sl.registerLazySingleton<QuizApi>(() => QuizApi(sl.get<DioClient>().dio));
+  sl.registerLazySingleton<QuizRepository>(() => QuizRepositoryImpl(sl.get(), sl.get()));
+
+  // ── Announcements (release 4) ──
+  sl.registerLazySingleton<AnnouncementApi>(() => AnnouncementApi(sl.get<DioClient>().dio));
+  sl.registerLazySingleton<AnnouncementRepository>(() => AnnouncementRepositoryImpl(sl.get()));
   sl.registerFactory<LibraryCubit>(() => LibraryCubit(sl.get()));
 
   // ── Homework: given by the teacher, sent by the pupil or the parent ──

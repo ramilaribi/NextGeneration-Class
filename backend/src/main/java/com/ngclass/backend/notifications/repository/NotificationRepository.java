@@ -19,6 +19,9 @@ public interface NotificationRepository extends JpaRepository<Notification, UUID
 
 	Optional<Notification> findByIdAndUserId(UUID id, UUID userId);
 
+	/** The people an announcement reached, and whether they read it (Release 4). */
+	List<Notification> findByAnnouncementIdIn(java.util.Collection<UUID> announcementIds);
+
 	/** The teacher's unread "work sent" row of a homework, to gather the next work into it. */
 	Optional<Notification> findFirstByUserIdAndTypeAndAssignmentIdAndReadAtIsNull(UUID userId, NotificationType type, UUID assignmentId);
 

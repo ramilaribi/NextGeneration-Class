@@ -63,7 +63,7 @@ public class AssignmentRecipient {
 
 	/** MISSING as soon as the deadline is past, even before the job writes it. */
 	public HomeworkStatus statusAt(Assignment assignment, Instant now) {
-		if (status == HomeworkStatus.TODO && assignment.getSubmissionMode() == SubmissionMode.FILE && !assignment.getDeadlineAt().isAfter(now)) {
+		if (status == HomeworkStatus.TODO && assignment.getSubmissionMode() != SubmissionMode.NONE && !assignment.getDeadlineAt().isAfter(now)) {
 			return HomeworkStatus.MISSING;
 		}
 		return status;

@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-/// What happened to a session (R1), new homework or a corrected one (R2). Later releases add announcements.
+/// What happened to a session (R1), new homework or a corrected one (R2), the teacher's [announcement] (R4).
 /// [evaluation]: a paper evaluation's grade (release 2, step 5).
 /// The teacher's: [workSent] (work sent by pupils or parents, gathered by homework while unread) and
 /// [deadlinePassed] (a homework's deadline: who did not send).
-enum NotificationKind { cancelled, moved, restored, homework, corrected, evaluation, workSent, deadlinePassed }
+enum NotificationKind { cancelled, moved, restored, homework, corrected, evaluation, workSent, deadlinePassed, announcement }
 
 /// A pupil named in a teacher's notification, as written then.
 class NamedPupil extends Equatable {
@@ -40,6 +40,9 @@ class AppNotification extends Equatable {
     this.pupils = const [],
     this.late = false,
     this.read = false,
+    this.announcementId,
+    this.body,
+    this.author,
   });
 
   final String id;
@@ -77,6 +80,11 @@ class AppNotification extends Equatable {
   final DateTime createdAt;
   final bool read;
 
+  /// [NotificationKind.announcement]: which one, its text ([title] is its title) and who wrote it.
+  final String? announcementId;
+  final String? body;
+  final String? author;
+
   AppNotification markedRead() => AppNotification(
     id: id,
     kind: kind,
@@ -95,6 +103,9 @@ class AppNotification extends Equatable {
     pupils: pupils,
     late: late,
     read: true,
+    announcementId: announcementId,
+    body: body,
+    author: author,
   );
 
   @override
@@ -116,6 +127,9 @@ class AppNotification extends Equatable {
     late,
     createdAt,
     read,
+    announcementId,
+    body,
+    author,
   ];
 }
 

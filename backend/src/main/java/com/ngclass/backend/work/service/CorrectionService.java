@@ -80,7 +80,7 @@ public class CorrectionService {
 		if (waiting.isEmpty()) {
 			return List.of();
 		}
-		Map<UUID, Submission> latest = homework.latestSubmissions(waiting);
+		Map<UUID, HomeworkService.Sent> latest = homework.sent(waiting);
 		Map<UUID, Student> names = studentsOf(waiting);
 		List<ToCorrectGroup> out = new ArrayList<>();
 		for (Assignment a : lists.assignments()) {
@@ -88,9 +88,9 @@ public class CorrectionService {
 					.filter(r -> WAITING.contains(r.getStatus()) && latest.containsKey(r.getId()))
 					.map(r -> {
 						Student s = names.get(r.getStudentId());
-						Submission sub = latest.get(r.getId());
+						HomeworkService.Sent sub = latest.get(r.getId());
 						return new ToCorrectItem(r.getStudentId(), s.getUser().getFirstName(), s.getUser().getLastName(), r.getStatus().name(),
-								sub.getSubmittedAt(), sub.getId());
+								sub.submittedAt(), sub.id());
 					})
 					.sorted(Comparator.comparing(ToCorrectItem::submittedAt))
 					.toList();
@@ -211,6 +211,10 @@ public class CorrectionService {
 		if (assignment.getSubmissionMode() == SubmissionMode.NONE) {
 			throw ApiException.badRequest("nothing_to_submit");
 		}
+		// A quiz is scored question by question (QuizCorrectionController), never as a whole.
+		if (assignment.getSubmissionMode() == SubmissionMode.QUIZ) {
+			throw new ApiException(HttpStatus.CONFLICT, "quiz_scored_by_question");
+		}
 		AssignmentRecipient recipient = recipientOf(assignment, studentId);
 		if (recipient.statusAt(assignment, clock.instant()) == HomeworkStatus.TODO) {
 			throw new ApiException(HttpStatus.CONFLICT, "not_submitted_yet");
@@ -255,7 +259,7 @@ public class CorrectionService {
 	}
 
 	private Lists lists(List<Assignment> list) {
-		List<Assignment> withWork = list.stream().filter(a -> a.getSubmissionMode() == SubmissionMode.FILE).toList();
+		List<Assignment> withWork = list.stream().filter(a -> a.getSubmissionMode() != SubmissionMode.NONE).toList();
 		if (withWork.isEmpty()) {
 			return new Lists(List.of(), Map.of(), Map.of(), Map.of(), Map.of());
 		}

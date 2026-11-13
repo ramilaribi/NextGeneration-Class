@@ -166,6 +166,18 @@ class OwnerDashboardTest {
 				.param("groupId", group), sonia)
 				.andExpect(status().isNotFound());
 
+		// Ines's pages written in the app: Sonia can neither open nor save one, nor write in Ines's subject.
+		Map<String, Object> pageMeta = Map.of("title", "Série 3 : lecture", "subjectId", lecture, "levelId", levelId, "tag", "SERIE");
+		String inesPage = body(call(post("/api/v1/contents/pages").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(pageMeta)), ines)
+				.andExpect(status().isCreated())).at("/item/id").asText();
+		call(get("/api/v1/contents/" + inesPage + "/page"), sonia).andExpect(status().isNotFound());
+		call(put("/api/v1/contents/" + inesPage + "/page").contentType(MediaType.APPLICATION_JSON).content(
+				"{\"body\":[{\"insert\":\"Pris\\n\"}],\"answerBody\":[{\"insert\":\"\\n\"}]}"), sonia)
+				.andExpect(status().isNotFound());
+		call(get("/api/v1/contents/" + inesPage + "/view"), sonia).andExpect(status().isNotFound());
+		call(post("/api/v1/contents/pages").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(pageMeta)), sonia)
+				.andExpect(status().isNotFound());
+
 		// Her own work stays hers: same subject name, her own group, Ines's pupil cannot join it.
 		String hers = createSubject(sonia, "Lecture");
 		String sonias = body(call(post("/api/v1/groups").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(

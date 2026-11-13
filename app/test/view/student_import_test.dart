@@ -151,6 +151,7 @@ class FakeStudentImportRepository implements StudentImportRepository {
 /// Records what is printed and builds the PDF with the PDF package's own fonts (no download in tests).
 class FakeDocumentPrinter implements DocumentPrinter {
   final printed = <String>[];
+  final shared = <String>[];
   Uint8List? pdf;
 
   @override
@@ -160,6 +161,12 @@ class FakeDocumentPrinter implements DocumentPrinter {
   Future<void> printPdf(String name, Future<Uint8List> Function(PdfPageFormat format) build) async {
     printed.add(name);
     pdf = await build(PdfPageFormat.a4);
+  }
+
+  @override
+  Future<void> share(String fileName, Uint8List bytes) async {
+    shared.add(fileName);
+    pdf = bytes;
   }
 }
 

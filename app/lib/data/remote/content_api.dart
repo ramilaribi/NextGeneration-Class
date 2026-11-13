@@ -37,6 +37,8 @@ class ContentApi {
 
   Future<void> archive(String id) => _dio.post<void>('/contents/$id/archive');
 
+  Future<Json> duplicate(String id) async => (await _dio.post<Json>('/contents/$id/duplicate')).data!;
+
   Future<Json> view(String id) async => (await _dio.get<Json>('/contents/$id/view')).data!;
 
   Future<List<Json>> mine({String? studentId}) async =>

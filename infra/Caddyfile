@@ -5,10 +5,19 @@
 		reverse_proxy api:8080
 	}
 
+	# For the uptime alert: answers "UP" only when the API and the database both work.
+	handle /health {
+		rewrite * /actuator/health
+		reverse_proxy api:8080
+	}
+
 	# The Flutter web app: unknown paths fall back to index.html (client-side routes).
 	handle {
 		root * /srv
 		try_files {path} /index.html
+		# These files name the current version: never cached, so a new deploy reaches everyone on the next visit.
+		@entry path / /index.html /flutter_bootstrap.js /flutter_service_worker.js /version.json /manifest.json
+		header @entry Cache-Control "no-cache"
 		file_server
 	}
 
@@ -18,4 +27,9 @@
 		Referrer-Policy "strict-origin-when-cross-origin"
 		-Server
 	}
+}
+
+# www.<domain> sends visitors to the main address.
+www.{$DOMAIN} {
+	redir https://{$DOMAIN}{uri} permanent
 }

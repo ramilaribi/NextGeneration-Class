@@ -30,7 +30,7 @@ public interface AssignmentRecipientRepository extends JpaRepository<AssignmentR
 	@Query(value = """
 			update assignment_recipients r set status = 'MISSING', status_changed_at = :now
 			from assignments a
-			where r.assignment_id = a.id and r.status = 'TODO' and a.submission_mode = 'FILE' and a.deadline_at <= :now""",
+			where r.assignment_id = a.id and r.status = 'TODO' and a.submission_mode in ('FILE', 'QUIZ') and a.deadline_at <= :now""",
 			nativeQuery = true)
 	int markMissing(@Param("now") Instant now);
 

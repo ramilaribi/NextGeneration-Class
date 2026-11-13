@@ -15,8 +15,12 @@ import '../../view/screens/shared/my_results_screen.dart';
 import '../../view/screens/shared/notifications_screen.dart';
 import '../../view/screens/shared/splash_screen.dart';
 import '../../view/screens/student/student_destinations.dart';
+import '../../domain/model/content.dart';
 import '../../domain/model/evaluation.dart';
 import '../../view/screens/teacher/contents/contents_screen.dart';
+import '../../view/screens/teacher/contents/page/page_editor_screen.dart';
+import '../../view/screens/teacher/contents/quiz/quiz_editor_screen.dart';
+import '../../view/screens/teacher/contents/worksheet_screen.dart';
 import '../../view/screens/teacher/homework/assignment_screen.dart';
 import '../../view/screens/teacher/homework/evaluation_screen.dart';
 import '../../view/screens/teacher/homework/correction_screen.dart';
@@ -200,6 +204,7 @@ ShellRoute _teacherShell() {
         search: const TeacherSearchField(),
         phoneSearch: const SearchButton(),
         sidebarExtra: SidebarGroups(location: state.matchedLocation),
+        phoneFullScreen: Routes.isTeacherPage,
         child: child,
       ),
     ),
@@ -213,6 +218,17 @@ ShellRoute _teacherShell() {
       _page(Routes.teacherStudent(':id'), (state) => StudentProfileScreen(studentId: state.pathParameters['id']!)),
       _page(Routes.teacherGroup(':id'), (state) => GroupScreen(groupId: state.pathParameters['id']!)),
       _page(Routes.teacherHomework(':id'), (state) => AssignmentScreen(assignmentId: state.pathParameters['id']!)),
+      _page(Routes.teacherPage(':id'), (state) => PageEditorScreen(pageId: state.pathParameters['id']!)),
+      _page(Routes.teacherQuiz(':id'), (state) => QuizEditorScreen(quizId: state.pathParameters['id']!)),
+      _page(
+        '${Routes.teacherContents}/fiche/:kind/:id',
+        // Keyed by what it prints: "Changer" opens another page or quiz in a fresh screen.
+        (state) => WorksheetScreen(
+          key: ValueKey(state.matchedLocation),
+          id: state.pathParameters['id']!,
+          kind: state.pathParameters['kind'] == 'quiz' ? FileKind.quiz : FileKind.page,
+        ),
+      ),
       _page(
         Routes.teacherEvaluation(':id'),
         (state) => EvaluationScreen(evaluationId: state.pathParameters['id']!, created: state.extra as EvaluationDetail?),

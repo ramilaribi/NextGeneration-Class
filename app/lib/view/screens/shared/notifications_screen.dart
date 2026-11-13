@@ -17,6 +17,7 @@ import '../../stateManager/auth/auth_cubit.dart';
 import '../../stateManager/common/load_status.dart';
 import '../../stateManager/language/language_cubit.dart';
 import '../../stateManager/notifications/notifications_cubit.dart';
+import '../../widgets/announcement_widgets.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/cards.dart';
 import '../../widgets/classmates.dart';
@@ -211,9 +212,15 @@ class NotificationTile extends StatelessWidget {
     NotificationKind.workSent => (LucideIcons.inbox, Accent.green),
     NotificationKind.deadlinePassed when n.pupils.isEmpty => (LucideIcons.calendarCheck, Accent.turquoise),
     NotificationKind.deadlinePassed => (LucideIcons.calendarX, Accent.red),
+    NotificationKind.announcement => (LucideIcons.megaphone, Accent.indigo),
   };
 
   void _open(BuildContext context) {
+    if (notification.kind == NotificationKind.announcement) {
+      onOpen?.call();
+      openAnnouncement(context, notification);
+      return;
+    }
     context.read<NotificationsCubit>().markRead(notification);
     final router = GoRouter.of(context);
     onOpen?.call();
@@ -278,6 +285,7 @@ class NotificationTile extends StatelessWidget {
       NotificationKind.evaluation => l10n.notificationEvaluation,
       NotificationKind.workSent => l10n.notificationWorkSent(n.pupils.length),
       NotificationKind.deadlinePassed => l10n.notificationDeadlinePassed,
+      NotificationKind.announcement => n.title ?? l10n.announcementLabel,
     };
     final body = text.style(13, FontWeight.w500, color: BrandColors.body, height: 1.45);
     // The teacher's rows say where they lead.
@@ -318,6 +326,9 @@ class NotificationTile extends StatelessWidget {
             style: text.style(13, FontWeight.w600, color: Accent.red.onSoft, height: 1.45),
           ),
         Text(group, style: body),
+      ] else if (n.kind == NotificationKind.announcement) ...[
+        Text(n.body ?? '', maxLines: 3, overflow: TextOverflow.ellipsis, textDirection: writtenDirection(n.body ?? ''), style: body),
+        Text([if ((n.author ?? '').isNotEmpty) n.author!, group].join(sep), style: body.copyWith(color: BrandColors.slate)),
       ] else
         Text('${series ? fromWhen(n.startsAt) : when(n.startsAt)}$sep$group', style: body),
       if (n.reason != null && n.reason!.isNotEmpty)

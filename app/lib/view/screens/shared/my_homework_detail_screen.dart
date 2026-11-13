@@ -26,6 +26,7 @@ import '../../widgets/page_frame.dart';
 import '../../widgets/panels.dart';
 import '../teacher/contents/scan_screen.dart';
 import 'my_homework_screen.dart';
+import 'quiz/my_quiz_area.dart';
 
 /// One homework, full screen (design `r2/DevoirsPhone.png`, screens 2 and 3): the deadline, what to do,
 /// the document, and the work to send as photos (one PDF) or a file. A parent sends it for [studentId].
@@ -127,7 +128,29 @@ class MyHomeworkDetailView extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 640),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: detail.correction != null
+              children: detail.homework.mode == SubmissionMode.quiz
+                  // A quiz is taken online: its block holds the attempts and the grade.
+                  ? [
+                      _DeadlineCard(homework: detail.homework),
+                      if (detail.instructions?.trim().isNotEmpty ?? false) ...[
+                        const SizedBox(height: 12),
+                        _Card(
+                          child: Text(
+                            detail.instructions!,
+                            textDirection: writtenDirection(detail.instructions!),
+                            style: text.style(15, FontWeight.w500, height: 1.5),
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 12),
+                      MyQuizArea(
+                        assignmentId: detail.homework.id,
+                        studentId: context.read<MyHomeworkDetailCubit>().studentId,
+                        name: parent ? null : context.read<AuthCubit>().user?.firstName,
+                        onChanged: context.read<MyHomeworkDetailCubit>().load,
+                      ),
+                    ]
+                  : detail.correction != null
                   ? [_CorrectedArea(detail: detail, correction: detail.correction!, parent: parent)]
                   : [
                       _DeadlineCard(homework: detail.homework),

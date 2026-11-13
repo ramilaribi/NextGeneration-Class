@@ -5,12 +5,17 @@ import '../../../core/network/api_failure.dart';
 import '../../../core/platform/file_chooser.dart';
 import '../../../domain/model/content.dart';
 import '../../../domain/repositories/content_repository.dart';
+import '../../../domain/repositories/page_repository.dart';
+import '../../../domain/repositories/quiz_repository.dart';
 
 enum DocumentFormError { file, title, subject, level }
 
 class DocumentFormState extends Equatable {
   const DocumentFormState({
     this.editing,
+    this.writing = false,
+    this.quiz = false,
+    this.mcqOnly = false,
     this.file,
     this.title = '',
     this.subjectId,
@@ -27,6 +32,13 @@ class DocumentFormState extends Equatable {
 
   /// Null for an upload; the document whose details are edited otherwise.
   final ContentDocument? editing;
+
+  /// A page to write in the app (release 3): no file, a draft, then its editor.
+  final bool writing;
+
+  /// A quiz to build (release 3; [writing] too): no tag, then its builder. [mcqOnly] from "Créer › QCM".
+  final bool quiz;
+  final bool mcqOnly;
   final PickedFile? file;
   final String title;
   final String? subjectId;
@@ -61,6 +73,9 @@ class DocumentFormState extends Equatable {
     ApiFailure? Function()? failure,
   }) => DocumentFormState(
     editing: editing,
+    writing: writing,
+    quiz: quiz,
+    mcqOnly: mcqOnly,
     file: file != null ? file() : this.file,
     title: title ?? this.title,
     subjectId: subjectId != null ? subjectId() : this.subjectId,
@@ -78,6 +93,9 @@ class DocumentFormState extends Equatable {
   @override
   List<Object?> get props => [
     editing,
+    writing,
+    quiz,
+    mcqOnly,
     file,
     title,
     subjectId,
@@ -98,10 +116,51 @@ class DocumentFormState extends Equatable {
 class DocumentFormCubit extends Cubit<DocumentFormState> {
   /// An upload, placed where the teacher is in her library.
   DocumentFormCubit.upload(this._repository, this._chooser, {String? subjectId, String? levelId, String? chapterId})
-    : super(DocumentFormState(subjectId: subjectId, levelId: levelId, chapterId: chapterId));
+    : _pages = null,
+      _quizzes = null,
+      super(DocumentFormState(subjectId: subjectId, levelId: levelId, chapterId: chapterId));
+
+  /// "Écrire un document": where it goes and its tag; the page is created empty, as a draft.
+  DocumentFormCubit.write(
+    this._repository,
+    this._chooser,
+    PageRepository pages, {
+    String? subjectId,
+    String? levelId,
+    String? chapterId,
+    ContentTag tag = ContentTag.serie,
+  }) : _pages = pages,
+       _quizzes = null,
+       super(DocumentFormState(writing: true, subjectId: subjectId, levelId: levelId, chapterId: chapterId, tag: tag, draft: true));
+
+  /// "Créer un quiz" or "Créer › QCM": where it goes; the quiz is created empty, as a draft.
+  DocumentFormCubit.quiz(
+    this._repository,
+    this._chooser,
+    QuizRepository quizzes, {
+    bool mcqOnly = false,
+    String? subjectId,
+    String? levelId,
+    String? chapterId,
+  }) : _pages = null,
+       _quizzes = quizzes,
+       super(
+         DocumentFormState(
+           writing: true,
+           quiz: true,
+           mcqOnly: mcqOnly,
+           subjectId: subjectId,
+           levelId: levelId,
+           chapterId: chapterId,
+           tag: ContentTag.autre,
+           draft: true,
+         ),
+       );
 
   DocumentFormCubit.edit(this._repository, this._chooser, ContentDocument document)
-    : super(
+    : _pages = null,
+      _quizzes = null,
+      super(
         DocumentFormState(
           editing: document,
           title: document.title,
@@ -115,6 +174,8 @@ class DocumentFormCubit extends Cubit<DocumentFormState> {
 
   final ContentRepository _repository;
   final FileChooser _chooser;
+  final PageRepository? _pages;
+  final QuizRepository? _quizzes;
 
   /// The title starts from the file name when the teacher has not typed one.
   Future<void> pickFile() async {
@@ -182,7 +243,7 @@ class DocumentFormCubit extends Cubit<DocumentFormState> {
   Future<ContentDocument?> submit() async {
     if (state.submitting) return null;
     final errors = {
-      if (!state.isEditing && (state.file == null || state.fileProblem != null)) DocumentFormError.file,
+      if (!state.isEditing && !state.writing && (state.file == null || state.fileProblem != null)) DocumentFormError.file,
       if (state.title.trim().isEmpty) DocumentFormError.title,
       if (state.subjectId == null) DocumentFormError.subject,
       if (state.levelId == null) DocumentFormError.level,
@@ -191,7 +252,7 @@ class DocumentFormCubit extends Cubit<DocumentFormState> {
       emit(state.copyWith(errors: errors));
       return null;
     }
-    emit(state.copyWith(submitting: true, progress: () => state.isEditing ? null : 0, failure: () => null));
+    emit(state.copyWith(submitting: true, progress: () => state.isEditing || state.writing ? null : 0, failure: () => null));
     final draft = DocumentDraft(
       title: state.title,
       subjectId: state.subjectId!,
@@ -204,6 +265,10 @@ class DocumentFormCubit extends Cubit<DocumentFormState> {
     try {
       final saved = state.isEditing
           ? await _repository.update(state.editing!.id, draft)
+          : state.quiz
+          ? (await _quizzes!.create(draft, mcqOnly: state.mcqOnly)).document
+          : state.writing
+          ? (await _pages!.create(draft)).document
           : await _repository.upload(
               draft,
               state.file!,

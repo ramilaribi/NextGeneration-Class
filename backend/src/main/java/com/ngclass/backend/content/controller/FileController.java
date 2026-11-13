@@ -4,6 +4,7 @@ import com.ngclass.backend.common.ApiException;
 import com.ngclass.backend.content.domain.ContentItem;
 import com.ngclass.backend.content.domain.FileAsset;
 import com.ngclass.backend.content.repository.ContentItemRepository;
+import com.ngclass.backend.content.repository.FileAssetRepository;
 import com.ngclass.backend.content.service.FileLinks;
 import com.ngclass.backend.content.service.FileLinks.Target;
 import com.ngclass.backend.content.service.PageRenderer;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FileController {
 	private final FileLinks links;
 	private final ContentItemRepository items;
+	private final FileAssetRepository files;
 	private final SubmissionRepository submissions;
 	private final AssignmentRecipientRepository recipients;
 	private final PageRenderer renderer;
@@ -44,6 +46,7 @@ public class FileController {
 			case CONTENT -> items.findById(target.id()).map(ContentItem::getFile).orElseThrow(() -> ApiException.notFound("content_not_found"));
 			case SUBMISSION -> submissions.findById(target.id()).map(Submission::getFile).orElseThrow(() -> ApiException.notFound("submission_not_found"));
 			case CORRECTION -> recipients.findCorrectionFile(target.id()).orElseThrow(() -> ApiException.notFound("correction_not_found"));
+			case PICTURE -> files.findById(target.id()).orElseThrow(() -> ApiException.notFound("not_found"));
 		};
 		CacheControl cache = CacheControl.maxAge(FileLinks.TTL).cachePrivate();
 		if (target.page() == 0) {

@@ -28,6 +28,7 @@ import '../../../widgets/panels.dart';
 import '../../../widgets/text_field.dart';
 import '../../shared/my_homework_screen.dart' show homeworkWhen;
 import '../contents/scan_screen.dart';
+import 'quiz_correction_body.dart';
 
 /// Correcting (design `r2/Corriger.png`): the copy beside the score, the comment and the corrected copy;
 /// "Enregistrer et suivant" opens the next copy of the same homework.
@@ -58,6 +59,10 @@ class CorrectionBody extends StatelessWidget {
     final state = context.watch<CorrectionCubit>().state;
     final cubit = context.read<CorrectionCubit>();
     final a = state.assignment;
+    // A quiz is corrected question by question, its open questions only.
+    if (a != null && a.mode == SubmissionMode.quiz) {
+      return QuizCorrectionBody(assignment: a, copies: state.copies, index: state.index);
+    }
     final wide = MediaQuery.sizeOf(context).width >= _sideBySide;
     final phone = isPhone(context);
     final now = sl.get<Now>()();

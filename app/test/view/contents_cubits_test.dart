@@ -65,6 +65,19 @@ void main() {
       expect(cubit.state.place?.chapterId, 'ch-mul');
     });
 
+    test('"Dupliquer" adds a draft copy in the same place, shared with nobody', () async {
+      final repository = FakeContentRepository();
+      final cubit = LibraryCubit(repository);
+      await cubit.load();
+      expect(await cubit.duplicate(cubit.state.document('serie2')!), isNull);
+      expect(repository.duplicated, ['serie2']);
+      final copy = cubit.state.document('serie2-copy')!;
+      expect(copy.title, 'Série 2 : les fractions (copie)');
+      expect(copy.status, ContentStatus.draft);
+      expect(copy.sharedGroupIds, isEmpty);
+      expect(cubit.state.place?.chapterId, copy.chapterId);
+    });
+
     test('archiving removes the document; deleting a chapter leaves its documents in "Sans chapitre"', () async {
       final repository = FakeContentRepository();
       final cubit = LibraryCubit(repository);

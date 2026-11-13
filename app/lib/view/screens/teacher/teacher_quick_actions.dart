@@ -17,7 +17,7 @@ import 'homework/assign_panel.dart';
 import 'planning/session_form_panel.dart';
 
 /// What the teacher creates most. Each opens its creation flow once its release is there
-/// (session R1, assignment R2, QCM and series R3, import R2); until then, "coming soon".
+/// (session R1, assignment R2, series R3 step 1, QCM R3 step 2, import R2); until then, "coming soon".
 class TeacherQuickAction {
   const TeacherQuickAction(this.label, this.icon, this.accent, {this.flow, this.menuOnly = false});
 
@@ -46,8 +46,8 @@ class TeacherQuickAction {
       flow: (context) => EvaluationPanel.createAndGrade(context),
       menuOnly: true,
     ),
-    TeacherQuickAction((l10n) => l10n.quickQcm, LucideIcons.listChecks, Accent.violet),
-    TeacherQuickAction((l10n) => l10n.quickSeries, LucideIcons.layers, Accent.turquoise),
+    TeacherQuickAction((l10n) => l10n.quickQcm, LucideIcons.listChecks, Accent.violet, flow: _writeQcm),
+    TeacherQuickAction((l10n) => l10n.quickSeries, LucideIcons.layers, Accent.turquoise, flow: _writeSeries),
     TeacherQuickAction((l10n) => l10n.quickImport, LucideIcons.upload, Accent.blue, flow: _import),
   ];
 
@@ -64,6 +64,26 @@ class TeacherQuickAction {
       final saved = await DocumentFormPanel.upload(context, library: library);
       if (saved != null && context.mounted) showNotice(context, AppLocalizations.of(context).documentUploaded);
       return saved != null;
+    } finally {
+      await library.close();
+    }
+  }
+
+  /// "QCM": a quiz of multiple choice questions, opened in its builder with the fast entry.
+  static Future<bool> _writeQcm(BuildContext context) async {
+    final library = sl.get<LibraryCubit>()..load();
+    try {
+      return await DocumentFormPanel.quiz(context, library: library, mcqOnly: true);
+    } finally {
+      await library.close();
+    }
+  }
+
+  /// "Série": a page written in the app, tagged Série, opened in its editor.
+  static Future<bool> _writeSeries(BuildContext context) async {
+    final library = sl.get<LibraryCubit>()..load();
+    try {
+      return await DocumentFormPanel.write(context, library: library);
     } finally {
       await library.close();
     }

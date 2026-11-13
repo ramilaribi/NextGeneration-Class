@@ -59,6 +59,7 @@ public class MyContentService {
 	private final SubjectRepository subjects;
 	private final ContentViewRepository views;
 	private final FileLinks links;
+	private final PageService pages;
 	private final MyHomeworkService homework;
 	private final Clock clock;
 
@@ -94,13 +95,12 @@ public class MyContentService {
 					Subject subject = subjectById.get(item.getSubjectId());
 					Chapter chapter = item.getChapterId() == null ? null : chapterById.get(item.getChapterId());
 					Instant shared = later(byItem.get(item.getId()), chapter == null ? null : byChapter.get(chapter.getId()));
-					FileAsset file = item.getFile();
 					return new MyContentItem(
 							item.getId(),
 							item.getTitle(),
 							item.getTag().name(),
-							file.kind().name(),
-							file.getPageCount(),
+							item.kindName(),
+							item.pageCount(),
 							new SubjectRef(subject.getId(), subject.name(), subject.getColor(), subject.getPosition()),
 							chapter == null ? null : new ChapterRef(chapter.getId(), chapter.getTitle(), chapter.getPosition()),
 							shared,
@@ -137,15 +137,24 @@ public class MyContentService {
 			}
 			case ADMIN -> throw new ApiException(HttpStatus.FORBIDDEN, "forbidden");
 		};
+		// A quiz is taken from its homework (its answers stay hidden), and edited in the builder.
+		if (item.isQuiz()) {
+			throw ApiException.notFound("content_not_found");
+		}
+		Subject subject = subjects.findById(item.getSubjectId()).orElseThrow();
+		String chapterTitle = item.getChapterId() == null ? null : chapters.findById(item.getChapterId()).map(Chapter::getTitle).orElse(null);
+		if (item.isPage()) {
+			// The page only: its Corrigé stays the teacher's.
+			return new ContentViewResponse(item.getId(), item.getTitle(), subject.name(), chapterTitle, item.kindName(), item.getTag().name(),
+					null, null, 0, List.of(), null, item.getBody(), pages.pictureUrls(item, item.getBody()));
+		}
 		FileAsset file = item.getFile();
 		FileKind kind = file.kind();
-		int pages = switch (kind) {
+		int pageCount = switch (kind) {
 			case PDF -> file.getPageCount() == null ? 0 : file.getPageCount();
 			case IMAGE -> 1;
 			case WORD -> 0;
 		};
-		Subject subject = subjects.findById(item.getSubjectId()).orElseThrow();
-		String chapterTitle = item.getChapterId() == null ? null : chapters.findById(item.getChapterId()).map(Chapter::getTitle).orElse(null);
 		return new ContentViewResponse(
 				item.getId(),
 				item.getTitle(),
@@ -156,8 +165,10 @@ public class MyContentService {
 				file.getPageCount(),
 				file.getOriginalName(),
 				file.getSizeBytes(),
-				IntStream.rangeClosed(1, pages).mapToObj(page -> links.link(item.getId(), page)).toList(),
-				links.link(item.getId(), 0));
+				IntStream.rangeClosed(1, pageCount).mapToObj(page -> links.link(item.getId(), page)).toList(),
+				links.link(item.getId(), 0),
+				null,
+				Map.of());
 	}
 
 	/** The children's current groups, archived groups left out. */

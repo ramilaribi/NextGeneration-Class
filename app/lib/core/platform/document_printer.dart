@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -20,22 +21,27 @@ abstract interface class DocumentPrinter {
   Future<PdfFonts> fonts({required bool arabic});
 
   Future<void> printPdf(String name, Future<Uint8List> Function(PdfPageFormat format) build);
+
+  /// Saves the PDF: a download in the browser, the share sheet on a phone (WhatsApp, e-mail, print).
+  Future<void> share(String fileName, Uint8List bytes);
 }
 
 class PrintingDocumentPrinter implements DocumentPrinter {
+  /// The fonts come with the app (assets/google_fonts): nothing is downloaded to print.
+  static Future<pw.Font> _font(String file) async => pw.Font.ttf(await rootBundle.load('assets/google_fonts/$file'));
+
   @override
   Future<PdfFonts> fonts({required bool arabic}) async {
-    final arabicRegular = await PdfGoogleFonts.iBMPlexSansArabicRegular();
-    final arabicBold = await PdfGoogleFonts.iBMPlexSansArabicBold();
-    if (arabic) return PdfFonts(regular: arabicRegular, bold: arabicBold);
-    return PdfFonts(
-      regular: await PdfGoogleFonts.plusJakartaSansRegular(),
-      bold: await PdfGoogleFonts.plusJakartaSansBold(),
-      fallback: [arabicRegular],
-    );
+    final arabicRegular = await _font('IBMPlexSansArabic-Regular.ttf');
+    final arabicBold = await _font('IBMPlexSansArabic-Bold.ttf');
+    final regular = await _font('PlusJakartaSans-Regular.ttf');
+    if (arabic) return PdfFonts(regular: arabicRegular, bold: arabicBold, fallback: [regular]);
+    return PdfFonts(regular: regular, bold: await _font('PlusJakartaSans-Bold.ttf'), fallback: [arabicRegular]);
   }
 
   @override
-  Future<void> printPdf(String name, Future<Uint8List> Function(PdfPageFormat format) build) =>
-      Printing.layoutPdf(name: name, onLayout: build);
+  Future<void> printPdf(String name, Future<Uint8List> Function(PdfPageFormat format) build) => Printing.layoutPdf(name: name, onLayout: build);
+
+  @override
+  Future<void> share(String fileName, Uint8List bytes) => Printing.sharePdf(bytes: bytes, filename: fileName);
 }

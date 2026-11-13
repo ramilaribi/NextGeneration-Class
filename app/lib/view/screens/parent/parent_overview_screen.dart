@@ -19,6 +19,8 @@ import '../../stateManager/homework/my_homework_cubit.dart';
 import '../../stateManager/my_planning/my_planning_cubit.dart';
 import '../../stateManager/results/results_cubit.dart';
 import '../../stateManager/language/language_cubit.dart';
+import '../../stateManager/notifications/notifications_cubit.dart';
+import '../../widgets/announcement_widgets.dart';
 import '../../widgets/cards.dart';
 import '../../widgets/classmates.dart';
 import '../../widgets/hero_card.dart';
@@ -41,7 +43,13 @@ class ParentOverviewScreen extends StatelessWidget {
         BlocProvider(create: (_) => MyHomeworkCubit(sl.get(), sl.get<Now>())..load(studentId: firstChild)),
         BlocProvider(create: (_) => CommentsCubit(sl.get())..load(studentId: firstChild)),
       ],
-      child: const ParentOverviewView(),
+      child: Builder(
+        builder: (context) {
+          // The teacher's announcements sit on top for 7 days (release 4): the shell's notifications hold them.
+          context.read<NotificationsCubit>().load();
+          return const ParentOverviewView();
+        },
+      ),
     );
   }
 }
@@ -77,6 +85,7 @@ class ParentOverviewView extends StatelessWidget {
     final last = results?.grades.where((g) => g.counted).firstOrNull;
     final missing = homework.items.where((h) => h.status == HomeworkStatus.missing).toList()
       ..sort((a, b) => b.deadlineAt.compareTo(a.deadlineAt));
+    final announcements = recentAnnouncements(context.select((NotificationsCubit c) => c.state.items), sl.get<Now>()(), studentId: child.studentId);
     void openResults() => context.push(Uri(path: Routes.parentResults, queryParameters: {Routes.childParam: child.studentId}).toString());
     void select(String studentId) {
       context.read<MyPlanningCubit>().load(studentId: studentId);
@@ -107,6 +116,7 @@ class ParentOverviewView extends StatelessWidget {
             ],
           ],
         ),
+        if (announcements.isNotEmpty) FamilyAnnouncements(items: announcements, now: sl.get<Now>()()),
         // On a computer the average and the four tiles sit side by side; one under the other on phones.
         PairedBlocks(
           equalHeight: false,

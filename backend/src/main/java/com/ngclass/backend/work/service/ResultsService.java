@@ -86,11 +86,11 @@ public class ResultsService {
 		List<AssignmentRecipient> rows = recipients.findByStudentIdIn(List.of(studentId));
 		Map<UUID, Assignment> byId = rows.isEmpty() ? Map.of() : assignments.findByIdIn(rows.stream().map(AssignmentRecipient::getAssignmentId).toList()).stream()
 				.collect(Collectors.toMap(Assignment::getId, Function.identity()));
-		List<AssignmentRecipient> work = rows.stream().filter(r -> byId.get(r.getAssignmentId()).getSubmissionMode() == SubmissionMode.FILE).toList();
+		List<AssignmentRecipient> work = rows.stream().filter(r -> byId.get(r.getAssignmentId()).getSubmissionMode() != SubmissionMode.NONE).toList();
 		Map<UUID, UUID> subjectOfItem = items.findAllById(work.stream().map(r -> byId.get(r.getAssignmentId()).getContentItemId()).collect(Collectors.toSet()))
 				.stream()
 				.collect(Collectors.toMap(ContentItem::getId, ContentItem::getSubjectId));
-		Map<UUID, Submission> latest = homework.latestSubmissions(work);
+		Map<UUID, HomeworkService.Sent> latest = homework.sent(work);
 
 		// The subjects of the child's groups, and any subject with homework.
 		Set<UUID> subjectIds = new LinkedHashSet<>();
@@ -112,14 +112,15 @@ public class ResultsService {
 				.toList());
 	}
 
-	private static SubjectResult result(Subject subject, List<AssignmentRecipient> rows, Map<UUID, Assignment> byId, Map<UUID, Submission> latest,
+	private static SubjectResult result(Subject subject, List<AssignmentRecipient> rows, Map<UUID, Assignment> byId, Map<UUID, HomeworkService.Sent> latest,
 			List<GradeItem> tests, Integer attendanceRate, Instant now) {
 		List<GradeItem> grades = java.util.stream.Stream.concat(
 						rows.stream()
 								.filter(r -> r.getStatus() == HomeworkStatus.CORRECTED && r.getScore() != null)
 								.map(r -> {
 									Assignment a = byId.get(r.getAssignmentId());
-									return new GradeItem("HOMEWORK", a.getId(), null, a.getTitle(), r.getCorrectedAt(), r.getScore(), a.getMaxScore(),
+									String source = a.getSubmissionMode() == SubmissionMode.QUIZ ? "QUIZ" : "HOMEWORK";
+									return new GradeItem(source, a.getId(), null, a.getTitle(), r.getCorrectedAt(), r.getScore(), a.getMaxScore(),
 											Grades.on20(r.getScore(), a.getMaxScore()), r.getComment(), false);
 								}),
 						tests.stream())

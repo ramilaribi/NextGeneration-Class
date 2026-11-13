@@ -29,11 +29,15 @@ public class FileLinks {
 	private final byte[] key;
 	private final Clock clock;
 
-	/** What a link opens: a library document, a pupil's submitted work, or the teacher's corrected copy (spec 06). */
+	/**
+	 * What a link opens: a library document, a pupil's submitted work, the teacher's corrected copy (spec 06),
+	 * or a picture inside a page written in the app (release 3).
+	 */
 	public enum Kind {
 		CONTENT('c'),
 		SUBMISSION('s'),
-		CORRECTION('k');
+		CORRECTION('k'),
+		PICTURE('i');
 
 		private final char code;
 
@@ -72,6 +76,11 @@ public class FileLinks {
 	/** The teacher's corrected copy, by the pupil's recipient row. */
 	public String correctionLink(UUID recipientId, int page) {
 		return link(Kind.CORRECTION, recipientId, page);
+	}
+
+	/** A picture of a page, by its file: only handed out with a page the reader may open. */
+	public String pictureLink(UUID fileId) {
+		return link(Kind.PICTURE, fileId, 1);
 	}
 
 	private String link(Kind kind, UUID id, int page) {

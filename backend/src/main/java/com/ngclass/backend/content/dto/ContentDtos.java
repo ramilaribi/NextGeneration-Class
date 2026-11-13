@@ -1,11 +1,13 @@
 package com.ngclass.backend.content.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.ngclass.backend.common.LocalizedText;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /** The library (spec 04) and the pupil's and parent's "Cours". */
@@ -45,7 +47,28 @@ public final class ContentDtos {
 	public record ShareRequest(@NotNull List<UUID> groupIds) {
 	}
 
-	/** [kind]: PDF, IMAGE or WORD. [status]: DRAFT, PUBLISHED or ARCHIVED. */
+	/** A page written in the app (release 3): where it sits and its tag. It starts empty, as a draft. */
+	public record PageRequest(
+			@NotBlank @Size(max = 160) String title,
+			@NotNull UUID subjectId,
+			@NotNull UUID levelId,
+			UUID chapterId,
+			@NotBlank String tag) {
+	}
+
+	/** What the editor saves: both documents whole (Delta operations), the page and its Corrigé. */
+	public record PageSave(@NotNull JsonNode body, @NotNull JsonNode answerBody) {
+	}
+
+	/** The editor's page: its library row, both documents, and signed links to its pictures by id. */
+	public record PageResponse(ContentItemResponse item, JsonNode body, JsonNode answerBody, Map<UUID, String> pictureUrls) {
+	}
+
+	/** A picture uploaded for a page: the Delta names it by [id]; [url] shows it for half an hour. */
+	public record PictureResponse(UUID id, String url) {
+	}
+
+	/** [kind]: PDF, IMAGE, WORD or PAGE. [status]: DRAFT, PUBLISHED or ARCHIVED. */
 	public record ContentItemResponse(
 			UUID id,
 			String title,
@@ -87,7 +110,8 @@ public final class ContentDtos {
 
 	/**
 	 * What the viewer needs. Links are relative to the API base and signed: they work without the access
-	 * token for half an hour. [pageUrls] is empty for a Word file, which only downloads.
+	 * token for half an hour. [pageUrls] is empty for a Word file, which only downloads. A page written in
+	 * the app has its [body] and the links to its pictures instead, never its Corrigé.
 	 */
 	public record ContentViewResponse(
 			UUID id,
@@ -100,6 +124,8 @@ public final class ContentDtos {
 			String fileName,
 			long sizeBytes,
 			List<String> pageUrls,
-			String downloadUrl) {
+			String downloadUrl,
+			JsonNode body,
+			Map<UUID, String> pictureUrls) {
 	}
 }

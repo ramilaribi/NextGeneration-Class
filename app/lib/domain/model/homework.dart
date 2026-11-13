@@ -7,7 +7,8 @@ import 'session.dart';
 enum HomeworkStatus { todo, submitted, late, missing, corrected }
 
 /// Photos or a PDF to send, or something to read only (no status).
-enum SubmissionMode { file, none }
+/// Photos or a PDF to send, nothing to send, or a quiz taken online (release 3).
+enum SubmissionMode { file, none, quiz }
 
 class StatusCounts extends Equatable {
   const StatusCounts({this.todo = 0, this.submitted = 0, this.late = 0, this.missing = 0, this.corrected = 0});

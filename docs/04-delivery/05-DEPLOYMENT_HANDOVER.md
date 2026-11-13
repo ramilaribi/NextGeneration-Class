@@ -1,5 +1,7 @@
 # Delivery 05. Deployment handover
 
+**Update 2026-11-13 (product track, merged with this track):** the owner chose the host: **OVHcloud VPS-1, monthly, France, `.com` at OVHcloud, web platform only** (`05-DEPLOYMENT.md`, step-by-step guide `05-DEPLOYMENT_GUIDE.pdf`). Your CI/CD and production changes were combined with the product track's (branch `release3-quizzes`): one `docker-compose.prod.yml` with your health checks, `--wait` and web image, plus memory and log limits, `/health` and no-cache headers in the Caddyfile, a backup that writes as root and can copy off-site, and `infra/deploy.sh` (+ `server-setup.sh`, `make-env.sh`) as a second way to start the same stack from a Mac. Section 7 items 1 and 3 are done (your `UserDetailsServiceAutoConfiguration` exclusion and CD job). See "Two ways to deploy" in `05-DEPLOYMENT.md` before running the runner on the server.
+
 Last update: 2026-10-20 · Written for the next agent working on the **deployment track** (environment, CI, CD, server). The product track (features, Release 3) keeps using `docs/HANDOVER.md` and `docs/NEXT_AGENT_PROMPT.md`.
 
 ## 1. Who and what

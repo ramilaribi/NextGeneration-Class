@@ -20,6 +20,12 @@ import com.ngclass.backend.people.repository.StudentRepository;
 import com.ngclass.backend.planning.service.PlanningService;
 import com.ngclass.backend.school.domain.Subject;
 import com.ngclass.backend.school.repository.SubjectRepository;
+import com.ngclass.backend.content.domain.ContentType;
+import com.ngclass.backend.quiz.domain.Quiz;
+import com.ngclass.backend.quiz.domain.QuizAttempt;
+import com.ngclass.backend.quiz.repository.QuizAttemptRepository;
+import com.ngclass.backend.quiz.repository.QuizRepository;
+import com.ngclass.backend.quiz.service.QuizRules;
 import com.ngclass.backend.work.domain.Assignment;
 import com.ngclass.backend.work.domain.AssignmentRecipient;
 import com.ngclass.backend.work.domain.HomeworkStatus;
@@ -61,6 +67,8 @@ public class HomeworkService {
 	private final AssignmentRepository assignments;
 	private final AssignmentRecipientRepository recipients;
 	private final SubmissionRepository submissions;
+	private final QuizRepository quizzes;
+	private final QuizAttemptRepository quizAttempts;
 	private final ContentService contents;
 	private final ContentItemRepository items;
 	private final GroupService groupService;
@@ -100,6 +108,16 @@ public class HomeworkService {
 		}
 		ClassGroup group = groupService.require(request.groupId());
 		SubmissionMode mode = mode(request.submissionMode());
+		// A quiz is taken online, and only a quiz is: its grade is out of its total points.
+		if (item.isQuiz() != (mode == SubmissionMode.QUIZ)) {
+			throw ApiException.badRequest("quiz_mode_mismatch");
+		}
+		int maxScore = request.maxScore() == null ? 20 : request.maxScore();
+		if (item.isQuiz()) {
+			Quiz quiz = quizzes.findById(item.getId()).orElseThrow(() -> ApiException.notFound("content_not_found"));
+			QuizRules.requireComplete(quiz.getQuestions());
+			maxScore = QuizRules.totalPoints(quiz.getQuestions());
+		}
 		Instant now = clock.instant();
 		if (!request.deadlineAt().isAfter(now)) {
 			throw ApiException.badRequest("deadline_past");
@@ -119,7 +137,7 @@ public class HomeworkService {
 				.title(request.title().trim())
 				.instructions(request.instructions() == null || request.instructions().isBlank() ? null : request.instructions().trim())
 				.deadlineAt(request.deadlineAt())
-				.maxScore(request.maxScore() == null ? 20 : request.maxScore())
+				.maxScore(maxScore)
 				.submissionMode(mode)
 				.allowLate(request.allowLate())
 				.wholeGroup(wholeGroup)
@@ -142,19 +160,19 @@ public class HomeworkService {
 		List<AssignmentRecipient> rows = recipients.findByAssignmentId(id);
 		Map<UUID, Student> studentById = students.findByIdIn(rows.stream().map(AssignmentRecipient::getStudentId).toList()).stream()
 				.collect(Collectors.toMap(Student::getId, Function.identity()));
-		Map<UUID, Submission> latest = latestSubmissions(rows);
+		Map<UUID, Sent> latest = sent(rows);
 		Instant now = clock.instant();
 		List<RecipientRow> out = rows.stream()
 				.map(r -> {
 					Student s = studentById.get(r.getStudentId());
-					Submission sub = latest.get(r.getId());
+					Sent sub = latest.get(r.getId());
 					return new RecipientRow(
 							r.getStudentId(),
 							s.getUser().getFirstName(),
 							s.getUser().getLastName(),
 							status(r, assignment, now),
-							sub == null ? null : sub.getSubmittedAt(),
-							sub == null ? null : sub.getId(),
+							sub == null ? null : sub.submittedAt(),
+							sub == null ? null : sub.id(),
 							r.getStatus() == HomeworkStatus.CORRECTED ? r.getScore() : null);
 				})
 				.sorted(Comparator.comparing(RecipientRow::lastName, String.CASE_INSENSITIVE_ORDER).thenComparing(RecipientRow::firstName, String.CASE_INSENSITIVE_ORDER))
@@ -230,11 +248,31 @@ public class HomeworkService {
 				file.getOriginalName(),
 				file.getSizeBytes(),
 				IntStream.rangeClosed(1, pages).mapToObj(link).toList(),
-				link.apply(0));
+				link.apply(0),
+				null,
+				Map.of());
 	}
 
 	static String status(AssignmentRecipient r, Assignment a, Instant now) {
 		return a.getSubmissionMode() == SubmissionMode.NONE ? null : r.statusAt(a, now).name();
+	}
+
+	/** What was last sent for a pupil: a file (its submission id) or a quiz attempt (its attempt id). */
+	public record Sent(UUID id, Instant submittedAt) {
+	}
+
+	/** The last file or quiz attempt sent of each pupil, by recipient id. */
+	Map<UUID, Sent> sent(List<AssignmentRecipient> rows) {
+		Map<UUID, Sent> out = new HashMap<>();
+		latestSubmissions(rows).forEach((recipientId, s) -> out.put(recipientId, new Sent(s.getId(), s.getSubmittedAt())));
+		if (!rows.isEmpty()) {
+			for (QuizAttempt a : quizAttempts.findByRecipientIdInOrderByAttemptNoAsc(rows.stream().map(AssignmentRecipient::getId).toList())) {
+				if (a.isSubmitted()) {
+					out.put(a.getRecipientId(), new Sent(a.getId(), a.getSubmittedAt()));
+				}
+			}
+		}
+		return out;
 	}
 
 	Map<UUID, Submission> latestSubmissions(List<AssignmentRecipient> rows) {
@@ -280,7 +318,7 @@ public class HomeworkService {
 				a.getId(),
 				a.getTitle(),
 				a.getContentItemId(),
-				item == null ? FileKind.PDF.name() : item.getFile().kind().name(),
+				item == null ? FileKind.PDF.name() : item.kindName(),
 				PlanningService.ref(group),
 				a.isWholeGroup(),
 				a.getDeadlineAt(),

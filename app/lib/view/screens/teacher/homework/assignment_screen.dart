@@ -83,7 +83,7 @@ class _Content extends StatelessWidget {
           ),
         ),
         _Header(detail: detail),
-        if (a.mode == SubmissionMode.file) _Tiles(counts: a.counts),
+        if (a.mode != SubmissionMode.none) _Tiles(counts: a.counts),
         if (a.instructions?.trim().isNotEmpty ?? false)
           SectionCard(
             title: l10n.instructionsLabel,
@@ -162,7 +162,8 @@ class _Header extends StatelessWidget {
           ],
         ),
         if (a.mode == SubmissionMode.none) StatusChip(label: l10n.nothingToSubmit, accent: Accent.grey),
-        if (a.allowLate && a.mode == SubmissionMode.file) Text(l10n.lateAccepted, style: quiet),
+        if (a.mode == SubmissionMode.quiz) StatusChip(label: l10n.kindQuiz, accent: Accent.violet),
+        if (a.allowLate && a.mode != SubmissionMode.none) Text(l10n.lateAccepted, style: quiet),
         if (a.closed) StatusChip(label: l10n.closedChip, accent: Accent.grey),
         if (a.average != null) Text(l10n.averageOutOf20(averageText(a.average!)), style: quiet),
       ],
@@ -323,7 +324,7 @@ class _Recipients extends StatelessWidget {
                     children: [
                       const SizedBox(width: 54),
                       Expanded(child: Text(text.upper(l10n.columnStudent), style: style)),
-                      if (detail.assignment.mode == SubmissionMode.file) ...[
+                      if (detail.assignment.mode != SubmissionMode.none) ...[
                         SizedBox(width: 170, child: Text(text.upper(l10n.columnStatus), style: style)),
                         SizedBox(width: 160, child: Text(text.upper(l10n.columnSentAt), style: style)),
                         SizedBox(width: 90, child: Text(text.upper(l10n.columnScore), style: style)),
@@ -370,7 +371,9 @@ class _RecipientLine extends StatelessWidget {
     final Widget? action = switch (r.status) {
       HomeworkStatus.corrected => SecondaryButton(label: l10n.viewCorrection, icon: LucideIcons.eye, height: 38, onPressed: open),
       HomeworkStatus.submitted || HomeworkStatus.late => TonalButton(label: l10n.correctAction, onPressed: open),
-      HomeworkStatus.missing => GhostButton(label: l10n.gradeAnyway, icon: LucideIcons.pencil, height: 38, onPressed: open),
+      // A quiz not taken has nothing to score; a paper copy is graded anyway.
+      HomeworkStatus.missing when mode == SubmissionMode.file =>
+        GhostButton(label: l10n.gradeAnyway, icon: LucideIcons.pencil, height: 38, onPressed: open),
       _ => null,
     };
     final score = r.score == null

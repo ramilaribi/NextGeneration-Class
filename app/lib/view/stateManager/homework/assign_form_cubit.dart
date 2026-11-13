@@ -59,6 +59,9 @@ class AssignFormState extends Equatable {
 
   ContentDocument? get document => documents.where((d) => d.id == contentItemId).firstOrNull;
 
+  /// A quiz: taken online, no choice of what to send.
+  bool get isQuiz => document?.kind == FileKind.quiz;
+
   DateTime get deadlineAt => TunisTime.instant(date, time);
 
   AssignFormState copyWith({
@@ -194,7 +197,7 @@ class AssignFormCubit extends Cubit<AssignFormState> {
 
   void setInstructions(String value) => emit(state.copyWith(instructions: value));
 
-  /// The homework given, or null with the reason in the state.
+  /// The homework given, or null with the reason in the state. A quiz is taken online, graded out of its points.
   Future<Assignment?> submit() async {
     if (state.submitting) return null;
     final errors = {
@@ -217,7 +220,7 @@ class AssignFormCubit extends Cubit<AssignFormState> {
           groupId: state.groupId!,
           studentIds: state.someStudents ? state.studentIds : const [],
           deadlineAt: state.deadlineAt,
-          mode: state.mode,
+          mode: state.isQuiz ? SubmissionMode.quiz : (state.mode == SubmissionMode.quiz ? SubmissionMode.file : state.mode),
           allowLate: state.allowLate,
           instructions: state.instructions,
         ),

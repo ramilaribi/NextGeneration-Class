@@ -21,6 +21,9 @@ abstract interface class ContentRepository {
 
   Future<void> archive(String id);
 
+  /// "Dupliquer": a new draft in the same place, shared with nobody (a quiz keeps its settings and questions).
+  Future<ContentDocument> duplicate(String id);
+
   /// For anyone allowed to read the document; opening it takes "Nouveau" off for a pupil or a parent.
   Future<DocumentView> view(String id);
 

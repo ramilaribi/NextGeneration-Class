@@ -3362,4 +3362,1155 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get linkCopied => 'Lien copié.';
+
+  @override
+  String get kindPage => 'Page écrite';
+
+  @override
+  String get writeDocument => 'Écrire un document';
+
+  @override
+  String get writeDocumentShort => 'Écrire';
+
+  @override
+  String get writeDocumentSubtitle =>
+      'Une page comme dans Word, écrite ici : titres, formules, tableaux et images. Elle reste un brouillon jusqu\'à « Publier ».';
+
+  @override
+  String get createAndWrite => 'Créer et écrire';
+
+  @override
+  String get pageOnlyYou => 'visible par vous uniquement';
+
+  @override
+  String get pageSaving => 'enregistrement…';
+
+  @override
+  String get pageSavedNow => 'enregistré à l\'instant';
+
+  @override
+  String pageSavedAt(String time) {
+    return 'enregistré à $time';
+  }
+
+  @override
+  String get pageNotSaved => 'pas enregistré';
+
+  @override
+  String pageSheetPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages · A4',
+      one: '1 page · A4',
+      zero: 'A4',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studentPreview => 'Aperçu élève';
+
+  @override
+  String get studentPreviewSubtitle =>
+      'Ce que vos élèves et leurs parents verront. Le corrigé n\'y est pas.';
+
+  @override
+  String get publish => 'Publier';
+
+  @override
+  String get pagePublished =>
+      'Document publié. Partagez-le avec un groupe ou donnez-le en devoir.';
+
+  @override
+  String get toolUndo => 'Annuler la dernière modification';
+
+  @override
+  String get toolRedo => 'Rétablir';
+
+  @override
+  String get toolStyle => 'Style du texte';
+
+  @override
+  String get styleNormal => 'Texte';
+
+  @override
+  String get styleTitle1 => 'Titre 1';
+
+  @override
+  String get styleTitle2 => 'Titre 2';
+
+  @override
+  String get styleTitle3 => 'Titre 3';
+
+  @override
+  String get toolSize => 'Taille du texte';
+
+  @override
+  String get toolBold => 'Gras';
+
+  @override
+  String get toolItalic => 'Italique';
+
+  @override
+  String get toolUnderline => 'Souligné';
+
+  @override
+  String get toolColor => 'Couleur du texte';
+
+  @override
+  String get toolHighlight => 'Surligner';
+
+  @override
+  String get toolNoColor => 'Sans couleur';
+
+  @override
+  String get toolAlignStart => 'Aligner au début de la ligne';
+
+  @override
+  String get toolAlignCenter => 'Centrer';
+
+  @override
+  String get toolAlignEnd => 'Aligner à la fin de la ligne';
+
+  @override
+  String get toolBullets => 'Liste à puces';
+
+  @override
+  String get toolNumbers => 'Liste numérotée';
+
+  @override
+  String get toolTable => 'Tableau';
+
+  @override
+  String get toolPicture => 'Image';
+
+  @override
+  String get toolLines => 'Lignes pour répondre';
+
+  @override
+  String get toolFormula => 'Formule';
+
+  @override
+  String get toolRtl => 'Écrire de droite à gauche';
+
+  @override
+  String get formulaTitle => 'Formule';
+
+  @override
+  String get formulaEscape => 'Échap pour fermer';
+
+  @override
+  String get formulaHint => 'Ex. : 3/4 + 1/2';
+
+  @override
+  String get formulaHelp =>
+      '3/4 devient une fraction, x^2 une puissance, sqrt(9) une racine, * un ×, : un ÷, <= un ≤.';
+
+  @override
+  String get formulaInvalid =>
+      'Cette formule ne se lit pas encore : une parenthèse est-elle restée ouverte ?';
+
+  @override
+  String get formulaPreviewEmpty => 'L\'aperçu de la formule s\'affiche ici.';
+
+  @override
+  String get insert => 'Insérer';
+
+  @override
+  String get formulaFraction => 'Fraction';
+
+  @override
+  String get formulaPower => 'Puissance';
+
+  @override
+  String get formulaIndex => 'Indice';
+
+  @override
+  String get formulaRoot => 'Racine carrée';
+
+  @override
+  String get formulaTimes => 'Multiplié par';
+
+  @override
+  String get formulaDivide => 'Divisé par';
+
+  @override
+  String get formulaLessEq => 'Inférieur ou égal à';
+
+  @override
+  String get formulaGreaterEq => 'Supérieur ou égal à';
+
+  @override
+  String get formulaNotEqual => 'Différent de';
+
+  @override
+  String get formulaPi => 'Pi';
+
+  @override
+  String get formulaDegree => 'Degré';
+
+  @override
+  String get formulaVector => 'Vecteur';
+
+  @override
+  String get formulaAngle => 'Angle';
+
+  @override
+  String get tableTitle => 'Tableau';
+
+  @override
+  String get tableSubtitle =>
+      'La première ligne est l\'en-tête. Une formule s\'écrit entre deux \$ : \$3/4\$.';
+
+  @override
+  String get tableCellHint => 'Vide';
+
+  @override
+  String get tableAddRow => 'Ajouter une ligne';
+
+  @override
+  String get tableAddColumn => 'Ajouter une colonne';
+
+  @override
+  String get tableRemoveRow => 'Retirer la dernière ligne';
+
+  @override
+  String get tableRemoveColumn => 'Retirer la dernière colonne';
+
+  @override
+  String get tableDelete => 'Supprimer le tableau';
+
+  @override
+  String get linesTitle => 'Lignes pour répondre';
+
+  @override
+  String linesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lignes',
+      one: '1 ligne',
+      zero: 'Aucune ligne',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get linesDelete => 'Retirer les lignes';
+
+  @override
+  String get pictureTitle => 'Image';
+
+  @override
+  String get pictureTake => 'Prendre une photo';
+
+  @override
+  String get pictureChoose => 'Choisir une image';
+
+  @override
+  String get pictureSending => 'Envoi de l\'image…';
+
+  @override
+  String get pictureMissing => 'Image introuvable';
+
+  @override
+  String get pictureDelete => 'Retirer l\'image';
+
+  @override
+  String get pictureSizeSmall => 'Petite';
+
+  @override
+  String get pictureSizeMedium => 'Moyenne';
+
+  @override
+  String get pictureSizeFull => 'Pleine largeur';
+
+  @override
+  String get sheetNameLine => 'Nom et prénom :';
+
+  @override
+  String get pagePlaceholder =>
+      'Écrivez ici. La barre ajoute titres, listes, tableaux, images et formules.';
+
+  @override
+  String get unsavedPageText =>
+      'Les dernières modifications n\'ont pas pu être enregistrées. Restez sur la page pour réessayer.';
+
+  @override
+  String get stay => 'Rester';
+
+  @override
+  String get acceptedAnswers => 'Réponses acceptées :';
+
+  @override
+  String get acceptedHint => 'Ex. : 2,5';
+
+  @override
+  String get addAnswer => 'Ajouter';
+
+  @override
+  String get addChoice => 'Ajouter un choix';
+
+  @override
+  String addQuestions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ajouter $count questions',
+      one: 'Ajouter 1 question',
+      zero: 'Ajouter',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get answerFalse => 'Faux';
+
+  @override
+  String get answerTrue => 'Vrai';
+
+  @override
+  String get answerNotSaved =>
+      'Réponse pas encore enregistrée : vérifiez la connexion.';
+
+  @override
+  String get answerSaved => 'Réponse enregistrée';
+
+  @override
+  String get answeredPupil => 'Tu as répondu :';
+
+  @override
+  String get answeredTeacher => 'A répondu :';
+
+  @override
+  String get answersAfterDeadline => 'Après la date';
+
+  @override
+  String get answersLaterNote =>
+      'Les bonnes réponses ne sont pas encore affichées.';
+
+  @override
+  String get answersNever => 'Jamais';
+
+  @override
+  String get answersRightAway => 'Tout de suite';
+
+  @override
+  String attemptNumber(int number) {
+    return 'Tentative $number';
+  }
+
+  @override
+  String attemptsAllowed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tentatives',
+      one: '1 tentative',
+      zero: 'Aucune tentative',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get blankDialogHint => 'Une réponse par ligne, ex. : numérateur';
+
+  @override
+  String get blankDialogSubtitle =>
+      'Chaque ligne est une réponse acceptée. Majuscules et accents ne comptent pas.';
+
+  @override
+  String get blankDialogTitle => 'Le trou';
+
+  @override
+  String get blankEdit => 'Modifier les réponses du trou';
+
+  @override
+  String get blankEmpty => 'trou sans réponse';
+
+  @override
+  String get blankRemove => 'Retirer le trou';
+
+  @override
+  String get blankSelectFirst =>
+      'Sélectionnez d\'abord le mot à cacher, puis « Trou ».';
+
+  @override
+  String blanksCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count trous',
+      one: '1 trou',
+      zero: 'Aucun trou',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get blanksHint =>
+      'Sélectionnez un mot puis « Trou » : les élèves le tapent. Les points se partagent entre les trous.';
+
+  @override
+  String get blanksPlaceholder =>
+      'Écrivez la phrase, puis transformez des mots en trous.';
+
+  @override
+  String get choiceEmpty => 'Choix vide';
+
+  @override
+  String choiceHint(int number) {
+    return 'Choix $number, ex. : 3/4';
+  }
+
+  @override
+  String get choiceRightHint => 'Cliquez le rond de la bonne réponse.';
+
+  @override
+  String correctedAlone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'corrigées seules',
+      one: 'corrigée seule',
+      zero: 'corrigée seule',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get createQuiz => 'Créer un quiz';
+
+  @override
+  String get createQuizAndWrite => 'Créer et écrire les questions';
+
+  @override
+  String get deleteQuestion => 'Supprimer la question';
+
+  @override
+  String get duplicate => 'Dupliquer';
+
+  @override
+  String get duplicateQuiz => 'Dupliquer le quiz';
+
+  @override
+  String get durationMinutesHint => 'Ex. : 20';
+
+  @override
+  String get durationNone => 'Sans limite';
+
+  @override
+  String get durationOther => 'Autre';
+
+  @override
+  String get explanationHint => 'Ex. : 3/5 = 21/35 et 4/7 = 20/35';
+
+  @override
+  String get explanationLabel => 'Explication, montrée avec les réponses';
+
+  @override
+  String get gapHint => 'ta réponse';
+
+  @override
+  String get gapsInstruction => 'Tape le mot qui manque dans chaque trou.';
+
+  @override
+  String get giveShort => 'Donner';
+
+  @override
+  String get kindQuiz => 'Quiz';
+
+  @override
+  String get leavePreviewText => 'Rien n\'est enregistré dans l\'aperçu.';
+
+  @override
+  String get leaveQuiz => 'Quitter';
+
+  @override
+  String get leaveQuizText =>
+      'Tes réponses sont enregistrées : tu pourras reprendre le quiz. Le minuteur continue.';
+
+  @override
+  String get leaveQuizTitle => 'Quitter le quiz ?';
+
+  @override
+  String get markRightChoice => 'Marquer comme bonne réponse';
+
+  @override
+  String get matchingRulesHint =>
+      '2,5 et 2.5 comptent pareil ; majuscules, accents et point final ne comptent pas.';
+
+  @override
+  String minutesShort(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get minutesUnit => 'min';
+
+  @override
+  String get modeQuizHint =>
+      'Un quiz se fait en ligne. Il est noté sur ses points et corrigé tout seul ; les questions ouvertes vont dans « À corriger ».';
+
+  @override
+  String get moveDown => 'Descendre';
+
+  @override
+  String get moveUp => 'Monter';
+
+  @override
+  String get newQcm => 'Nouveau QCM';
+
+  @override
+  String get newQuiz => 'Nouveau quiz';
+
+  @override
+  String get newQuizSubtitle =>
+      'Où il se range ; vous écrivez les questions ensuite.';
+
+  @override
+  String get nextQuestion => 'Suivante';
+
+  @override
+  String get noAcceptedAnswer => 'aucune pour l\'instant';
+
+  @override
+  String get noAnswer => 'Pas de réponse.';
+
+  @override
+  String get noAttemptLeft => 'Plus de tentative possible pour ce quiz.';
+
+  @override
+  String get openAnswerHint => 'Écris ta réponse ici.';
+
+  @override
+  String get openHint =>
+      'Vous la corrigez dans « À corriger » ; le reste est corrigé tout seul.';
+
+  @override
+  String pointsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count points',
+      one: '1 point',
+      zero: '0 point',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String pointsShort(int count, String points) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$points pts',
+      one: '$points pt',
+      zero: '$points pt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String pointsWord(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'points',
+      one: 'point',
+      zero: 'point',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get prevQuestion => 'Précédente';
+
+  @override
+  String get qcmNoQuestionHint =>
+      'Ajoutez un choix multiple, ou tapez-en plusieurs d\'un coup avec « Saisie rapide QCM ».';
+
+  @override
+  String get questionActions => 'Actions de la question';
+
+  @override
+  String get questionBlanks => 'Texte à trous';
+
+  @override
+  String get questionIncomplete =>
+      'Question pas terminée : un énoncé et sa bonne réponse.';
+
+  @override
+  String get questionMcq => 'Choix multiple';
+
+  @override
+  String questionNumber(int number) {
+    return 'Question $number';
+  }
+
+  @override
+  String questionOf(int number, int count) {
+    return 'Question $number sur $count';
+  }
+
+  @override
+  String get questionOpen => 'Question ouverte';
+
+  @override
+  String get questionPlaceholder =>
+      'Écrivez la question. ƒx ajoute une formule.';
+
+  @override
+  String get questionPoints => 'Points de la question';
+
+  @override
+  String get questionShort => 'Réponse courte';
+
+  @override
+  String get questionTextEmpty => 'Énoncé à écrire';
+
+  @override
+  String get questionTrueFalse => 'Vrai / Faux';
+
+  @override
+  String questionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count questions',
+      one: '1 question',
+      zero: 'Aucune question',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String questionsWord(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'questions',
+      one: 'question',
+      zero: 'question',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get quickQcmHint => 'Quel est le plus grand nombre ?\n1/3\n1/2\n1/4';
+
+  @override
+  String get quickQcmNote =>
+      'Cliquez le rond de la bonne réponse. 3/4 tapé devient une fraction ; après l\'ajout, chaque question garde son ruban (ƒx, images).';
+
+  @override
+  String get quickQcmPickRight => 'Cliquez la bonne réponse.';
+
+  @override
+  String quickQcmReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count questions prêtes · 1 point chacune, modifiable',
+      one: '1 question prête · 1 point chacune, modifiable',
+      zero: 'Aucune question prête',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get quickQcmSubtitle =>
+      'Une ligne pour la question, puis une ligne par choix. Une ligne vide : question suivante.';
+
+  @override
+  String get quickQcmTitle => 'Saisie rapide QCM';
+
+  @override
+  String get quizAttempts => 'Tentatives';
+
+  @override
+  String get quizClosed => 'Ce quiz est clos.';
+
+  @override
+  String get quizCorrectedAlone =>
+      'Tout est corrigé automatiquement : rien à noter ici.';
+
+  @override
+  String get quizDeadlinePassed => 'La date limite est passée.';
+
+  @override
+  String get quizDuplicated => 'Copie créée : c\'est un nouveau brouillon.';
+
+  @override
+  String get quizDuration => 'Durée';
+
+  @override
+  String get quizEmptyError => 'Ajoutez au moins une question.';
+
+  @override
+  String get quizIncompleteError =>
+      'Une question n\'est pas terminée : elle est marquée en rouge.';
+
+  @override
+  String quizKept(String score, int max) {
+    return 'Note retenue : $score / $max';
+  }
+
+  @override
+  String get quizLockedNote =>
+      'Un élève a commencé ce quiz : ses questions ne changent plus. Dupliquez-le pour une nouvelle version.';
+
+  @override
+  String get quizLockedShort => 'questions figées';
+
+  @override
+  String get quizNoQuestion => 'Pas encore de question';
+
+  @override
+  String get quizNoQuestionHint =>
+      'Choisissez un type ci-dessous : choix multiple, vrai / faux, réponse courte, texte à trous ou question ouverte.';
+
+  @override
+  String get quizNotTakenYet => 'Pas encore de tentative envoyée.';
+
+  @override
+  String get quizPublished => 'Quiz publié.';
+
+  @override
+  String get quizScoreKept => 'Note retenue';
+
+  @override
+  String quizScoreOutOf(String score, int max) {
+    return '$score sur $max : toutes les questions sont corrigées.';
+  }
+
+  @override
+  String get quizSentTitle => 'C\'est envoyé !';
+
+  @override
+  String get quizSettings => 'Réglages';
+
+  @override
+  String get quizShowAnswers => 'Montrer les réponses';
+
+  @override
+  String get quizShuffle => 'Questions dans le désordre';
+
+  @override
+  String quizWaitingOne(int number, int points) {
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other:
+          'La question $number attend la correction de l\'enseignante ($points points).',
+      one:
+          'La question $number attend la correction de l\'enseignante (1 point).',
+      zero: 'La question $number attend la correction de l\'enseignante.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String quizWaitingSome(int points) {
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: '$points points attendent la correction de l\'enseignante.',
+      one: '1 point attend la correction de l\'enseignante.',
+      zero: 'Rien n\'attend la correction.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get removeAnswer => 'Retirer cette réponse';
+
+  @override
+  String get removeChoice => 'Retirer ce choix';
+
+  @override
+  String get resumeQuiz => 'Reprendre le quiz';
+
+  @override
+  String get rightAnswerIs => 'Bonne réponse :';
+
+  @override
+  String get scoreBest => 'La meilleure';
+
+  @override
+  String get scoreLast => 'La dernière';
+
+  @override
+  String scoreOutOf(int max) {
+    return 'Entre 0 et $max, par demi-points.';
+  }
+
+  @override
+  String get sendQuiz => 'Envoyer';
+
+  @override
+  String get sendQuizAll => 'Toutes les questions ont une réponse.';
+
+  @override
+  String sendQuizMissing(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count questions sont sans réponse.',
+      one: '1 question est sans réponse.',
+      zero: 'Toutes les questions ont une réponse.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sendQuizTitle => 'Envoyer le quiz ?';
+
+  @override
+  String get shortAnswerHint => 'Ta réponse, ex. : 2,5';
+
+  @override
+  String get startAgain => 'Nouvelle tentative';
+
+  @override
+  String get startQuiz => 'Commencer le quiz';
+
+  @override
+  String timeLeft(String time) {
+    return 'Temps restant $time';
+  }
+
+  @override
+  String timerNote(int minutes) {
+    return '$minutes minutes dès le début : le quiz s\'envoie tout seul à la fin.';
+  }
+
+  @override
+  String get toolBlank => 'Trou';
+
+  @override
+  String get trueFalseHint => 'La bonne réponse :';
+
+  @override
+  String get unsavedQuizText =>
+      'Les dernières modifications n\'ont pas pu être enregistrées. Restez sur le quiz pour réessayer.';
+
+  @override
+  String waitingCorrection(int points) {
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: 'En attente de correction · $points points',
+      one: 'En attente de correction · 1 point',
+      zero: 'En attente de correction',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get waitingShort => 'en attente';
+
+  @override
+  String get wellDone => 'Bien joué !';
+
+  @override
+  String wellDoneName(String name) {
+    return 'Bien joué, $name !';
+  }
+
+  @override
+  String get documentDuplicated => 'Copie créée : c\'est un nouveau brouillon.';
+
+  @override
+  String get allLabel => 'Toutes';
+
+  @override
+  String get announcementActions => 'Actions de l\'annonce';
+
+  @override
+  String get announcementAudience => 'Qui la reçoit';
+
+  @override
+  String get announcementBodyHint =>
+      'Ex. : Jeudi 15 octobre, sortie au musée. Départ de l\'école à 9 h.';
+
+  @override
+  String get announcementDeleted => 'Annonce supprimée.';
+
+  @override
+  String get announcementFor => 'Pour qui';
+
+  @override
+  String get announcementLabel => 'Annonce';
+
+  @override
+  String get announcementOneWayNote =>
+      'Elle arrive dans leurs notifications et reste 7 jours sur leur accueil. Pas de réponse possible : les familles gardent leurs moyens habituels.';
+
+  @override
+  String announcementSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Annonce envoyée à $count personnes.',
+      one: 'Annonce envoyée à 1 personne.',
+      zero: 'Annonce envoyée.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get announcementTitleHint => 'Ex. : Sortie au musée jeudi';
+
+  @override
+  String get announcementsEmptyHint =>
+      'Un message à un groupe, à un élève ou à leurs parents : une sortie, un jour sans séance, des félicitations.';
+
+  @override
+  String get announcementsEmptyTitle => 'Pas encore d\'annonce';
+
+  @override
+  String get announcementsNoneForGroup => 'Aucune annonce pour ce groupe.';
+
+  @override
+  String get announcementsSubtitle =>
+      'Un message à un groupe, à un élève ou à leurs parents. Il reste 7 jours sur leur accueil.';
+
+  @override
+  String get audienceBoth => 'Élèves et parents';
+
+  @override
+  String get audienceParents => 'Parents';
+
+  @override
+  String get audiencePupils => 'Élèves';
+
+  @override
+  String get choosePupil => 'Choisir un élève';
+
+  @override
+  String get chooseRecipients => 'Choisissez au moins un groupe, ou un élève.';
+
+  @override
+  String get deleteAnnouncementText =>
+      'Personne ne l\'a encore lue : elle disparaît de leurs notifications.';
+
+  @override
+  String get deleteAnnouncementTitle => 'Supprimer l\'annonce ?';
+
+  @override
+  String get everyoneRead => 'Tout le monde l\'a lue.';
+
+  @override
+  String get messageLabel => 'Message';
+
+  @override
+  String get newAnnouncement => 'Nouvelle annonce';
+
+  @override
+  String get newAnnouncementShort => 'Nouvelle';
+
+  @override
+  String get newAnnouncementSubtitle =>
+      'Elle arrive dans leurs notifications et sur leur accueil.';
+
+  @override
+  String get notReadYet => 'Pas encore lue par';
+
+  @override
+  String get onePupil => 'Un élève';
+
+  @override
+  String get parentsOnlyHint =>
+      'Une annonce aux parents n\'est pas visible par les élèves.';
+
+  @override
+  String get previewForFamilies => 'Ce que voient les familles';
+
+  @override
+  String get previewForParents => 'Ce que voient les parents';
+
+  @override
+  String get previewForPupils => 'Ce que voient les élèves';
+
+  @override
+  String get pupilRole => 'Élève';
+
+  @override
+  String pupilsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count élèves',
+      one: '1 élève',
+      zero: 'aucun élève',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get pupilsNeedLoginHint =>
+      'Seuls les élèves qui ont leur propre accès la reçoivent.';
+
+  @override
+  String readCount(int read, int total) {
+    return '$read / $total lus';
+  }
+
+  @override
+  String get sendAnnouncement => 'Envoyer';
+
+  @override
+  String get someGroups => 'Des groupes';
+
+  @override
+  String get titleLabel => 'Titre';
+
+  @override
+  String todayAt(String time) {
+    return 'Aujourd\'hui à $time';
+  }
+
+  @override
+  String yesterdayAt(String time) {
+    return 'Hier à $time';
+  }
+
+  @override
+  String get worksheetMenu => 'Imprimer une fiche';
+
+  @override
+  String worksheetTitle(String title) {
+    return 'Fiche : $title';
+  }
+
+  @override
+  String get worksheetPupilVersion => 'version élève';
+
+  @override
+  String get worksheetTeacherVersion => 'version enseignante';
+
+  @override
+  String get worksheetSettings => 'Réglages de la fiche';
+
+  @override
+  String get worksheetSettingsShort => 'Réglages';
+
+  @override
+  String get worksheetFrom => 'À partir de';
+
+  @override
+  String get worksheetFromHint =>
+      'Une page écrite dans l\'application ou un quiz. Une série importée en PDF s\'imprime déjà telle quelle.';
+
+  @override
+  String get worksheetChange => 'Changer';
+
+  @override
+  String get worksheetChooseSource => 'Choisir une page ou un quiz';
+
+  @override
+  String get worksheetNoSource => 'Pas encore de page écrite ni de quiz.';
+
+  @override
+  String get worksheetVersion => 'Version';
+
+  @override
+  String get worksheetPupil => 'Élève';
+
+  @override
+  String get worksheetTeacher => 'Enseignante';
+
+  @override
+  String get worksheetTeacherHint =>
+      'La version enseignante ajoute les bonnes réponses, en vert.';
+
+  @override
+  String get worksheetTitleHint => 'Ex. : Contrôle : les fractions';
+
+  @override
+  String worksheetRevision(String title) {
+    return 'Fiche de révision : $title';
+  }
+
+  @override
+  String worksheetTest(String title) {
+    return 'Contrôle : $title';
+  }
+
+  @override
+  String get worksheetHeader => 'En-tête';
+
+  @override
+  String get worksheetShowPlace => 'Matière, niveau et chapitre';
+
+  @override
+  String worksheetShowDate(String date) {
+    return 'Date : $date';
+  }
+
+  @override
+  String worksheetShowTeacher(String name) {
+    return 'Votre nom : $name';
+  }
+
+  @override
+  String get worksheetShowNameLine => 'Ligne « Nom et prénom »';
+
+  @override
+  String get worksheetShowNameMark => 'Ligne « Nom et prénom » et la note';
+
+  @override
+  String get worksheetSave => 'L\'enregistrer dans Contenus';
+
+  @override
+  String get worksheetSaveHint =>
+      'Comme une fiche (PDF), à partager ou donner en devoir';
+
+  @override
+  String get worksheetDownload => 'Télécharger le PDF';
+
+  @override
+  String get worksheetPrint => 'Imprimer';
+
+  @override
+  String get worksheetShare => 'Partager';
+
+  @override
+  String get worksheetSaved => 'Fiche enregistrée dans Contenus.';
+
+  @override
+  String get worksheetFailed =>
+      'La fiche n\'a pas pu être préparée. Réessayez.';
+
+  @override
+  String get worksheetMarkLabel => 'Note :';
+
+  @override
+  String get worksheetAnswer => 'Réponse :';
+
+  @override
+  String get worksheetOr => ' ou ';
+
+  @override
+  String get worksheetExplanation => 'Explication :';
+
+  @override
+  String get worksheetToCorrect => 'Question ouverte : à corriger.';
+
+  @override
+  String worksheetPoints(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pts',
+      one: '1 pt',
+      zero: '0 pt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get worksheetShort => 'Fiche';
 }

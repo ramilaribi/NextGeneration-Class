@@ -216,6 +216,28 @@ class FakeContentRepository implements ContentRepository {
   @override
   Future<void> archive(String id) async => archived.add(id);
 
+  final List<String> duplicated = [];
+
+  @override
+  Future<ContentDocument> duplicate(String id) async {
+    duplicated.add(id);
+    final source = library_.documents.firstWhere((d) => d.id == id);
+    return ContentDocument(
+      id: '$id-copy',
+      title: '${source.title} (copie)',
+      subjectId: source.subjectId,
+      levelId: source.levelId,
+      chapterId: source.chapterId,
+      tag: source.tag,
+      status: ContentStatus.draft,
+      kind: source.kind,
+      fileName: source.fileName,
+      sizeBytes: source.sizeBytes,
+      pageCount: source.pageCount,
+      updatedAt: source.updatedAt,
+    );
+  }
+
   @override
   Future<DocumentView> view(String id) async {
     if (failure != null) throw failure!;

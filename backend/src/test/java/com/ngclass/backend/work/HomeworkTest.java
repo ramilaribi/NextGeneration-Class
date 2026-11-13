@@ -225,7 +225,9 @@ class HomeworkTest {
 	void refusalsAndEachTeacherInHerOwnSpace() throws Exception {
 		assign(Map.of("deadlineAt", Instant.now().minus(1, ChronoUnit.HOURS).toString()))
 				.andExpect(status().isBadRequest()).andExpect(jsonPath("$.code").value("deadline_past"));
-		assign(Map.of("submissionMode", "QUIZ")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.code").value("invalid_submission_mode"));
+		assign(Map.of("submissionMode", "PHOTO")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.code").value("invalid_submission_mode"));
+		// Online is for quizzes only (release 3): a document cannot be taken as a quiz.
+		assign(Map.of("submissionMode", "QUIZ")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.code").value("quiz_mode_mismatch"));
 		String stranger = createStudent("Sami", false, List.of()).at("/student/id").asText();
 		jdbc.update("delete from group_members where student_id = ?::uuid", stranger);
 		assign(Map.of("studentIds", List.of(stranger))).andExpect(status().isBadRequest()).andExpect(jsonPath("$.code").value("not_group_member"));

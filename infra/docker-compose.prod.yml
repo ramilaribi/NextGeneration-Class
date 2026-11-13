@@ -1,14 +1,23 @@
-# Production on one small VPS (docs/03-conception/01-ARCHITECTURE.md).
-# Usage, from infra/: cp .env.example .env (fill it), build the web app
+# Production on one small VPS (docs/03-conception/01-ARCHITECTURE.md, docs/04-delivery/05-DEPLOYMENT.md).
+# Two ways start it, with the same command: ./infra/deploy.sh ubuntu@SERVER from a Mac (settings in infra/.env,
+# written by make-env.sh on the server), or the CI/CD pipeline (.github/workflows/ci.yml, job "deploy", settings
+# from the repository's variables and secrets). By hand, from infra/: build the web app
 # (cd app && flutter build web --release --pwa-strategy=none), then
 #   docker compose -f docker-compose.prod.yml up -d --build --wait
-# The CI/CD pipeline (.github/workflows/ci.yml, job "deploy") runs the same command with its secrets.
 name: ngclass
+
+# Container logs are capped, so months of logs never fill the disk.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
 
 services:
   db:
     image: postgres:16-alpine
     restart: unless-stopped
+    logging: *logging
     environment:
       POSTGRES_DB: ngclass
       POSTGRES_USER: ngclass
@@ -23,6 +32,9 @@ services:
   api:
     build: ../backend
     restart: unless-stopped
+    logging: *logging
+    # The JVM takes 75% of this (Dockerfile), leaving the rest of the 4 GB server to PostgreSQL and Caddy.
+    mem_limit: 1536m
     depends_on:
       db:
         condition: service_healthy
@@ -36,16 +48,17 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
       ALLOWED_ORIGINS: https://${DOMAIN}
-      TEACHER_USERNAME: ${TEACHER_USERNAME:-}
-      TEACHER_PASSWORD: ${TEACHER_PASSWORD:-}
-      TEACHER_FIRST_NAME: ${TEACHER_FIRST_NAME:-}
-      TEACHER_LAST_NAME: ${TEACHER_LAST_NAME:-}
+      # Uploaded files live in the "files" volume, so they survive a rebuild and are in the backups.
+      STORAGE_DIR: /data/files
+      # The owner's account (admin dashboard), created on the first start only.
       ADMIN_USERNAME: ${ADMIN_USERNAME:-}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
       ADMIN_FIRST_NAME: ${ADMIN_FIRST_NAME:-}
       ADMIN_LAST_NAME: ${ADMIN_LAST_NAME:-}
-      # Uploaded documents go to the "files" volume below (the default ./data/files is not writable by the app user).
-      STORAGE_DIR: /data/files
+      TEACHER_USERNAME: ${TEACHER_USERNAME:-}
+      TEACHER_PASSWORD: ${TEACHER_PASSWORD:-}
+      TEACHER_FIRST_NAME: ${TEACHER_FIRST_NAME:-}
+      TEACHER_LAST_NAME: ${TEACHER_LAST_NAME:-}
     volumes:
       - files:/data/files
     # Healthy once Spring answers UP; Caddy waits for it, and `up --wait` fails the deploy if it never does.
@@ -64,12 +77,14 @@ services:
       dockerfile: web.Dockerfile
     image: ngclass-web
     restart: unless-stopped
+    logging: *logging
     depends_on:
       api:
         condition: service_healthy
     ports:
       - "80:80"
       - "443:443"
+      - "443:443/udp"
     environment:
       DOMAIN: ${DOMAIN:?DOMAIN is required}
     volumes:

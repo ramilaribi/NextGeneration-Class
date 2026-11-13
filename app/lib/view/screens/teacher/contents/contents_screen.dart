@@ -85,6 +85,18 @@ class ContentsView extends StatelessWidget {
               height: 44,
               onPressed: () => showChapterDialog(context, subjectId: place?.subjectId, levelId: place?.levelId),
             ),
+            SecondaryButton(
+              key: const Key('write-document'),
+              label: phone ? l10n.writeDocumentShort : l10n.writeDocument,
+              icon: LucideIcons.penLine,
+              onPressed: () => _write(context),
+            ),
+            SecondaryButton(
+              key: const Key('create-quiz'),
+              label: l10n.createQuiz,
+              icon: LucideIcons.listChecks,
+              onPressed: () => _quiz(context),
+            ),
             PrimaryButton(
               label: phone ? l10n.importShort : l10n.importDocument,
               icon: LucideIcons.upload,
@@ -115,7 +127,15 @@ class ContentsView extends StatelessWidget {
                   style: text.style(13, FontWeight.w500, color: BrandColors.slate, height: 1.5),
                 ),
                 const SizedBox(height: 16),
-                PrimaryButton(label: l10n.importDocument, icon: LucideIcons.upload, height: 44, onPressed: () => _upload(context)),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    SecondaryButton(label: l10n.writeDocument, icon: LucideIcons.penLine, onPressed: () => _write(context)),
+                    PrimaryButton(label: l10n.importDocument, icon: LucideIcons.upload, height: 44, onPressed: () => _upload(context)),
+                  ],
+                ),
               ],
             ),
           ),
@@ -146,6 +166,17 @@ class ContentsView extends StatelessWidget {
   static Future<void> _upload(BuildContext context) async {
     final saved = await DocumentFormPanel.upload(context);
     if (saved != null && context.mounted) showNotice(context, AppLocalizations.of(context).documentUploaded);
+  }
+
+  /// A new page, written in its editor; back here, the library shows it as it was left.
+  static Future<void> _write(BuildContext context) async {
+    final library = context.read<LibraryCubit>();
+    if (await DocumentFormPanel.write(context, library: library)) await library.load();
+  }
+
+  static Future<void> _quiz(BuildContext context) async {
+    final library = context.read<LibraryCubit>();
+    if (await DocumentFormPanel.quiz(context, library: library)) await library.load();
   }
 }
 
@@ -772,7 +803,16 @@ class _DocumentCard extends StatelessWidget {
   }
 }
 
-void _open(BuildContext context, ContentDocument document) => context.push(Routes.teacherDocument(document.id));
+/// A file opens in the viewer; a page written in the app or a quiz in its editor (the library follows its changes).
+Future<void> _open(BuildContext context, ContentDocument document) async {
+  if (document.kind != FileKind.page && document.kind != FileKind.quiz) {
+    await context.push(Routes.teacherDocument(document.id));
+    return;
+  }
+  final library = context.read<LibraryCubit>();
+  await context.push(document.kind == FileKind.quiz ? Routes.teacherQuiz(document.id) : Routes.teacherPage(document.id));
+  await library.load();
+}
 
 /// The groups a document or chapter is shared with, as their squares; "Non partagé" otherwise.
 class _SharedSquares extends StatelessWidget {
@@ -827,6 +867,12 @@ class _DocumentMenu extends StatelessWidget {
     if (saved != null && context.mounted) showNotice(context, AppLocalizations.of(context).detailsSaved);
   }
 
+  Future<void> _duplicate(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final failure = await context.read<LibraryCubit>().duplicate(document);
+    if (context.mounted) showNotice(context, failure == null ? l10n.documentDuplicated : failureText(l10n, failure));
+  }
+
   Future<void> _archive(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
     final ok = await confirmAction(
@@ -851,11 +897,13 @@ class _DocumentMenu extends StatelessWidget {
           onPressed: () => _open(context, document),
           child: Text(l10n.actionOpen),
         ),
-        MenuItemButton(
-          leadingIcon: const Icon(LucideIcons.share2, size: 16),
-          onPressed: () => _share(context),
-          child: Text(l10n.actionShare),
-        ),
+        // A quiz reaches pupils as homework only (its answers stay hidden until the deadline).
+        if (document.kind != FileKind.quiz)
+          MenuItemButton(
+            leadingIcon: const Icon(LucideIcons.share2, size: 16),
+            onPressed: () => _share(context),
+            child: Text(l10n.actionShare),
+          ),
         // Only a published document can be given (the server refuses a draft too).
         if (document.published)
           MenuItemButton(
@@ -867,6 +915,20 @@ class _DocumentMenu extends StatelessWidget {
           leadingIcon: const Icon(LucideIcons.pencil, size: 16),
           onPressed: () => _edit(context),
           child: Text(l10n.actionEditDetails),
+        ),
+        // A page written in the app or a quiz prints as a sheet (an uploaded file prints as it is).
+        if (document.kind == FileKind.page || document.kind == FileKind.quiz)
+          MenuItemButton(
+            key: Key('worksheet-${document.id}'),
+            leadingIcon: const Icon(LucideIcons.printer, size: 16),
+            onPressed: () => context.go(Routes.teacherWorksheet(document.kind, document.id)),
+            child: Text(l10n.worksheetMenu),
+          ),
+        MenuItemButton(
+          key: Key('duplicate-${document.id}'),
+          leadingIcon: const Icon(LucideIcons.copy, size: 16),
+          onPressed: () => _duplicate(context),
+          child: Text(l10n.duplicate),
         ),
         MenuItemButton(
           leadingIcon: Icon(LucideIcons.archive, size: 16, color: Accent.red.onSoft),

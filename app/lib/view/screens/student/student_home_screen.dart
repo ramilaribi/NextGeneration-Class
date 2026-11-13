@@ -18,6 +18,7 @@ import '../../stateManager/common/load_status.dart';
 import '../../stateManager/language/language_cubit.dart';
 import '../../stateManager/my_planning/my_planning_cubit.dart';
 import '../../stateManager/notifications/notifications_cubit.dart';
+import '../../widgets/announcement_widgets.dart';
 import '../../widgets/cards.dart';
 import '../../widgets/feedback.dart';
 import '../../widgets/hero_card.dart';
@@ -57,8 +58,10 @@ class StudentHomeView extends StatelessWidget {
     final phone = isPhone(context);
     final firstName = context.select((AuthCubit cubit) => cubit.user?.firstName ?? '');
     final state = context.watch<MyPlanningCubit>().state;
-    final unread = context.select((NotificationsCubit c) => c.unread);
+    final unread = context.select((NotificationsCubit c) => c.unread).where((n) => n.kind != NotificationKind.announcement).toList();
     final whatsNew = unread.isEmpty ? null : _WhatsNew(items: unread, now: state.now);
+    // The teacher's announcements, on top for 7 days (release 4).
+    final announcements = recentAnnouncements(context.select((NotificationsCubit c) => c.state.items), state.now);
     final hero = _NextSessionHero(session: state.next, now: state.now, loading: state.status == LoadStatus.loading);
     final week = state.status == LoadStatus.ready ? _MyWeek(state: state) : null;
     return PageScroll(
@@ -77,6 +80,7 @@ class StudentHomeView extends StatelessWidget {
             ],
           ],
         ),
+        if (announcements.isNotEmpty) FamilyAnnouncements(items: announcements, now: state.now),
         if (state.status == LoadStatus.failure) ...[
           ?whatsNew,
           FailureBanner(state.failure!, onRetry: () => context.read<MyPlanningCubit>().load()),

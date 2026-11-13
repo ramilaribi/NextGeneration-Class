@@ -38,6 +38,7 @@ AppNotification notificationOf(Json json) => AppNotification(
     'EVALUATION_GRADED' => NotificationKind.evaluation,
     'WORK_SUBMITTED' => NotificationKind.workSent,
     'DEADLINE_PASSED' => NotificationKind.deadlinePassed,
+    'ANNOUNCEMENT' => NotificationKind.announcement,
     _ => NotificationKind.cancelled,
   },
   studentId: json['studentId'] as String?,
@@ -58,4 +59,7 @@ AppNotification notificationOf(Json json) => AppNotification(
   late: json['late'] as bool? ?? false,
   createdAt: instant(json['createdAt'])!,
   read: json['read'] as bool? ?? false,
+  announcementId: json['announcementId'] as String?,
+  body: json['body'] as String?,
+  author: json['author'] as String?,
 );

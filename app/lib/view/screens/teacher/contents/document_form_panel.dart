@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/di/injection.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../core/theme/app_text.dart';
 import '../../../../core/theme/brand_colors.dart';
 import '../../../../domain/model/content.dart';
@@ -29,8 +31,9 @@ import 'scan_screen.dart';
 const _unfiled = '__unfiled__';
 const _newChapter = '__new_chapter__';
 
-/// "Importer un document" (design `Importer.png`) and "Modifier les détails". The saved document goes
-/// to the library, which shows its place.
+/// "Importer un document" (design `Importer.png`), "Écrire un document" (release 3: the same details,
+/// no file, then the page's editor) and "Modifier les détails". The saved document goes to the library,
+/// which shows its place.
 class DocumentFormPanel extends StatelessWidget {
   const DocumentFormPanel({super.key});
 
@@ -43,6 +46,50 @@ class DocumentFormPanel extends StatelessWidget {
           DocumentFormCubit.upload(sl.get(), sl.get(), subjectId: place?.subjectId, levelId: place?.levelId, chapterId: place?.chapterId),
       given: library,
     );
+  }
+
+  /// "Écrire un document" (or "Créer › Série"): the new page opens in its editor. True when created.
+  static Future<bool> write(BuildContext context, {LibraryCubit? library, ContentTag tag = ContentTag.serie}) async {
+    final router = GoRouter.of(context);
+    final place = (library ?? context.read<LibraryCubit>()).state.place;
+    final created = await _open(
+      context,
+      (_) => DocumentFormCubit.write(
+        sl.get(),
+        sl.get(),
+        sl.get(),
+        subjectId: place?.subjectId,
+        levelId: place?.levelId,
+        chapterId: place?.chapterId,
+        tag: tag,
+      ),
+      given: library,
+    );
+    if (created == null) return false;
+    await router.push(Routes.teacherPage(created.id));
+    return true;
+  }
+
+  /// "Créer un quiz" (or "Créer › QCM" with [mcqOnly]): the new quiz opens in its builder. True when created.
+  static Future<bool> quiz(BuildContext context, {LibraryCubit? library, bool mcqOnly = false}) async {
+    final router = GoRouter.of(context);
+    final place = (library ?? context.read<LibraryCubit>()).state.place;
+    final created = await _open(
+      context,
+      (_) => DocumentFormCubit.quiz(
+        sl.get(),
+        sl.get(),
+        sl.get(),
+        mcqOnly: mcqOnly,
+        subjectId: place?.subjectId,
+        levelId: place?.levelId,
+        chapterId: place?.chapterId,
+      ),
+      given: library,
+    );
+    if (created == null) return false;
+    await router.push(Routes.teacherQuiz(created.id));
+    return true;
   }
 
   static Future<ContentDocument?> edit(BuildContext context, ContentDocument document) =>
@@ -115,14 +162,21 @@ class DocumentFormPanel extends StatelessWidget {
     );
 
     return SidePanel(
-      icon: state.isEditing ? LucideIcons.pencil : LucideIcons.upload,
-      title: state.isEditing ? l10n.actionEditDetails : l10n.importDocument,
-      subtitle: state.isEditing ? l10n.editDetailsSubtitle : l10n.importSubtitle,
+      icon: state.isEditing
+          ? LucideIcons.pencil
+          : (state.quiz ? LucideIcons.listChecks : (state.writing ? LucideIcons.filePen : LucideIcons.upload)),
+      accent: state.quiz ? Accent.violet : Accent.indigo,
+      title: state.isEditing
+          ? l10n.actionEditDetails
+          : (state.quiz ? (state.mcqOnly ? l10n.newQcm : l10n.newQuiz) : (state.writing ? l10n.writeDocument : l10n.importDocument)),
+      subtitle: state.isEditing
+          ? l10n.editDetailsSubtitle
+          : (state.quiz ? l10n.newQuizSubtitle : (state.writing ? l10n.writeDocumentSubtitle : l10n.importSubtitle)),
       actions: [
         GhostButton(label: l10n.cancel, onPressed: () => Navigator.of(context).maybePop()),
         PrimaryButton(
-          label: state.isEditing ? l10n.save : l10n.importShort,
-          icon: state.isEditing ? null : LucideIcons.upload,
+          label: state.isEditing ? l10n.save : (state.quiz ? l10n.createQuizAndWrite : (state.writing ? l10n.createAndWrite : l10n.importShort)),
+          icon: state.isEditing ? null : (state.writing ? LucideIcons.penLine : LucideIcons.upload),
           height: 44,
           loading: state.submitting,
           onPressed: () => _submit(context),
@@ -132,7 +186,7 @@ class DocumentFormPanel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (state.failure != null) ...[FailureBanner(state.failure!), const SizedBox(height: 20)],
-          if (!state.isEditing) ...[const _FileBox(), const SizedBox(height: 20)],
+          if (!state.isEditing && !state.writing) ...[const _FileBox(), const SizedBox(height: 20)],
           FormInput(
             label: l10n.documentTitle,
             hint: l10n.documentTitleHint,
@@ -175,18 +229,21 @@ class DocumentFormPanel extends StatelessWidget {
               SelectOption(_newChapter, l10n.newChapter, leading: const Icon(LucideIcons.plus, size: 16, color: BrandColors.indigo)),
             ],
           ),
-          const SizedBox(height: 20),
-          LabeledField(
-            label: l10n.tag,
-            child: SegmentedChoice<ContentTag>(
-              value: state.tag,
-              onChanged: cubit.setTag,
-              options: [for (final tag in ContentTag.values) SelectOption(tag, tagLabel(l10n, tag))],
+          // A quiz has no tag: it is a quiz.
+          if (!state.quiz && state.editing?.kind != FileKind.quiz) ...[
+            const SizedBox(height: 20),
+            LabeledField(
+              label: l10n.tag,
+              child: SegmentedChoice<ContentTag>(
+                value: state.tag,
+                onChanged: cubit.setTag,
+                options: [for (final tag in ContentTag.values) SelectOption(tag, tagLabel(l10n, tag))],
+              ),
             ),
-          ),
+          ],
           if (!state.isEditing && !state.draft) ...[const SizedBox(height: 20), _ShareChoices(levelId: state.levelId)],
-          const SizedBox(height: 20),
-          _DraftSwitch(value: state.draft, onChanged: cubit.setDraft),
+          // A page written in the app starts as a draft: "Publier" is in its editor.
+          if (!state.writing) ...[const SizedBox(height: 20), _DraftSwitch(value: state.draft, onChanged: cubit.setDraft)],
         ],
       ),
     );
