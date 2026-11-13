@@ -51,6 +51,16 @@ dependencies:
   image_picker: ^1.2.3
   pdf: ^3.12.0
   printing: ^5.14.3
+  # Release 3, the Word-like page (MIT). 11.6 needs Flutter 3.44: stay on 11.5 while the project is on 3.38.
+  flutter_quill: 11.5.0
+  # Formulas on screen (Apache 2.0).
+  flutter_math_fork: ^0.7.4
+
+# flutter_quill 11.5 brings a Windows-only clipboard helper built on win32 5, while flutter_secure_storage
+# needs win32 6. The app has no Windows build (web, Android, iOS), so that helper is never compiled: take
+# win32 6. Remove this, and check the editor's paste of images, if a Windows build is ever added.
+dependency_overrides:
+  win32: ^6.0.1
 
 dev_dependencies:
   flutter_test:

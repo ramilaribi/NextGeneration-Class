@@ -3438,4 +3438,894 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get linkCopied => 'تمّ نسخ الرابط.';
+
+  @override
+  String get kindPage => 'صفحة مكتوبة';
+
+  @override
+  String get writeDocument => 'كتابة وثيقة';
+
+  @override
+  String get writeDocumentShort => 'كتابة';
+
+  @override
+  String get writeDocumentSubtitle =>
+      'صفحة كما في Word تكتبها هنا: عناوين وصيغ وجداول وصور. تبقى مسودّة حتّى «نشر».';
+
+  @override
+  String get createAndWrite => 'إنشاء وكتابة';
+
+  @override
+  String get pageOnlyYou => 'تراه أنت فقط';
+
+  @override
+  String get pageSaving => 'جارٍ الحفظ…';
+
+  @override
+  String get pageSavedNow => 'حُفظ للتوّ';
+
+  @override
+  String pageSavedAt(String time) {
+    return 'حُفظ على الساعة $time';
+  }
+
+  @override
+  String get pageNotSaved => 'لم يُحفظ';
+
+  @override
+  String pageSheetPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count صفحة · A4',
+      many: '$count صفحة · A4',
+      few: '$count صفحات · A4',
+      two: 'صفحتان · A4',
+      one: 'صفحة واحدة · A4',
+      zero: 'A4',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studentPreview => 'معاينة التلميذ';
+
+  @override
+  String get studentPreviewSubtitle =>
+      'ما سيراه تلاميذك وأولياؤهم. الإصلاح لا يظهر هنا.';
+
+  @override
+  String get publish => 'نشر';
+
+  @override
+  String get pagePublished => 'نُشرت الوثيقة. شاركها مع فوج أو أعطها واجبًا.';
+
+  @override
+  String get toolUndo => 'التراجع عن آخر تعديل';
+
+  @override
+  String get toolRedo => 'الإعادة';
+
+  @override
+  String get toolStyle => 'نمط النصّ';
+
+  @override
+  String get styleNormal => 'نصّ';
+
+  @override
+  String get styleTitle1 => 'عنوان 1';
+
+  @override
+  String get styleTitle2 => 'عنوان 2';
+
+  @override
+  String get styleTitle3 => 'عنوان 3';
+
+  @override
+  String get toolSize => 'حجم النصّ';
+
+  @override
+  String get toolBold => 'عريض';
+
+  @override
+  String get toolItalic => 'مائل';
+
+  @override
+  String get toolUnderline => 'مسطّر';
+
+  @override
+  String get toolColor => 'لون النصّ';
+
+  @override
+  String get toolHighlight => 'تظليل';
+
+  @override
+  String get toolNoColor => 'بلا لون';
+
+  @override
+  String get toolAlignStart => 'محاذاة إلى بداية السطر';
+
+  @override
+  String get toolAlignCenter => 'توسيط';
+
+  @override
+  String get toolAlignEnd => 'محاذاة إلى نهاية السطر';
+
+  @override
+  String get toolBullets => 'قائمة نقطية';
+
+  @override
+  String get toolNumbers => 'قائمة مرقّمة';
+
+  @override
+  String get toolTable => 'جدول';
+
+  @override
+  String get toolPicture => 'صورة';
+
+  @override
+  String get toolLines => 'أسطر للإجابة';
+
+  @override
+  String get toolFormula => 'صيغة';
+
+  @override
+  String get toolRtl => 'الكتابة من اليمين إلى اليسار';
+
+  @override
+  String get formulaTitle => 'صيغة';
+
+  @override
+  String get formulaEscape => 'زرّ Esc للإغلاق';
+
+  @override
+  String get formulaHint => 'مثال: 3/4 + 1/2';
+
+  @override
+  String get formulaHelp =>
+      '3/4 تصبح كسرًا، و x^2 قوّة، و sqrt(9) جذرًا، و * علامة ×، و : علامة ÷، و <= علامة ≤.';
+
+  @override
+  String get formulaInvalid => 'لا تُقرأ هذه الصيغة بعد: هل بقي قوس مفتوحًا؟';
+
+  @override
+  String get formulaPreviewEmpty => 'تظهر معاينة الصيغة هنا.';
+
+  @override
+  String get insert => 'إدراج';
+
+  @override
+  String get formulaFraction => 'كسر';
+
+  @override
+  String get formulaPower => 'قوّة';
+
+  @override
+  String get formulaIndex => 'دليل';
+
+  @override
+  String get formulaRoot => 'جذر تربيعي';
+
+  @override
+  String get formulaTimes => 'ضرب';
+
+  @override
+  String get formulaDivide => 'قسمة';
+
+  @override
+  String get formulaLessEq => 'أصغر من أو يساوي';
+
+  @override
+  String get formulaGreaterEq => 'أكبر من أو يساوي';
+
+  @override
+  String get formulaNotEqual => 'لا يساوي';
+
+  @override
+  String get formulaPi => 'باي';
+
+  @override
+  String get formulaDegree => 'درجة';
+
+  @override
+  String get formulaVector => 'شعاع';
+
+  @override
+  String get formulaAngle => 'زاوية';
+
+  @override
+  String get tableTitle => 'جدول';
+
+  @override
+  String get tableSubtitle =>
+      'السطر الأوّل هو رأس الجدول. تُكتب الصيغة بين علامتَي \$، مثل \$3/4\$.';
+
+  @override
+  String get tableCellHint => 'فارغة';
+
+  @override
+  String get tableAddRow => 'إضافة سطر';
+
+  @override
+  String get tableAddColumn => 'إضافة عمود';
+
+  @override
+  String get tableRemoveRow => 'حذف آخر سطر';
+
+  @override
+  String get tableRemoveColumn => 'حذف آخر عمود';
+
+  @override
+  String get tableDelete => 'حذف الجدول';
+
+  @override
+  String get linesTitle => 'أسطر للإجابة';
+
+  @override
+  String linesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count سطر',
+      many: '$count سطرًا',
+      few: '$count أسطر',
+      two: 'سطران',
+      one: 'سطر واحد',
+      zero: 'لا أسطر',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get linesDelete => 'حذف الأسطر';
+
+  @override
+  String get pictureTitle => 'صورة';
+
+  @override
+  String get pictureTake => 'التقاط صورة';
+
+  @override
+  String get pictureChoose => 'اختيار صورة';
+
+  @override
+  String get pictureSending => 'جارٍ إرسال الصورة…';
+
+  @override
+  String get pictureMissing => 'الصورة غير موجودة';
+
+  @override
+  String get pictureDelete => 'حذف الصورة';
+
+  @override
+  String get pictureSizeSmall => 'صغيرة';
+
+  @override
+  String get pictureSizeMedium => 'متوسّطة';
+
+  @override
+  String get pictureSizeFull => 'بعرض الصفحة';
+
+  @override
+  String get sheetNameLine => 'الاسم واللقب:';
+
+  @override
+  String get pagePlaceholder =>
+      'اكتب هنا. يضيف الشريط العناوين والقوائم والجداول والصور والصيغ.';
+
+  @override
+  String get unsavedPageText =>
+      'تعذّر حفظ آخر التعديلات. ابقَ في الصفحة لإعادة المحاولة.';
+
+  @override
+  String get stay => 'البقاء';
+
+  @override
+  String get acceptedAnswers => 'الإجابات المقبولة:';
+
+  @override
+  String get acceptedHint => 'مثال: 2,5';
+
+  @override
+  String get addAnswer => 'إضافة';
+
+  @override
+  String get addChoice => 'إضافة اختيار';
+
+  @override
+  String addQuestions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'إضافة $count سؤال',
+      many: 'إضافة $count سؤالًا',
+      few: 'إضافة $count أسئلة',
+      two: 'إضافة سؤالين',
+      one: 'إضافة سؤال واحد',
+      zero: 'إضافة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get answerFalse => 'خطأ';
+
+  @override
+  String get answerTrue => 'صحيح';
+
+  @override
+  String get answerNotSaved => 'لم تُحفظ الإجابة بعد: تحقّق من الاتصال.';
+
+  @override
+  String get answerSaved => 'تمّ حفظ الإجابة';
+
+  @override
+  String get answeredPupil => 'أجبت:';
+
+  @override
+  String get answeredTeacher => 'أجاب:';
+
+  @override
+  String get answersAfterDeadline => 'بعد الموعد';
+
+  @override
+  String get answersLaterNote => 'لم تُعرض الإجابات الصحيحة بعد.';
+
+  @override
+  String get answersNever => 'أبدًا';
+
+  @override
+  String get answersRightAway => 'فورًا';
+
+  @override
+  String attemptNumber(int number) {
+    return 'المحاولة $number';
+  }
+
+  @override
+  String attemptsAllowed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count محاولة',
+      many: '$count محاولة',
+      few: '$count محاولات',
+      two: 'محاولتان',
+      one: 'محاولة واحدة',
+      zero: 'لا محاولة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get blankDialogHint => 'إجابة في كل سطر، مثال: البسط';
+
+  @override
+  String get blankDialogSubtitle =>
+      'كل سطر إجابة مقبولة. لا تُحتسب الحروف الكبيرة ولا الحركات.';
+
+  @override
+  String get blankDialogTitle => 'الفراغ';
+
+  @override
+  String get blankEdit => 'تعديل إجابات الفراغ';
+
+  @override
+  String get blankEmpty => 'فراغ بلا إجابة';
+
+  @override
+  String get blankRemove => 'إزالة الفراغ';
+
+  @override
+  String get blankSelectFirst =>
+      'حدّد أوّلًا الكلمة المراد إخفاؤها، ثم «فراغ».';
+
+  @override
+  String blanksCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count فراغ',
+      many: '$count فراغًا',
+      few: '$count فراغات',
+      two: 'فراغان',
+      one: 'فراغ واحد',
+      zero: 'لا فراغ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get blanksHint =>
+      'حدّد كلمة ثم «فراغ»: يكتبها التلاميذ. تُقسَّم النقاط على الفراغات.';
+
+  @override
+  String get blanksPlaceholder =>
+      'اكتب الجملة، ثم حوّل بعض الكلمات إلى فراغات.';
+
+  @override
+  String get choiceEmpty => 'اختيار فارغ';
+
+  @override
+  String choiceHint(int number) {
+    return 'الاختيار $number، مثال: 3/4';
+  }
+
+  @override
+  String get choiceRightHint => 'انقر على دائرة الإجابة الصحيحة.';
+
+  @override
+  String correctedAlone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تُصحَّح آليًا',
+      zero: 'تُصحَّح آليًا',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get createQuiz => 'إنشاء اختبار';
+
+  @override
+  String get createQuizAndWrite => 'إنشاء وكتابة الأسئلة';
+
+  @override
+  String get deleteQuestion => 'حذف السؤال';
+
+  @override
+  String get duplicate => 'نسخ';
+
+  @override
+  String get duplicateQuiz => 'نسخ الاختبار';
+
+  @override
+  String get durationMinutesHint => 'مثال: 20';
+
+  @override
+  String get durationNone => 'بلا حدّ';
+
+  @override
+  String get durationOther => 'مدّة أخرى';
+
+  @override
+  String get explanationHint => 'مثال: 3/5 = 21/35 و 4/7 = 20/35';
+
+  @override
+  String get explanationLabel => 'شرح يظهر مع الإجابات';
+
+  @override
+  String get gapHint => 'إجابتك';
+
+  @override
+  String get gapsInstruction => 'اكتب الكلمة الناقصة في كل فراغ.';
+
+  @override
+  String get giveShort => 'إعطاء';
+
+  @override
+  String get kindQuiz => 'اختبار';
+
+  @override
+  String get leavePreviewText => 'لا يُحفظ شيء في المعاينة.';
+
+  @override
+  String get leaveQuiz => 'مغادرة';
+
+  @override
+  String get leaveQuizText =>
+      'إجاباتك محفوظة: يمكنك استئناف الاختبار لاحقًا. المؤقّت يستمرّ.';
+
+  @override
+  String get leaveQuizTitle => 'مغادرة الاختبار؟';
+
+  @override
+  String get markRightChoice => 'تحديدها كإجابة صحيحة';
+
+  @override
+  String get matchingRulesHint =>
+      '‏2,5 و2.5 سواء؛ لا تُحتسب الحروف الكبيرة ولا الحركات ولا النقطة الأخيرة.';
+
+  @override
+  String minutesShort(int minutes) {
+    return '$minutes دقيقة';
+  }
+
+  @override
+  String get minutesUnit => 'دقيقة';
+
+  @override
+  String get modeQuizHint =>
+      'يُجرى الاختبار عبر الإنترنت، ويُنقَط على مجموع نقاطه ويُصحَّح آليًا؛ وتذهب الأسئلة المفتوحة إلى «للتصحيح».';
+
+  @override
+  String get moveDown => 'نقل إلى الأسفل';
+
+  @override
+  String get moveUp => 'نقل إلى الأعلى';
+
+  @override
+  String get newQcm => 'اختيار من متعدّد جديد';
+
+  @override
+  String get newQuiz => 'اختبار جديد';
+
+  @override
+  String get newQuizSubtitle => 'مكان حفظه؛ تكتب الأسئلة بعد ذلك.';
+
+  @override
+  String get nextQuestion => 'التالي';
+
+  @override
+  String get noAcceptedAnswer => 'لا شيء بعد';
+
+  @override
+  String get noAnswer => 'لا إجابة.';
+
+  @override
+  String get noAttemptLeft => 'لم تعد هناك محاولة متاحة لهذا الاختبار.';
+
+  @override
+  String get openAnswerHint => 'اكتب إجابتك هنا.';
+
+  @override
+  String get openHint => 'تصحّحه في «للتصحيح»؛ والباقي يُصحَّح آليًا.';
+
+  @override
+  String pointsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count نقطة',
+      many: '$count نقطة',
+      few: '$count نقاط',
+      two: 'نقطتان',
+      one: 'نقطة واحدة',
+      zero: '0 نقطة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String pointsShort(int count, String points) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$points نقطة',
+      many: '$points نقطة',
+      few: '$points نقاط',
+      two: '$points نقطة',
+      one: '$points نقطة',
+      zero: '$points نقطة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String pointsWord(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'نقطة',
+      many: 'نقطة',
+      few: 'نقاط',
+      two: 'نقطتان',
+      one: 'نقطة',
+      zero: 'نقطة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get prevQuestion => 'السابق';
+
+  @override
+  String get qcmNoQuestionHint =>
+      'أضف سؤال اختيار من متعدّد، أو اكتب عدّة أسئلة دفعة واحدة عبر «إدخال سريع».';
+
+  @override
+  String get questionActions => 'إجراءات السؤال';
+
+  @override
+  String get questionBlanks => 'نصّ بفراغات';
+
+  @override
+  String get questionIncomplete =>
+      'سؤال غير مكتمل: نصّ السؤال وإجابته الصحيحة.';
+
+  @override
+  String get questionMcq => 'اختيار من متعدّد';
+
+  @override
+  String questionNumber(int number) {
+    return 'السؤال $number';
+  }
+
+  @override
+  String questionOf(int number, int count) {
+    return 'السؤال $number من $count';
+  }
+
+  @override
+  String get questionOpen => 'سؤال مفتوح';
+
+  @override
+  String get questionPlaceholder => 'اكتب السؤال. ƒx تضيف صيغة.';
+
+  @override
+  String get questionPoints => 'نقاط السؤال';
+
+  @override
+  String get questionShort => 'إجابة قصيرة';
+
+  @override
+  String get questionTextEmpty => 'نصّ السؤال لم يُكتب بعد';
+
+  @override
+  String get questionTrueFalse => 'صحيح / خطأ';
+
+  @override
+  String questionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count سؤال',
+      many: '$count سؤالًا',
+      few: '$count أسئلة',
+      two: 'سؤالان',
+      one: 'سؤال واحد',
+      zero: 'لا أسئلة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String questionsWord(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'سؤال',
+      many: 'سؤالًا',
+      few: 'أسئلة',
+      two: 'سؤالان',
+      one: 'سؤال',
+      zero: 'سؤال',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get quickQcmHint => 'ما هو أكبر عدد؟\n1/3\n1/2\n1/4';
+
+  @override
+  String get quickQcmNote =>
+      'انقر على دائرة الإجابة الصحيحة. تصبح 3/4 المكتوبة كسرًا؛ وبعد الإضافة يحتفظ كل سؤال بشريط أدواته (ƒx، الصور).';
+
+  @override
+  String get quickQcmPickRight => 'انقر على الإجابة الصحيحة.';
+
+  @override
+  String quickQcmReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count سؤال جاهز · نقطة لكلّ سؤال، قابلة للتعديل',
+      many: '$count سؤالًا جاهزًا · نقطة لكلّ سؤال، قابلة للتعديل',
+      few: '$count أسئلة جاهزة · نقطة لكلّ سؤال، قابلة للتعديل',
+      two: 'سؤالان جاهزان · نقطة لكلّ سؤال، قابلة للتعديل',
+      one: 'سؤال واحد جاهز · نقطة لكلّ سؤال، قابلة للتعديل',
+      zero: 'لا سؤال جاهز',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get quickQcmSubtitle =>
+      'سطر للسؤال، ثم سطر لكل اختيار. سطر فارغ: السؤال التالي.';
+
+  @override
+  String get quickQcmTitle => 'إدخال سريع';
+
+  @override
+  String get quizAttempts => 'المحاولات';
+
+  @override
+  String get quizClosed => 'هذا الاختبار مغلق.';
+
+  @override
+  String get quizCorrectedAlone => 'كلّ شيء يُصحَّح آليًا: لا شيء للتنقيط هنا.';
+
+  @override
+  String get quizDeadlinePassed => 'انقضى الموعد النهائي.';
+
+  @override
+  String get quizDuplicated => 'أُنشئت نسخة: إنّها مسودّة جديدة.';
+
+  @override
+  String get quizDuration => 'المدّة';
+
+  @override
+  String get quizEmptyError => 'أضف سؤالًا واحدًا على الأقل.';
+
+  @override
+  String get quizIncompleteError =>
+      'هناك سؤال غير مكتمل: إنّه مُعلَّم بالأحمر.';
+
+  @override
+  String quizKept(String score, int max) {
+    return 'العلامة المعتمدة: $score / $max';
+  }
+
+  @override
+  String get quizLockedNote =>
+      'بدأ تلميذ هذا الاختبار: لم تعد أسئلته تتغيّر. انسخه لنسخة جديدة.';
+
+  @override
+  String get quizLockedShort => 'الأسئلة مجمّدة';
+
+  @override
+  String get quizNoQuestion => 'لا سؤال بعد';
+
+  @override
+  String get quizNoQuestionHint =>
+      'اختر نوعًا أدناه: اختيار من متعدّد، صحيح / خطأ، إجابة قصيرة، نصّ بفراغات أو سؤال مفتوح.';
+
+  @override
+  String get quizNotTakenYet => 'لم تُرسَل أيّ محاولة بعد.';
+
+  @override
+  String get quizPublished => 'تمّ نشر الاختبار.';
+
+  @override
+  String get quizScoreKept => 'العلامة المعتمدة';
+
+  @override
+  String quizScoreOutOf(String score, int max) {
+    return '$score من $max: صُحّحت كلّ الأسئلة.';
+  }
+
+  @override
+  String get quizSentTitle => 'تمّ الإرسال!';
+
+  @override
+  String get quizSettings => 'إعدادات الاختبار';
+
+  @override
+  String get quizShowAnswers => 'إظهار الإجابات';
+
+  @override
+  String get quizShuffle => 'أسئلة بترتيب عشوائي';
+
+  @override
+  String quizWaitingOne(int number, int points) {
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: 'السؤال $number في انتظار تصحيح المعلّمة ($points نقطة).',
+      many: 'السؤال $number في انتظار تصحيح المعلّمة ($points نقطة).',
+      few: 'السؤال $number في انتظار تصحيح المعلّمة ($points نقاط).',
+      two: 'السؤال $number في انتظار تصحيح المعلّمة (نقطتان).',
+      one: 'السؤال $number في انتظار تصحيح المعلّمة (نقطة واحدة).',
+      zero: 'السؤال $number في انتظار تصحيح المعلّمة.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String quizWaitingSome(int points) {
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: '$points نقطة في انتظار تصحيح المعلّمة.',
+      many: '$points نقطة في انتظار تصحيح المعلّمة.',
+      few: '$points نقاط في انتظار تصحيح المعلّمة.',
+      two: 'نقطتان في انتظار تصحيح المعلّمة.',
+      one: 'نقطة واحدة في انتظار تصحيح المعلّمة.',
+      zero: 'لا شيء في انتظار التصحيح.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get removeAnswer => 'إزالة هذه الإجابة';
+
+  @override
+  String get removeChoice => 'إزالة هذا الاختيار';
+
+  @override
+  String get resumeQuiz => 'استئناف الاختبار';
+
+  @override
+  String get rightAnswerIs => 'الإجابة الصحيحة:';
+
+  @override
+  String get scoreBest => 'الأفضل';
+
+  @override
+  String get scoreLast => 'الأخيرة';
+
+  @override
+  String scoreOutOf(int max) {
+    return 'بين 0 و$max، بأنصاف النقاط.';
+  }
+
+  @override
+  String get sendQuiz => 'إرسال';
+
+  @override
+  String get sendQuizAll => 'لكلّ الأسئلة إجابة.';
+
+  @override
+  String sendQuizMissing(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count سؤال بلا إجابة.',
+      many: '$count سؤالًا بلا إجابة.',
+      few: '$count أسئلة بلا إجابة.',
+      two: 'سؤالان بلا إجابة.',
+      one: 'سؤال واحد بلا إجابة.',
+      zero: 'لكلّ الأسئلة إجابة.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sendQuizTitle => 'إرسال الاختبار؟';
+
+  @override
+  String get shortAnswerHint => 'إجابتك، مثال: 2,5';
+
+  @override
+  String get startAgain => 'محاولة جديدة';
+
+  @override
+  String get startQuiz => 'بدء الاختبار';
+
+  @override
+  String timeLeft(String time) {
+    return 'الوقت المتبقّي $time';
+  }
+
+  @override
+  String timerNote(int minutes) {
+    return '$minutes دقيقة منذ البداية: يُرسَل الاختبار تلقائيًا عند انتهائها.';
+  }
+
+  @override
+  String get toolBlank => 'فراغ';
+
+  @override
+  String get trueFalseHint => 'الإجابة الصحيحة:';
+
+  @override
+  String get unsavedQuizText =>
+      'تعذّر حفظ آخر التعديلات. ابقَ في الاختبار لإعادة المحاولة.';
+
+  @override
+  String waitingCorrection(int points) {
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: 'في انتظار التصحيح · $points نقطة',
+      many: 'في انتظار التصحيح · $points نقطة',
+      few: 'في انتظار التصحيح · $points نقاط',
+      two: 'في انتظار التصحيح · نقطتان',
+      one: 'في انتظار التصحيح · نقطة واحدة',
+      zero: 'في انتظار التصحيح',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get waitingShort => 'قيد الانتظار';
+
+  @override
+  String get wellDone => 'أحسنت!';
+
+  @override
+  String wellDoneName(String name) {
+    return 'أحسنت يا $name!';
+  }
 }

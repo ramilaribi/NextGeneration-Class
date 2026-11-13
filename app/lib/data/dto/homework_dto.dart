@@ -11,9 +11,17 @@ HomeworkStatus? homeworkStatus(Object? value) => switch (value) {
   _ => null,
 };
 
-SubmissionMode submissionMode(Object? value) => value == 'NONE' ? SubmissionMode.none : SubmissionMode.file;
+SubmissionMode submissionMode(Object? value) => switch (value) {
+  'NONE' => SubmissionMode.none,
+  'QUIZ' => SubmissionMode.quiz,
+  _ => SubmissionMode.file,
+};
 
-String submissionModeParam(SubmissionMode mode) => mode == SubmissionMode.none ? 'NONE' : 'FILE';
+String submissionModeParam(SubmissionMode mode) => switch (mode) {
+  SubmissionMode.none => 'NONE',
+  SubmissionMode.quiz => 'QUIZ',
+  SubmissionMode.file => 'FILE',
+};
 
 StatusCounts _counts(Object? value) {
   final json = value as Json? ?? const {};

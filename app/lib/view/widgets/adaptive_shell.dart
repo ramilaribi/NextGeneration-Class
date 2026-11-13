@@ -25,11 +25,16 @@ class AdaptiveShell extends StatelessWidget {
     this.bell,
     this.search,
     this.phoneSearch,
+    this.phoneFullScreen,
   });
 
   final List<AppDestination> destinations;
   final String location;
   final Widget child;
+
+  /// Pages that take the whole phone screen, without the header and the bottom bar (the Word-like page:
+  /// the toolbar sits above the keyboard). They bring their own way back.
+  final bool Function(String location)? phoneFullScreen;
 
   /// The role's main action at the end of the top bar (the teacher's "Créer").
   final Widget? topBarAction;
@@ -75,6 +80,7 @@ class AdaptiveShell extends StatelessWidget {
   Widget _phone(BuildContext context) {
     final bar = destinations.where((destination) => destination.inPhoneBar).toList();
     final more = destinations.where((destination) => !destination.inPhoneBar).toList();
+    if (phoneFullScreen?.call(location) ?? false) return Scaffold(body: SafeArea(child: child));
     return Scaffold(
       body: SafeArea(
         bottom: false,

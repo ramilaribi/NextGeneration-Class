@@ -8,8 +8,10 @@ enum ContentTag { serie, cours, corrige, autre }
 /// Only a published document can be shared; a draft is never visible to pupils or parents.
 enum ContentStatus { draft, published, archived }
 
-/// What the viewer can do: PDF pages and images open in the app, Word only downloads.
-enum FileKind { pdf, image, word }
+/// What the viewer can do: PDF pages and images open in the app, Word only downloads, and a page written
+/// in the app (release 3) shows its text.
+/// What a library item is: an uploaded file, a page written in the app, or a quiz (release 3).
+enum FileKind { pdf, image, word, page, quiz }
 
 /// Subject > level > chapter.
 class Chapter extends Equatable {
@@ -263,7 +265,8 @@ class SharedDocument extends Equatable {
   List<Object?> get props => [id, title, tag, kind, pageCount, subject, chapter, sharedAt, isNew];
 }
 
-/// What the viewer shows: page images (none for Word) and the file, behind short-lived links.
+/// What the viewer shows: page images (none for Word) and the file, behind short-lived links; for a page
+/// written in the app, its text ([body], Delta operations) and its pictures, never its Corrigé.
 class DocumentView extends Equatable {
   const DocumentView({
     required this.id,
@@ -276,6 +279,8 @@ class DocumentView extends Equatable {
     required this.pageUrls,
     required this.downloadUrl,
     this.chapterTitle,
+    this.body,
+    this.pictureUrls = const {},
   });
 
   final String id;
@@ -287,8 +292,14 @@ class DocumentView extends Equatable {
   final String fileName;
   final int sizeBytes;
   final List<String> pageUrls;
-  final String downloadUrl;
+
+  /// Null for a page written in the app (nothing to download).
+  final String? downloadUrl;
+  final List<Map<String, dynamic>>? body;
+
+  /// By picture id, absolute.
+  final Map<String, String> pictureUrls;
 
   @override
-  List<Object?> get props => [id, title, subjectName, chapterTitle, kind, tag, fileName, sizeBytes, pageUrls, downloadUrl];
+  List<Object?> get props => [id, title, subjectName, chapterTitle, kind, tag, fileName, sizeBytes, pageUrls, downloadUrl, body, pictureUrls];
 }

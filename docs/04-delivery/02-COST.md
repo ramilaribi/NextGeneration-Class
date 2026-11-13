@@ -2,6 +2,8 @@
 
 The client's principle stays: **prefer free and open-source tools, and never add a paid service without approval.** But a production app with file uploads cannot run at exactly 0 € with no limits. This file shows the real floor so the client can decide (Q11).
 
+**Decided on 2026-11-12:** web platform only (no store apps), OVHcloud VPS-1 monthly (about $5.35 a month) and a `.com` at OVHcloud (about $9.20 the first year): about $15 the first month. Details in `05-DEPLOYMENT.md`.
+
 ## Priority order for any technical choice
 1. What the project already has
 2. A free, open-source library

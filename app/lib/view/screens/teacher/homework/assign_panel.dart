@@ -174,16 +174,21 @@ class AssignPanel extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          LabeledField(
-            label: l10n.submissionLabel,
-            child: SegmentedChoice<SubmissionMode>(
-              value: state.mode,
-              onChanged: cubit.setMode,
-              options: [SelectOption(SubmissionMode.file, l10n.modeFile), SelectOption(SubmissionMode.none, l10n.modeNone)],
+          if (state.isQuiz)
+            // A quiz is taken online and graded out of its points: nothing to choose.
+            InfoNote(text: l10n.modeQuizHint)
+          else ...[
+            LabeledField(
+              label: l10n.submissionLabel,
+              child: SegmentedChoice<SubmissionMode>(
+                value: state.mode == SubmissionMode.quiz ? SubmissionMode.file : state.mode,
+                onChanged: cubit.setMode,
+                options: [SelectOption(SubmissionMode.file, l10n.modeFile), SelectOption(SubmissionMode.none, l10n.modeNone)],
+              ),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(state.mode == SubmissionMode.file ? l10n.modeFileHint : l10n.modeNoneHint, style: quiet),
+            const SizedBox(height: 6),
+            Text(state.mode == SubmissionMode.none ? l10n.modeNoneHint : l10n.modeFileHint, style: quiet),
+          ],
           const SizedBox(height: 20),
           FormInput(
             label: l10n.instructionsLabel,
@@ -193,7 +198,7 @@ class AssignPanel extends StatelessWidget {
             onChanged: cubit.setInstructions,
             maxLines: 5,
           ),
-          if (state.mode == SubmissionMode.file) ...[
+          if (state.isQuiz || state.mode == SubmissionMode.file) ...[
             const SizedBox(height: 20),
             _LateSwitch(value: state.allowLate, onChanged: cubit.setAllowLate),
           ],

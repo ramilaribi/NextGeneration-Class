@@ -29,6 +29,14 @@ abstract final class Routes {
   /// A document of the library, full screen.
   static String teacherDocument(String id) => '$teacherContents/document/$id';
 
+  /// A page written in the app, in its editor (inside the shell; the whole screen on phones).
+  static String teacherPage(String id) => '$teacherContents/page/$id';
+
+  /// A quiz in its builder (release 3).
+  static String teacherQuiz(String id) => '$teacherContents/quiz/$id';
+  static bool isTeacherPage(String location) =>
+      location.startsWith('$teacherContents/page/') || location.startsWith('$teacherContents/quiz/');
+
   /// Contenus opened on one chapter (from the search).
   static String teacherChapter(String id) => '$teacherContents/chapitre/$id';
 

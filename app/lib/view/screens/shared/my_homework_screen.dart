@@ -247,6 +247,7 @@ class _HomeworkTile extends StatelessWidget {
                   [
                     h.subject.name.of(language),
                     if (h.mode == SubmissionMode.none) l10n.nothingToSubmit.toLowerCase(),
+                    if (h.mode == SubmissionMode.quiz) l10n.kindQuiz,
                   ].join(l10n.dotSeparator),
                   style: text.style(14, FontWeight.w500, color: BrandColors.slate),
                 ),

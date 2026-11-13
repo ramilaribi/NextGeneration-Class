@@ -1,9 +1,9 @@
 // Screenshots of the local web app, signed in, through headless Chrome and the DevTools protocol.
 // Usage: DEV_YAML=backend/src/main/resources/application-dev.yaml node infra/dev-tools/cdp-screens.mjs steps.json
 // Steps (JSON array, run in order): {"viewport":[w,h]} {"go":url} {"wait":ms} {"click":[x,y]} {"type":text}
-// {"key":"Enter"} {"eval":js} {"shot":"out.png"}, {"drag":[x1,y1,x2,y2]}, {"file":"/abs/path"} (answers the next file picker), and {"signin":"admin|teacher|student|parent","lang":"fr|ar"}, which signs in
+// {"key":"Enter"} (also Tab, Backspace, Escape, Delete, Home, End, arrows) {"eval":js} {"shot":"out.png"}, {"drag":[x1,y1,x2,y2]}, {"file":"/abs/path"} (answers the next file picker), and {"signin":"admin|teacher|student|parent","lang":"fr|ar"}, which signs in
 // on its own (at the size the login coordinates belong to), so any viewport can follow. A "type" value starting with "$" is read from DEV_YAML
-// by key: "$username" and "$password" (first match: the teacher), "$student-username", "$parent-phone",
+// by key ("$$" types one "$" as written): "$username" and "$password" (first match: the teacher), "$student-username", "$parent-phone",
 // "$admin.username" (key inside a block)...
 // so passwords never appear in steps, logs or chat.
 // The app uses hash URLs: http://localhost:5050/#/enseignante/...
@@ -40,6 +40,16 @@ ws.addEventListener('message', (e) => {
   if (m.method === 'Runtime.consoleAPICalled' && (['error', 'warning'].includes(m.params.type) || process.env.CDP_LOG)) report(m.params.args.map((a) => a.value ?? a.description ?? '').join(' '));
 });
 const send = (method, params = {}) => new Promise((r) => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
+// Keys as a real keyboard sends them: the key code Chrome needs, and the character for Enter, so Flutter web
+// fields see a line break, a Tab moves the focus, a Backspace deletes.
+const KEYS = { Enter: [13, '\r'], Tab: [9], Backspace: [8], Escape: [27], Delete: [46], Home: [36], End: [35],
+  ArrowLeft: [37], ArrowUp: [38], ArrowRight: [39], ArrowDown: [40] };
+async function press(key) {
+  const [code = 0, text] = KEYS[key] ?? [];
+  const common = { key, code: key, windowsVirtualKeyCode: code, nativeVirtualKeyCode: code };
+  await send('Input.dispatchKeyEvent', { type: text ? 'keyDown' : 'rawKeyDown', ...common, ...(text ? { text, unmodifiedText: text } : {}) });
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', ...common });
+}
 // "section.key" looks for the key inside that block of the YAML (e.g. "admin.username").
 // Values come from DEV_YAML; a "${NAME:}" with no default is read from backend/.env (DEV_ENV), never printed.
 const devEnv = (() => {
@@ -61,7 +71,8 @@ const secrets = (() => {
   };
   return { get };
 })();
-const value = (v) => v.startsWith('$') ? secrets.get(v.slice(1)) : v;
+// "$key" reads a secret; "$$3/5$" types "$3/5$" as written (a formula in a table cell).
+const value = (v) => v.startsWith('$$') ? v.slice(1) : v.startsWith('$') ? secrets.get(v.slice(1)) : v;
 async function click(x, y) { for (const type of ['mousePressed', 'mouseReleased']) await send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1 }); }
 await send('Runtime.enable');
 // The login screen centers its form: these points belong to a 1440 x 900 window, so sign-in always runs there.
@@ -105,7 +116,7 @@ for (const s of steps) {
     await sleep(200);
   }
   if (s.type) { await send('Input.insertText', { text: value(s.type) }); }
-  if (s.key) { await send('Input.dispatchKeyEvent', { type: 'keyDown', key: s.key, code: s.key, windowsVirtualKeyCode: s.key === 'Enter' ? 13 : 0 }); await send('Input.dispatchKeyEvent', { type: 'keyUp', key: s.key, code: s.key }); }
+  if (s.key) { await press(s.key); }
   if (s.eval) { const r = await send('Runtime.evaluate', { expression: s.eval, awaitPromise: true, returnByValue: true }); console.log('eval', JSON.stringify(r.result?.result?.value)); }
   if (s.shot) { const r = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); writeFileSync(s.shot, Buffer.from(r.result.data, 'base64')); console.log('shot', s.shot); }
 }

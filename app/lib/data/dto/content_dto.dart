@@ -1,4 +1,5 @@
 import '../../domain/model/content.dart';
+import '../../domain/model/written_page.dart';
 import 'school_dto.dart';
 import 'user_dto.dart';
 
@@ -20,6 +21,8 @@ ContentStatus contentStatus(Object? value) => switch (value) {
 FileKind fileKind(Object? value) => switch (value) {
   'IMAGE' => FileKind.image,
   'WORD' => FileKind.word,
+  'PAGE' => FileKind.page,
+  'QUIZ' => FileKind.quiz,
   _ => FileKind.pdf,
 };
 
@@ -85,8 +88,24 @@ SharedDocument sharedDocumentOf(Json json) {
 }
 
 /// The links are relative to the API base ("files/abc"): [apiBase] makes them absolute.
+String absoluteLink(String apiBase, Object? path) => '${apiBase.endsWith('/') ? apiBase : '$apiBase/'}$path';
+
+/// Delta operations as the server keeps them.
+List<Map<String, dynamic>> deltaOf(Object? value) => [for (final op in value as List<dynamic>? ?? const []) Map<String, dynamic>.from(op as Map)];
+
+Map<String, String> pictureUrlsOf(Object? value, String apiBase) => {
+  for (final e in (value as Map<String, dynamic>? ?? const {}).entries) e.key: absoluteLink(apiBase, e.value),
+};
+
+WrittenPage writtenPageOf(Json json, String apiBase) => WrittenPage(
+  document: documentOf(json['item'] as Json),
+  body: deltaOf(json['body']),
+  answerBody: deltaOf(json['answerBody']),
+  pictureUrls: pictureUrlsOf(json['pictureUrls'], apiBase),
+);
+
 DocumentView documentViewOf(Json json, String apiBase) {
-  String absolute(Object? path) => '${apiBase.endsWith('/') ? apiBase : '$apiBase/'}$path';
+  String absolute(Object? path) => absoluteLink(apiBase, path);
   return DocumentView(
     id: json['id'] as String,
     title: json['title'] as String? ?? '',
@@ -97,7 +116,9 @@ DocumentView documentViewOf(Json json, String apiBase) {
     fileName: json['fileName'] as String? ?? '',
     sizeBytes: (json['sizeBytes'] as num? ?? 0).toInt(),
     pageUrls: [for (final p in (json['pageUrls'] as List<dynamic>? ?? const [])) absolute(p)],
-    downloadUrl: absolute(json['downloadUrl']),
+    downloadUrl: json['downloadUrl'] == null ? null : absolute(json['downloadUrl']),
+    body: json['body'] == null ? null : deltaOf(json['body']),
+    pictureUrls: pictureUrlsOf(json['pictureUrls'], apiBase),
   );
 }
 

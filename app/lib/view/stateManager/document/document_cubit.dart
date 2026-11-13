@@ -72,8 +72,8 @@ class DocumentCubit extends Cubit<DocumentState> {
 
   /// False when nothing could open the link.
   Future<bool> download() async {
-    final view = state.view;
-    if (view == null) return false;
-    return _opener.download(view.downloadUrl);
+    final url = state.view?.downloadUrl;
+    if (url == null) return false;
+    return _opener.download(url);
   }
 }

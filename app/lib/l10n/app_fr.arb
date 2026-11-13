@@ -389,10 +389,10 @@
   "email": "Email",
   "newAccount": "Nouveau compte",
   "searchParent": "Rechercher un parent",
-  "parentOf": "Parent de {names}",
+  "parentOf": "Parent de {children}",
   "@parentOf": {
     "placeholders": {
-      "names": {
+      "children": {
         "type": "String"
       }
     }
@@ -1104,7 +1104,7 @@
   "chapterEmpty": "Aucun document dans ce chapitre.",
   "subjectEmpty": "Aucun document dans cette matière pour l'instant.",
   "draftCannotShare": "Un brouillon ne peut pas être partagé. Publiez-le d'abord.",
-  "importSubtitle": "PDF, photo ou Word, ou des feuilles à scanner. Il est rangé dans un chapitre, puis partagé quand vous voulez.",
+  "importSubtitle": "Une classe entière d'un coup, depuis Excel : les élèves, leurs parents et leurs accès.",
   "editDetailsSubtitle": "Titre, rangement, étiquette et statut.",
   "chooseFile": "Choisir un fichier",
   "changeFile": "Changer",
@@ -1817,7 +1817,6 @@
   "noNotificationsHintTeacher": "Vous serez prévenue ici quand un élève rend un travail ou quand une date limite passe.",
   "quickEvaluation": "Évaluation",
   "importTitle": "Importer des élèves",
-  "importSubtitle": "Une classe entière d'un coup, depuis Excel : les élèves, leurs parents et leurs accès.",
   "importReadLines": "{file} · {count, plural, =0{aucune ligne lue} =1{1 ligne lue} other{{count} lignes lues}}. Vérifiez avant de créer les élèves.",
   "@importReadLines": {
     "placeholders": {
@@ -2001,14 +2000,6 @@
   "importNoAccounts": "Aucun nouvel accès à donner : les enfants ont rejoint des parents déjà inscrits ou n'ont pas de parent.",
   "importAgain": "Importer un autre fichier",
   "importSeeStudents": "Voir mes élèves",
-  "parentOf": "Parent de {children}",
-  "@parentOf": {
-    "placeholders": {
-      "children": {
-        "type": "String"
-      }
-    }
-  },
   "printCardTitle": "Accès de {name}",
   "@printCardTitle": {
     "placeholders": {
@@ -2038,5 +2029,435 @@
   "searchNothingHint": "Cherchez un élève (nom, identifiant, téléphone d'un parent), un groupe, un document, un chapitre, un devoir ou une évaluation.",
   "searchOpen": "Rechercher",
   "copyLink": "Copier le lien",
-  "linkCopied": "Lien copié."
+  "linkCopied": "Lien copié.",
+  "kindPage": "Page écrite",
+  "writeDocument": "Écrire un document",
+  "writeDocumentShort": "Écrire",
+  "writeDocumentSubtitle": "Une page comme dans Word, écrite ici : titres, formules, tableaux et images. Elle reste un brouillon jusqu'à « Publier ».",
+  "createAndWrite": "Créer et écrire",
+  "pageOnlyYou": "visible par vous uniquement",
+  "pageSaving": "enregistrement…",
+  "pageSavedNow": "enregistré à l'instant",
+  "pageSavedAt": "enregistré à {time}",
+  "@pageSavedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "pageNotSaved": "pas enregistré",
+  "pageSheetPages": "{count, plural, =0{A4} =1{1 page · A4} other{{count} pages · A4}}",
+  "@pageSheetPages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "studentPreview": "Aperçu élève",
+  "studentPreviewSubtitle": "Ce que vos élèves et leurs parents verront. Le corrigé n'y est pas.",
+  "publish": "Publier",
+  "pagePublished": "Document publié. Partagez-le avec un groupe ou donnez-le en devoir.",
+  "toolUndo": "Annuler la dernière modification",
+  "toolRedo": "Rétablir",
+  "toolStyle": "Style du texte",
+  "styleNormal": "Texte",
+  "styleTitle1": "Titre 1",
+  "styleTitle2": "Titre 2",
+  "styleTitle3": "Titre 3",
+  "toolSize": "Taille du texte",
+  "toolBold": "Gras",
+  "toolItalic": "Italique",
+  "toolUnderline": "Souligné",
+  "toolColor": "Couleur du texte",
+  "toolHighlight": "Surligner",
+  "toolNoColor": "Sans couleur",
+  "toolAlignStart": "Aligner au début de la ligne",
+  "toolAlignCenter": "Centrer",
+  "toolAlignEnd": "Aligner à la fin de la ligne",
+  "toolBullets": "Liste à puces",
+  "toolNumbers": "Liste numérotée",
+  "toolTable": "Tableau",
+  "toolPicture": "Image",
+  "toolLines": "Lignes pour répondre",
+  "toolFormula": "Formule",
+  "toolRtl": "Écrire de droite à gauche",
+  "formulaTitle": "Formule",
+  "formulaEscape": "Échap pour fermer",
+  "formulaHint": "Ex. : 3/4 + 1/2",
+  "formulaHelp": "3/4 devient une fraction, x^2 une puissance, sqrt(9) une racine, * un ×, : un ÷, <= un ≤.",
+  "formulaInvalid": "Cette formule ne se lit pas encore : une parenthèse est-elle restée ouverte ?",
+  "formulaPreviewEmpty": "L'aperçu de la formule s'affiche ici.",
+  "insert": "Insérer",
+  "formulaFraction": "Fraction",
+  "formulaPower": "Puissance",
+  "formulaIndex": "Indice",
+  "formulaRoot": "Racine carrée",
+  "formulaTimes": "Multiplié par",
+  "formulaDivide": "Divisé par",
+  "formulaLessEq": "Inférieur ou égal à",
+  "formulaGreaterEq": "Supérieur ou égal à",
+  "formulaNotEqual": "Différent de",
+  "formulaPi": "Pi",
+  "formulaDegree": "Degré",
+  "formulaVector": "Vecteur",
+  "formulaAngle": "Angle",
+  "tableTitle": "Tableau",
+  "tableSubtitle": "La première ligne est l'en-tête. Une formule s'écrit entre deux $ : $3/4$.",
+  "tableCellHint": "Vide",
+  "tableAddRow": "Ajouter une ligne",
+  "tableAddColumn": "Ajouter une colonne",
+  "tableRemoveRow": "Retirer la dernière ligne",
+  "tableRemoveColumn": "Retirer la dernière colonne",
+  "tableDelete": "Supprimer le tableau",
+  "linesTitle": "Lignes pour répondre",
+  "linesCount": "{count, plural, =0{Aucune ligne} =1{1 ligne} other{{count} lignes}}",
+  "@linesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "linesDelete": "Retirer les lignes",
+  "pictureTitle": "Image",
+  "pictureTake": "Prendre une photo",
+  "pictureChoose": "Choisir une image",
+  "pictureSending": "Envoi de l'image…",
+  "pictureMissing": "Image introuvable",
+  "pictureDelete": "Retirer l'image",
+  "pictureSizeSmall": "Petite",
+  "pictureSizeMedium": "Moyenne",
+  "pictureSizeFull": "Pleine largeur",
+  "sheetNameLine": "Nom et prénom :",
+  "pagePlaceholder": "Écrivez ici. La barre ajoute titres, listes, tableaux, images et formules.",
+  "unsavedPageText": "Les dernières modifications n'ont pas pu être enregistrées. Restez sur la page pour réessayer.",
+  "stay": "Rester",
+  "acceptedAnswers": "Réponses acceptées :",
+  "acceptedHint": "Ex. : 2,5",
+  "addAnswer": "Ajouter",
+  "addChoice": "Ajouter un choix",
+  "addQuestions": "{count, plural, =0{Ajouter} =1{Ajouter 1 question} other{Ajouter {count} questions}}",
+  "@addQuestions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "answerFalse": "Faux",
+  "answerTrue": "Vrai",
+  "answerNotSaved": "Réponse pas encore enregistrée : vérifiez la connexion.",
+  "answerSaved": "Réponse enregistrée",
+  "answeredPupil": "Tu as répondu :",
+  "answeredTeacher": "A répondu :",
+  "answersAfterDeadline": "Après la date",
+  "answersLaterNote": "Les bonnes réponses ne sont pas encore affichées.",
+  "answersNever": "Jamais",
+  "answersRightAway": "Tout de suite",
+  "attemptNumber": "Tentative {number}",
+  "@attemptNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "attemptsAllowed": "{count, plural, =0{Aucune tentative} =1{1 tentative} other{{count} tentatives}}",
+  "@attemptsAllowed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "blankDialogHint": "Une réponse par ligne, ex. : numérateur",
+  "blankDialogSubtitle": "Chaque ligne est une réponse acceptée. Majuscules et accents ne comptent pas.",
+  "blankDialogTitle": "Le trou",
+  "blankEdit": "Modifier les réponses du trou",
+  "blankEmpty": "trou sans réponse",
+  "blankRemove": "Retirer le trou",
+  "blankSelectFirst": "Sélectionnez d'abord le mot à cacher, puis « Trou ».",
+  "blanksCount": "{count, plural, =0{Aucun trou} =1{1 trou} other{{count} trous}}",
+  "@blanksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "blanksHint": "Sélectionnez un mot puis « Trou » : les élèves le tapent. Les points se partagent entre les trous.",
+  "blanksPlaceholder": "Écrivez la phrase, puis transformez des mots en trous.",
+  "choiceEmpty": "Choix vide",
+  "choiceHint": "Choix {number}, ex. : 3/4",
+  "@choiceHint": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "choiceRightHint": "Cliquez le rond de la bonne réponse.",
+  "correctedAlone": "{count, plural, =0{corrigée seule} =1{corrigée seule} other{corrigées seules}}",
+  "@correctedAlone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "createQuiz": "Créer un quiz",
+  "createQuizAndWrite": "Créer et écrire les questions",
+  "deleteQuestion": "Supprimer la question",
+  "duplicate": "Dupliquer",
+  "duplicateQuiz": "Dupliquer le quiz",
+  "durationMinutesHint": "Ex. : 20",
+  "durationNone": "Sans limite",
+  "durationOther": "Autre",
+  "explanationHint": "Ex. : 3/5 = 21/35 et 4/7 = 20/35",
+  "explanationLabel": "Explication, montrée avec les réponses",
+  "gapHint": "ta réponse",
+  "gapsInstruction": "Tape le mot qui manque dans chaque trou.",
+  "giveShort": "Donner",
+  "kindQuiz": "Quiz",
+  "leavePreviewText": "Rien n'est enregistré dans l'aperçu.",
+  "leaveQuiz": "Quitter",
+  "leaveQuizText": "Tes réponses sont enregistrées : tu pourras reprendre le quiz. Le minuteur continue.",
+  "leaveQuizTitle": "Quitter le quiz ?",
+  "markRightChoice": "Marquer comme bonne réponse",
+  "matchingRulesHint": "2,5 et 2.5 comptent pareil ; majuscules, accents et point final ne comptent pas.",
+  "minutesShort": "{minutes} min",
+  "@minutesShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesUnit": "min",
+  "modeQuizHint": "Un quiz se fait en ligne. Il est noté sur ses points et corrigé tout seul ; les questions ouvertes vont dans « À corriger ».",
+  "moveDown": "Descendre",
+  "moveUp": "Monter",
+  "newQcm": "Nouveau QCM",
+  "newQuiz": "Nouveau quiz",
+  "newQuizSubtitle": "Où il se range ; vous écrivez les questions ensuite.",
+  "nextQuestion": "Suivante",
+  "noAcceptedAnswer": "aucune pour l'instant",
+  "noAnswer": "Pas de réponse.",
+  "noAttemptLeft": "Plus de tentative possible pour ce quiz.",
+  "openAnswerHint": "Écris ta réponse ici.",
+  "openHint": "Vous la corrigez dans « À corriger » ; le reste est corrigé tout seul.",
+  "pointsCount": "{count, plural, =0{0 point} =1{1 point} other{{count} points}}",
+  "@pointsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsShort": "{count, plural, =0{{points} pt} =1{{points} pt} other{{points} pts}}",
+  "@pointsShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsWord": "{count, plural, =0{point} =1{point} other{points}}",
+  "@pointsWord": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "prevQuestion": "Précédente",
+  "qcmNoQuestionHint": "Ajoutez un choix multiple, ou tapez-en plusieurs d'un coup avec « Saisie rapide QCM ».",
+  "questionActions": "Actions de la question",
+  "questionBlanks": "Texte à trous",
+  "questionIncomplete": "Question pas terminée : un énoncé et sa bonne réponse.",
+  "questionMcq": "Choix multiple",
+  "questionNumber": "Question {number}",
+  "@questionNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "questionOf": "Question {number} sur {count}",
+  "@questionOf": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "questionOpen": "Question ouverte",
+  "questionPlaceholder": "Écrivez la question. ƒx ajoute une formule.",
+  "questionPoints": "Points de la question",
+  "questionShort": "Réponse courte",
+  "questionTextEmpty": "Énoncé à écrire",
+  "questionTrueFalse": "Vrai / Faux",
+  "questionsCount": "{count, plural, =0{Aucune question} =1{1 question} other{{count} questions}}",
+  "@questionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "questionsWord": "{count, plural, =0{question} =1{question} other{questions}}",
+  "@questionsWord": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quickQcmHint": "Quel est le plus grand nombre ?\n1/3\n1/2\n1/4",
+  "quickQcmNote": "Cliquez le rond de la bonne réponse. 3/4 tapé devient une fraction ; après l'ajout, chaque question garde son ruban (ƒx, images).",
+  "quickQcmPickRight": "Cliquez la bonne réponse.",
+  "quickQcmReady": "{count, plural, =0{Aucune question prête} =1{1 question prête · 1 point chacune, modifiable} other{{count} questions prêtes · 1 point chacune, modifiable}}",
+  "@quickQcmReady": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quickQcmSubtitle": "Une ligne pour la question, puis une ligne par choix. Une ligne vide : question suivante.",
+  "quickQcmTitle": "Saisie rapide QCM",
+  "quizAttempts": "Tentatives",
+  "quizClosed": "Ce quiz est clos.",
+  "quizCorrectedAlone": "Tout est corrigé automatiquement : rien à noter ici.",
+  "quizDeadlinePassed": "La date limite est passée.",
+  "quizDuplicated": "Copie créée : c'est un nouveau brouillon.",
+  "quizDuration": "Durée",
+  "quizEmptyError": "Ajoutez au moins une question.",
+  "quizIncompleteError": "Une question n'est pas terminée : elle est marquée en rouge.",
+  "quizKept": "Note retenue : {score} / {max}",
+  "@quizKept": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "quizLockedNote": "Un élève a commencé ce quiz : ses questions ne changent plus. Dupliquez-le pour une nouvelle version.",
+  "quizLockedShort": "questions figées",
+  "quizNoQuestion": "Pas encore de question",
+  "quizNoQuestionHint": "Choisissez un type ci-dessous : choix multiple, vrai / faux, réponse courte, texte à trous ou question ouverte.",
+  "quizNotTakenYet": "Pas encore de tentative envoyée.",
+  "quizPublished": "Quiz publié.",
+  "quizScoreKept": "Note retenue",
+  "quizScoreOutOf": "{score} sur {max} : toutes les questions sont corrigées.",
+  "@quizScoreOutOf": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "quizSentTitle": "C'est envoyé !",
+  "quizSettings": "Réglages",
+  "quizShowAnswers": "Montrer les réponses",
+  "quizShuffle": "Questions dans le désordre",
+  "quizWaitingOne": "{points, plural, =0{La question {number} attend la correction de l'enseignante.} =1{La question {number} attend la correction de l'enseignante (1 point).} other{La question {number} attend la correction de l'enseignante ({points} points).}}",
+  "@quizWaitingOne": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "quizWaitingSome": "{points, plural, =0{Rien n'attend la correction.} =1{1 point attend la correction de l'enseignante.} other{{points} points attendent la correction de l'enseignante.}}",
+  "@quizWaitingSome": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "removeAnswer": "Retirer cette réponse",
+  "removeChoice": "Retirer ce choix",
+  "resumeQuiz": "Reprendre le quiz",
+  "rightAnswerIs": "Bonne réponse :",
+  "scoreBest": "La meilleure",
+  "scoreLast": "La dernière",
+  "scoreOutOf": "Entre 0 et {max}, par demi-points.",
+  "@scoreOutOf": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "sendQuiz": "Envoyer",
+  "sendQuizAll": "Toutes les questions ont une réponse.",
+  "sendQuizMissing": "{count, plural, =0{Toutes les questions ont une réponse.} =1{1 question est sans réponse.} other{{count} questions sont sans réponse.}}",
+  "@sendQuizMissing": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sendQuizTitle": "Envoyer le quiz ?",
+  "shortAnswerHint": "Ta réponse, ex. : 2,5",
+  "startAgain": "Nouvelle tentative",
+  "startQuiz": "Commencer le quiz",
+  "timeLeft": "Temps restant {time}",
+  "@timeLeft": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timerNote": "{minutes} minutes dès le début : le quiz s'envoie tout seul à la fin.",
+  "@timerNote": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "toolBlank": "Trou",
+  "trueFalseHint": "La bonne réponse :",
+  "unsavedQuizText": "Les dernières modifications n'ont pas pu être enregistrées. Restez sur le quiz pour réessayer.",
+  "waitingCorrection": "{points, plural, =0{En attente de correction} =1{En attente de correction · 1 point} other{En attente de correction · {points} points}}",
+  "@waitingCorrection": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "waitingShort": "en attente",
+  "wellDone": "Bien joué !",
+  "wellDoneName": "Bien joué, {name} !",
+  "@wellDoneName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -95,8 +95,8 @@ def a4_page(selected=True):
   <div class="s13" style="margin-bottom:14px">Nom et prénom : ................................................................</div>
   <div style="font-weight:800;color:#2B3990;font-size:16px">Exercice 1 <span style="color:#6B7090;font-weight:600;font-size:13px">(4 points)</span></div>
   <div>Calcule et simplifie :</div>
-  <ol type="a" style="margin:4px 0;padding-inline-start:22px">
-    <li><span style="background:#EEF0FA;outline:1.5px solid #2B3990;border-radius:5px;padding:4px 6px">$\\dfrac{{3}}{{4}} + \\dfrac{{1}}{{2}}$</span> = {answer_lines()}</li>
+  <ol type="a" style="margin:4px 0;padding-inline-start:22px;line-height:2.7">
+    <li><span style="display:inline-block;line-height:1.2;vertical-align:middle;background:#EEF0FA;outline:1.5px solid #2B3990;border-radius:5px;padding:2px 6px">$\\dfrac{{3}}{{4}} + \\dfrac{{1}}{{2}}$</span> = {answer_lines()}</li>
     <li>$\\dfrac{{5}}{{6}} - \\dfrac{{1}}{{3}}$ = {answer_lines()}</li>
   </ol>
   <div style="font-weight:800;color:#2B3990;font-size:16px;margin-top:8px">Exercice 2 <span style="color:#6B7090;font-weight:600;font-size:13px">(4 points)</span></div>
@@ -291,7 +291,7 @@ def teacher_phone_editor():
 
 
 NOTES = [
-    ('Écrire comme dans Word', 'Créer › Série (ou Contenus › « Écrire un document ») ouvre une page A4 : titres, gras, italique, souligné, tailles, couleurs, surligner, aligner, listes à puces et numérotées, tableaux, images (fichier ou photo), lignes pour répondre, et ƒx Formule. Enregistré tout seul, en brouillon.'),
+    ('Écrire comme dans Word', 'Créer › Série (ou Contenus › « Écrire un document ») ouvre une page A4 : titres, gras, italique, souligné, tailles, couleurs, surligner, aligner, listes à puces et numérotées, tableaux (un clic sur le tableau ouvre une petite grille pour le remplir), images (fichier ou photo), lignes pour répondre, et ƒx Formule. Enregistré tout seul, en brouillon.'),
     ('Formules', 'ƒx ouvre une petite fenêtre : on tape 3/4 + 1/2 (ou on clique une fraction, une puissance, une racine, ×, ÷, ≤ …) et l\'aperçu montre la vraie formule ; « Insérer » la place dans le texte. Un clic sur une formule la modifie.'),
     ('Corrigé', 'Un deuxième onglet « Corrigé », visible par vous seule : la version avec les réponses. Les fiches PDF (étape suivante) imprimeront l\'une ou l\'autre.'),
     ('Publier', '« Publier » la met dans Contenus comme un document (Série, Cours ou Autre) : partager avec un groupe, donner en devoir, ouvrir dans l\'application pour les élèves et les parents, en français ou en arabe. Les mêmes outils servent aux leçons.'),

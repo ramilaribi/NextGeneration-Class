@@ -76,7 +76,7 @@ public class MyHomeworkService {
 		}
 		Map<UUID, Assignment> byId = assignments.findByIdIn(rows.stream().map(AssignmentRecipient::getAssignmentId).toList()).stream()
 				.collect(Collectors.toMap(Assignment::getId, Function.identity()));
-		Map<UUID, Submission> latest = homework.latestSubmissions(rows);
+		Map<UUID, HomeworkService.Sent> latest = homework.sent(rows);
 		Instant now = clock.instant();
 		Places places = places(byId.values());
 		return rows.stream()
@@ -95,9 +95,9 @@ public class MyHomeworkService {
 		Places places = places(List.of(assignment));
 		ContentItem item = places.items().get(assignment.getContentItemId());
 		return new MyHomeworkDetail(
-				item(assignment, recipient, submission, places, now),
+				item(assignment, recipient, homework.sent(List.of(recipient)).get(recipient.getId()), places, now),
 				assignment.getInstructions(),
-				new ContentRef(item.getId(), item.getTitle(), item.getFile().kind().name(), item.getTag().name(), item.getFile().getPageCount()),
+				new ContentRef(item.getId(), item.getTitle(), item.kindName(), item.getTag().name(), item.pageCount()),
 				submission == null ? null : new SubmissionInfo(
 						submission.getId(),
 						submission.getSubmittedAt(),
@@ -117,7 +117,7 @@ public class MyHomeworkService {
 		AssignmentRecipient recipient = recipientOf(user, assignmentId, studentId);
 		Assignment assignment = assignments.findById(assignmentId).orElseThrow();
 		Instant now = clock.instant();
-		if (assignment.getSubmissionMode() == SubmissionMode.NONE) {
+		if (assignment.getSubmissionMode() != SubmissionMode.FILE) {
 			throw ApiException.badRequest("nothing_to_submit");
 		}
 		if (assignment.getClosedAt() != null) {
@@ -214,7 +214,7 @@ public class MyHomeworkService {
 		return new Places(itemById, subjectById, groupById);
 	}
 
-	private static MyHomework item(Assignment a, AssignmentRecipient r, Submission submission, Places places, Instant now) {
+	private static MyHomework item(Assignment a, AssignmentRecipient r, HomeworkService.Sent sent, Places places, Instant now) {
 		ContentItem item = places.items().get(a.getContentItemId());
 		Subject subject = places.subjects().get(item.getSubjectId());
 		return new MyHomework(
@@ -227,7 +227,7 @@ public class MyHomeworkService {
 				a.isAllowLate(),
 				a.getClosedAt() != null,
 				HomeworkService.status(r, a, now),
-				submission == null ? null : submission.getSubmittedAt(),
+				sent == null ? null : sent.submittedAt(),
 				r.getStatus() == HomeworkStatus.CORRECTED ? r.getScore() : null,
 				a.getMaxScore());
 	}

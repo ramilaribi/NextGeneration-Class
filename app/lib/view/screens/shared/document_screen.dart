@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/l10n/formatting.dart';
 import '../../../core/l10n/tunis_time.dart';
+import '../../../core/router/routes.dart';
 import '../../../core/theme/app_text.dart';
 import '../../../core/theme/brand_colors.dart';
 import '../../../domain/model/content.dart';
@@ -26,6 +27,7 @@ import '../../widgets/feedback.dart';
 import '../../widgets/page_frame.dart';
 import '../../widgets/panels.dart';
 import '../../widgets/school_widgets.dart';
+import '../../widgets/written_page.dart';
 import '../teacher/contents/document_form_panel.dart';
 import '../teacher/contents/share_dialog.dart';
 
@@ -107,7 +109,16 @@ class DocumentView extends StatelessWidget {
           ),
           if (view != null) ...[
             const SizedBox(width: 8),
-            if (!phone) TonalButton(label: l10n.download, icon: LucideIcons.download, height: 44, onPressed: () => _download(context)),
+            if (!phone && view.kind != FileKind.page)
+              TonalButton(label: l10n.download, icon: LucideIcons.download, height: 44, onPressed: () => _download(context)),
+            // A page written in the app opens in its editor for the teacher.
+            if (teacher && view.kind == FileKind.page) ...[
+              const SizedBox(width: 8),
+              if (phone)
+                IconSquareButton(icon: LucideIcons.penLine, tooltip: l10n.edit, onPressed: () => context.push(Routes.teacherPage(view.id)))
+              else
+                TonalButton(label: l10n.edit, icon: LucideIcons.penLine, height: 44, onPressed: () => context.push(Routes.teacherPage(view.id))),
+            ],
             if (teacher && document != null) ...[
               const SizedBox(width: 8),
               if (phone)
@@ -130,6 +141,8 @@ class DocumentView extends StatelessWidget {
       );
     } else if (view == null) {
       body = const Align(alignment: Alignment.topCenter, child: LinearProgressIndicator(minHeight: 3));
+    } else if (view.kind == FileKind.page) {
+      body = _WrittenPage(view: view);
     } else if (view.pageUrls.isEmpty) {
       body = _WordNotice(onDownload: () => _download(context));
     } else {
@@ -154,7 +167,7 @@ class DocumentView extends StatelessWidget {
                     )
                   : body,
             ),
-            if (phone && view != null) _PhoneBar(onDownload: () => _download(context)),
+            if (phone && view != null && view.kind != FileKind.page) _PhoneBar(onDownload: () => _download(context)),
           ],
         ),
       ),
@@ -170,6 +183,34 @@ class DocumentView extends StatelessWidget {
       library.documentSaved(saved);
       if (context.mounted) showNotice(context, l10n.shareSaved);
     }
+  }
+}
+
+/// A page written in the app, on its white sheet (release 3): the text, its formulas, tables and pictures.
+class _WrittenPage extends StatelessWidget {
+  const _WrittenPage({required this.view});
+
+  final model.DocumentView view;
+
+  @override
+  Widget build(BuildContext context) {
+    final phone = isPhone(context);
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(phone ? 10 : 28),
+      child: Center(
+        child: Container(
+          key: const Key('written-page'),
+          constraints: const BoxConstraints(maxWidth: 794),
+          padding: phone ? const EdgeInsets.fromLTRB(16, 18, 16, 28) : const EdgeInsets.fromLTRB(52, 44, 52, 60),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: const [BoxShadow(color: Color(0x241C2566), blurRadius: 30, offset: Offset(0, 10))],
+          ),
+          child: WrittenPageView(body: view.body ?? const [], pictureUrls: view.pictureUrls),
+        ),
+      ),
+    );
   }
 }
 
@@ -338,14 +379,15 @@ class _DetailsAside extends StatelessWidget {
                       ],
                     ),
             ),
-            row(
-              l10n.detailFile,
-              Text(
-                [document.fileName, fileSize(l10n, document.sizeBytes)].join(l10n.dotSeparator),
-                textDirection: TextDirection.ltr,
-                style: text.style(14, FontWeight.w600),
+            if (document.kind != FileKind.page)
+              row(
+                l10n.detailFile,
+                Text(
+                  [document.fileName, fileSize(l10n, document.sizeBytes)].join(l10n.dotSeparator),
+                  textDirection: TextDirection.ltr,
+                  style: text.style(14, FontWeight.w600),
+                ),
               ),
-            ),
             row(l10n.columnEdited, value(editedLabel(l10n, language, document.updatedAt, sl.get<Now>()()))),
             const SizedBox(height: 16),
             TonalButton(

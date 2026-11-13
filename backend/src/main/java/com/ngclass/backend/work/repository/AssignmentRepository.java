@@ -15,6 +15,8 @@ public interface AssignmentRepository extends JpaRepository<Assignment, UUID> {
 
 	List<Assignment> findByIdIn(Collection<UUID> ids);
 
+	List<Assignment> findByContentItemId(UUID contentItemId);
+
 	List<Assignment> findByGroupIdAndWholeGroupTrueAndClosedAtIsNullAndDeadlineAtAfter(UUID groupId, Instant now);
 
 	/** Deadlines passed that the teacher has not heard of yet. */

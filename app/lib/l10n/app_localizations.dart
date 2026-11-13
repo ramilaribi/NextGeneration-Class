@@ -5328,6 +5328,1320 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Lien copié.'**
   String get linkCopied;
+
+  /// No description provided for @kindPage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Page écrite'**
+  String get kindPage;
+
+  /// No description provided for @writeDocument.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire un document'**
+  String get writeDocument;
+
+  /// No description provided for @writeDocumentShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire'**
+  String get writeDocumentShort;
+
+  /// No description provided for @writeDocumentSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une page comme dans Word, écrite ici : titres, formules, tableaux et images. Elle reste un brouillon jusqu\'à « Publier ».'**
+  String get writeDocumentSubtitle;
+
+  /// No description provided for @createAndWrite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer et écrire'**
+  String get createAndWrite;
+
+  /// No description provided for @pageOnlyYou.
+  ///
+  /// In fr, this message translates to:
+  /// **'visible par vous uniquement'**
+  String get pageOnlyYou;
+
+  /// No description provided for @pageSaving.
+  ///
+  /// In fr, this message translates to:
+  /// **'enregistrement…'**
+  String get pageSaving;
+
+  /// No description provided for @pageSavedNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'enregistré à l\'instant'**
+  String get pageSavedNow;
+
+  /// No description provided for @pageSavedAt.
+  ///
+  /// In fr, this message translates to:
+  /// **'enregistré à {time}'**
+  String pageSavedAt(String time);
+
+  /// No description provided for @pageNotSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'pas enregistré'**
+  String get pageNotSaved;
+
+  /// No description provided for @pageSheetPages.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{A4} =1{1 page · A4} other{{count} pages · A4}}'**
+  String pageSheetPages(int count);
+
+  /// No description provided for @studentPreview.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aperçu élève'**
+  String get studentPreview;
+
+  /// No description provided for @studentPreviewSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que vos élèves et leurs parents verront. Le corrigé n\'y est pas.'**
+  String get studentPreviewSubtitle;
+
+  /// No description provided for @publish.
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier'**
+  String get publish;
+
+  /// No description provided for @pagePublished.
+  ///
+  /// In fr, this message translates to:
+  /// **'Document publié. Partagez-le avec un groupe ou donnez-le en devoir.'**
+  String get pagePublished;
+
+  /// No description provided for @toolUndo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la dernière modification'**
+  String get toolUndo;
+
+  /// No description provided for @toolRedo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rétablir'**
+  String get toolRedo;
+
+  /// No description provided for @toolStyle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Style du texte'**
+  String get toolStyle;
+
+  /// No description provided for @styleNormal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Texte'**
+  String get styleNormal;
+
+  /// No description provided for @styleTitle1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre 1'**
+  String get styleTitle1;
+
+  /// No description provided for @styleTitle2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre 2'**
+  String get styleTitle2;
+
+  /// No description provided for @styleTitle3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre 3'**
+  String get styleTitle3;
+
+  /// No description provided for @toolSize.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taille du texte'**
+  String get toolSize;
+
+  /// No description provided for @toolBold.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gras'**
+  String get toolBold;
+
+  /// No description provided for @toolItalic.
+  ///
+  /// In fr, this message translates to:
+  /// **'Italique'**
+  String get toolItalic;
+
+  /// No description provided for @toolUnderline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Souligné'**
+  String get toolUnderline;
+
+  /// No description provided for @toolColor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couleur du texte'**
+  String get toolColor;
+
+  /// No description provided for @toolHighlight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Surligner'**
+  String get toolHighlight;
+
+  /// No description provided for @toolNoColor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans couleur'**
+  String get toolNoColor;
+
+  /// No description provided for @toolAlignStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aligner au début de la ligne'**
+  String get toolAlignStart;
+
+  /// No description provided for @toolAlignCenter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Centrer'**
+  String get toolAlignCenter;
+
+  /// No description provided for @toolAlignEnd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aligner à la fin de la ligne'**
+  String get toolAlignEnd;
+
+  /// No description provided for @toolBullets.
+  ///
+  /// In fr, this message translates to:
+  /// **'Liste à puces'**
+  String get toolBullets;
+
+  /// No description provided for @toolNumbers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Liste numérotée'**
+  String get toolNumbers;
+
+  /// No description provided for @toolTable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tableau'**
+  String get toolTable;
+
+  /// No description provided for @toolPicture.
+  ///
+  /// In fr, this message translates to:
+  /// **'Image'**
+  String get toolPicture;
+
+  /// No description provided for @toolLines.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lignes pour répondre'**
+  String get toolLines;
+
+  /// No description provided for @toolFormula.
+  ///
+  /// In fr, this message translates to:
+  /// **'Formule'**
+  String get toolFormula;
+
+  /// No description provided for @toolRtl.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire de droite à gauche'**
+  String get toolRtl;
+
+  /// No description provided for @formulaTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Formule'**
+  String get formulaTitle;
+
+  /// No description provided for @formulaEscape.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échap pour fermer'**
+  String get formulaEscape;
+
+  /// No description provided for @formulaHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : 3/4 + 1/2'**
+  String get formulaHint;
+
+  /// No description provided for @formulaHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'3/4 devient une fraction, x^2 une puissance, sqrt(9) une racine, * un ×, : un ÷, <= un ≤.'**
+  String get formulaHelp;
+
+  /// No description provided for @formulaInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette formule ne se lit pas encore : une parenthèse est-elle restée ouverte ?'**
+  String get formulaInvalid;
+
+  /// No description provided for @formulaPreviewEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'aperçu de la formule s\'affiche ici.'**
+  String get formulaPreviewEmpty;
+
+  /// No description provided for @insert.
+  ///
+  /// In fr, this message translates to:
+  /// **'Insérer'**
+  String get insert;
+
+  /// No description provided for @formulaFraction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fraction'**
+  String get formulaFraction;
+
+  /// No description provided for @formulaPower.
+  ///
+  /// In fr, this message translates to:
+  /// **'Puissance'**
+  String get formulaPower;
+
+  /// No description provided for @formulaIndex.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indice'**
+  String get formulaIndex;
+
+  /// No description provided for @formulaRoot.
+  ///
+  /// In fr, this message translates to:
+  /// **'Racine carrée'**
+  String get formulaRoot;
+
+  /// No description provided for @formulaTimes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Multiplié par'**
+  String get formulaTimes;
+
+  /// No description provided for @formulaDivide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Divisé par'**
+  String get formulaDivide;
+
+  /// No description provided for @formulaLessEq.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inférieur ou égal à'**
+  String get formulaLessEq;
+
+  /// No description provided for @formulaGreaterEq.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supérieur ou égal à'**
+  String get formulaGreaterEq;
+
+  /// No description provided for @formulaNotEqual.
+  ///
+  /// In fr, this message translates to:
+  /// **'Différent de'**
+  String get formulaNotEqual;
+
+  /// No description provided for @formulaPi.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pi'**
+  String get formulaPi;
+
+  /// No description provided for @formulaDegree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Degré'**
+  String get formulaDegree;
+
+  /// No description provided for @formulaVector.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vecteur'**
+  String get formulaVector;
+
+  /// No description provided for @formulaAngle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Angle'**
+  String get formulaAngle;
+
+  /// No description provided for @tableTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tableau'**
+  String get tableTitle;
+
+  /// No description provided for @tableSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'La première ligne est l\'en-tête. Une formule s\'écrit entre deux \$ : \$3/4\$.'**
+  String get tableSubtitle;
+
+  /// No description provided for @tableCellHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vide'**
+  String get tableCellHint;
+
+  /// No description provided for @tableAddRow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une ligne'**
+  String get tableAddRow;
+
+  /// No description provided for @tableAddColumn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une colonne'**
+  String get tableAddColumn;
+
+  /// No description provided for @tableRemoveRow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer la dernière ligne'**
+  String get tableRemoveRow;
+
+  /// No description provided for @tableRemoveColumn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer la dernière colonne'**
+  String get tableRemoveColumn;
+
+  /// No description provided for @tableDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer le tableau'**
+  String get tableDelete;
+
+  /// No description provided for @linesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lignes pour répondre'**
+  String get linesTitle;
+
+  /// No description provided for @linesCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune ligne} =1{1 ligne} other{{count} lignes}}'**
+  String linesCount(int count);
+
+  /// No description provided for @linesDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer les lignes'**
+  String get linesDelete;
+
+  /// No description provided for @pictureTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Image'**
+  String get pictureTitle;
+
+  /// No description provided for @pictureTake.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prendre une photo'**
+  String get pictureTake;
+
+  /// No description provided for @pictureChoose.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir une image'**
+  String get pictureChoose;
+
+  /// No description provided for @pictureSending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoi de l\'image…'**
+  String get pictureSending;
+
+  /// No description provided for @pictureMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Image introuvable'**
+  String get pictureMissing;
+
+  /// No description provided for @pictureDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer l\'image'**
+  String get pictureDelete;
+
+  /// No description provided for @pictureSizeSmall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Petite'**
+  String get pictureSizeSmall;
+
+  /// No description provided for @pictureSizeMedium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyenne'**
+  String get pictureSizeMedium;
+
+  /// No description provided for @pictureSizeFull.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pleine largeur'**
+  String get pictureSizeFull;
+
+  /// No description provided for @sheetNameLine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom et prénom :'**
+  String get sheetNameLine;
+
+  /// No description provided for @pagePlaceholder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrivez ici. La barre ajoute titres, listes, tableaux, images et formules.'**
+  String get pagePlaceholder;
+
+  /// No description provided for @unsavedPageText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les dernières modifications n\'ont pas pu être enregistrées. Restez sur la page pour réessayer.'**
+  String get unsavedPageText;
+
+  /// No description provided for @stay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rester'**
+  String get stay;
+
+  /// No description provided for @acceptedAnswers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponses acceptées :'**
+  String get acceptedAnswers;
+
+  /// No description provided for @acceptedHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : 2,5'**
+  String get acceptedHint;
+
+  /// No description provided for @addAnswer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get addAnswer;
+
+  /// No description provided for @addChoice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un choix'**
+  String get addChoice;
+
+  /// No description provided for @addQuestions.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Ajouter} =1{Ajouter 1 question} other{Ajouter {count} questions}}'**
+  String addQuestions(int count);
+
+  /// No description provided for @answerFalse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Faux'**
+  String get answerFalse;
+
+  /// No description provided for @answerTrue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vrai'**
+  String get answerTrue;
+
+  /// No description provided for @answerNotSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponse pas encore enregistrée : vérifiez la connexion.'**
+  String get answerNotSaved;
+
+  /// No description provided for @answerSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponse enregistrée'**
+  String get answerSaved;
+
+  /// No description provided for @answeredPupil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as répondu :'**
+  String get answeredPupil;
+
+  /// No description provided for @answeredTeacher.
+  ///
+  /// In fr, this message translates to:
+  /// **'A répondu :'**
+  String get answeredTeacher;
+
+  /// No description provided for @answersAfterDeadline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Après la date'**
+  String get answersAfterDeadline;
+
+  /// No description provided for @answersLaterNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les bonnes réponses ne sont pas encore affichées.'**
+  String get answersLaterNote;
+
+  /// No description provided for @answersNever.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jamais'**
+  String get answersNever;
+
+  /// No description provided for @answersRightAway.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout de suite'**
+  String get answersRightAway;
+
+  /// No description provided for @attemptNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tentative {number}'**
+  String attemptNumber(int number);
+
+  /// No description provided for @attemptsAllowed.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune tentative} =1{1 tentative} other{{count} tentatives}}'**
+  String attemptsAllowed(int count);
+
+  /// No description provided for @blankDialogHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une réponse par ligne, ex. : numérateur'**
+  String get blankDialogHint;
+
+  /// No description provided for @blankDialogSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque ligne est une réponse acceptée. Majuscules et accents ne comptent pas.'**
+  String get blankDialogSubtitle;
+
+  /// No description provided for @blankDialogTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le trou'**
+  String get blankDialogTitle;
+
+  /// No description provided for @blankEdit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier les réponses du trou'**
+  String get blankEdit;
+
+  /// No description provided for @blankEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'trou sans réponse'**
+  String get blankEmpty;
+
+  /// No description provided for @blankRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer le trou'**
+  String get blankRemove;
+
+  /// No description provided for @blankSelectFirst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sélectionnez d\'abord le mot à cacher, puis « Trou ».'**
+  String get blankSelectFirst;
+
+  /// No description provided for @blanksCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun trou} =1{1 trou} other{{count} trous}}'**
+  String blanksCount(int count);
+
+  /// No description provided for @blanksHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sélectionnez un mot puis « Trou » : les élèves le tapent. Les points se partagent entre les trous.'**
+  String get blanksHint;
+
+  /// No description provided for @blanksPlaceholder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrivez la phrase, puis transformez des mots en trous.'**
+  String get blanksPlaceholder;
+
+  /// No description provided for @choiceEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choix vide'**
+  String get choiceEmpty;
+
+  /// No description provided for @choiceHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choix {number}, ex. : 3/4'**
+  String choiceHint(int number);
+
+  /// No description provided for @choiceRightHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliquez le rond de la bonne réponse.'**
+  String get choiceRightHint;
+
+  /// No description provided for @correctedAlone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{corrigée seule} =1{corrigée seule} other{corrigées seules}}'**
+  String correctedAlone(int count);
+
+  /// No description provided for @createQuiz.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un quiz'**
+  String get createQuiz;
+
+  /// No description provided for @createQuizAndWrite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer et écrire les questions'**
+  String get createQuizAndWrite;
+
+  /// No description provided for @deleteQuestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer la question'**
+  String get deleteQuestion;
+
+  /// No description provided for @duplicate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dupliquer'**
+  String get duplicate;
+
+  /// No description provided for @duplicateQuiz.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dupliquer le quiz'**
+  String get duplicateQuiz;
+
+  /// No description provided for @durationMinutesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : 20'**
+  String get durationMinutesHint;
+
+  /// No description provided for @durationNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans limite'**
+  String get durationNone;
+
+  /// No description provided for @durationOther.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre'**
+  String get durationOther;
+
+  /// No description provided for @explanationHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : 3/5 = 21/35 et 4/7 = 20/35'**
+  String get explanationHint;
+
+  /// No description provided for @explanationLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Explication, montrée avec les réponses'**
+  String get explanationLabel;
+
+  /// No description provided for @gapHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'ta réponse'**
+  String get gapHint;
+
+  /// No description provided for @gapsInstruction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tape le mot qui manque dans chaque trou.'**
+  String get gapsInstruction;
+
+  /// No description provided for @giveShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donner'**
+  String get giveShort;
+
+  /// No description provided for @kindQuiz.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quiz'**
+  String get kindQuiz;
+
+  /// No description provided for @leavePreviewText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien n\'est enregistré dans l\'aperçu.'**
+  String get leavePreviewText;
+
+  /// No description provided for @leaveQuiz.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quitter'**
+  String get leaveQuiz;
+
+  /// No description provided for @leaveQuizText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes réponses sont enregistrées : tu pourras reprendre le quiz. Le minuteur continue.'**
+  String get leaveQuizText;
+
+  /// No description provided for @leaveQuizTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quitter le quiz ?'**
+  String get leaveQuizTitle;
+
+  /// No description provided for @markRightChoice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer comme bonne réponse'**
+  String get markRightChoice;
+
+  /// No description provided for @matchingRulesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'2,5 et 2.5 comptent pareil ; majuscules, accents et point final ne comptent pas.'**
+  String get matchingRulesHint;
+
+  /// No description provided for @minutesShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'{minutes} min'**
+  String minutesShort(int minutes);
+
+  /// No description provided for @minutesUnit.
+  ///
+  /// In fr, this message translates to:
+  /// **'min'**
+  String get minutesUnit;
+
+  /// No description provided for @modeQuizHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un quiz se fait en ligne. Il est noté sur ses points et corrigé tout seul ; les questions ouvertes vont dans « À corriger ».'**
+  String get modeQuizHint;
+
+  /// No description provided for @moveDown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Descendre'**
+  String get moveDown;
+
+  /// No description provided for @moveUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Monter'**
+  String get moveUp;
+
+  /// No description provided for @newQcm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau QCM'**
+  String get newQcm;
+
+  /// No description provided for @newQuiz.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau quiz'**
+  String get newQuiz;
+
+  /// No description provided for @newQuizSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Où il se range ; vous écrivez les questions ensuite.'**
+  String get newQuizSubtitle;
+
+  /// No description provided for @nextQuestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivante'**
+  String get nextQuestion;
+
+  /// No description provided for @noAcceptedAnswer.
+  ///
+  /// In fr, this message translates to:
+  /// **'aucune pour l\'instant'**
+  String get noAcceptedAnswer;
+
+  /// No description provided for @noAnswer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de réponse.'**
+  String get noAnswer;
+
+  /// No description provided for @noAttemptLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus de tentative possible pour ce quiz.'**
+  String get noAttemptLeft;
+
+  /// No description provided for @openAnswerHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écris ta réponse ici.'**
+  String get openAnswerHint;
+
+  /// No description provided for @openHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous la corrigez dans « À corriger » ; le reste est corrigé tout seul.'**
+  String get openHint;
+
+  /// No description provided for @pointsCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{0 point} =1{1 point} other{{count} points}}'**
+  String pointsCount(int count);
+
+  /// No description provided for @pointsShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{{points} pt} =1{{points} pt} other{{points} pts}}'**
+  String pointsShort(int count, String points);
+
+  /// No description provided for @pointsWord.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{point} =1{point} other{points}}'**
+  String pointsWord(int count);
+
+  /// No description provided for @prevQuestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Précédente'**
+  String get prevQuestion;
+
+  /// No description provided for @qcmNoQuestionHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutez un choix multiple, ou tapez-en plusieurs d\'un coup avec « Saisie rapide QCM ».'**
+  String get qcmNoQuestionHint;
+
+  /// No description provided for @questionActions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actions de la question'**
+  String get questionActions;
+
+  /// No description provided for @questionBlanks.
+  ///
+  /// In fr, this message translates to:
+  /// **'Texte à trous'**
+  String get questionBlanks;
+
+  /// No description provided for @questionIncomplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Question pas terminée : un énoncé et sa bonne réponse.'**
+  String get questionIncomplete;
+
+  /// No description provided for @questionMcq.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choix multiple'**
+  String get questionMcq;
+
+  /// No description provided for @questionNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Question {number}'**
+  String questionNumber(int number);
+
+  /// No description provided for @questionOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Question {number} sur {count}'**
+  String questionOf(int number, int count);
+
+  /// No description provided for @questionOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Question ouverte'**
+  String get questionOpen;
+
+  /// No description provided for @questionPlaceholder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrivez la question. ƒx ajoute une formule.'**
+  String get questionPlaceholder;
+
+  /// No description provided for @questionPoints.
+  ///
+  /// In fr, this message translates to:
+  /// **'Points de la question'**
+  String get questionPoints;
+
+  /// No description provided for @questionShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponse courte'**
+  String get questionShort;
+
+  /// No description provided for @questionTextEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Énoncé à écrire'**
+  String get questionTextEmpty;
+
+  /// No description provided for @questionTrueFalse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vrai / Faux'**
+  String get questionTrueFalse;
+
+  /// No description provided for @questionsCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune question} =1{1 question} other{{count} questions}}'**
+  String questionsCount(int count);
+
+  /// No description provided for @questionsWord.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{question} =1{question} other{questions}}'**
+  String questionsWord(int count);
+
+  /// No description provided for @quickQcmHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel est le plus grand nombre ?\n1/3\n1/2\n1/4'**
+  String get quickQcmHint;
+
+  /// No description provided for @quickQcmNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliquez le rond de la bonne réponse. 3/4 tapé devient une fraction ; après l\'ajout, chaque question garde son ruban (ƒx, images).'**
+  String get quickQcmNote;
+
+  /// No description provided for @quickQcmPickRight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliquez la bonne réponse.'**
+  String get quickQcmPickRight;
+
+  /// No description provided for @quickQcmReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune question prête} =1{1 question prête · 1 point chacune, modifiable} other{{count} questions prêtes · 1 point chacune, modifiable}}'**
+  String quickQcmReady(int count);
+
+  /// No description provided for @quickQcmSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une ligne pour la question, puis une ligne par choix. Une ligne vide : question suivante.'**
+  String get quickQcmSubtitle;
+
+  /// No description provided for @quickQcmTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisie rapide QCM'**
+  String get quickQcmTitle;
+
+  /// No description provided for @quizAttempts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tentatives'**
+  String get quizAttempts;
+
+  /// No description provided for @quizClosed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce quiz est clos.'**
+  String get quizClosed;
+
+  /// No description provided for @quizCorrectedAlone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout est corrigé automatiquement : rien à noter ici.'**
+  String get quizCorrectedAlone;
+
+  /// No description provided for @quizDeadlinePassed.
+  ///
+  /// In fr, this message translates to:
+  /// **'La date limite est passée.'**
+  String get quizDeadlinePassed;
+
+  /// No description provided for @quizDuplicated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copie créée : c\'est un nouveau brouillon.'**
+  String get quizDuplicated;
+
+  /// No description provided for @quizDuration.
+  ///
+  /// In fr, this message translates to:
+  /// **'Durée'**
+  String get quizDuration;
+
+  /// No description provided for @quizEmptyError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutez au moins une question.'**
+  String get quizEmptyError;
+
+  /// No description provided for @quizIncompleteError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une question n\'est pas terminée : elle est marquée en rouge.'**
+  String get quizIncompleteError;
+
+  /// No description provided for @quizKept.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note retenue : {score} / {max}'**
+  String quizKept(String score, int max);
+
+  /// No description provided for @quizLockedNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un élève a commencé ce quiz : ses questions ne changent plus. Dupliquez-le pour une nouvelle version.'**
+  String get quizLockedNote;
+
+  /// No description provided for @quizLockedShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'questions figées'**
+  String get quizLockedShort;
+
+  /// No description provided for @quizNoQuestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de question'**
+  String get quizNoQuestion;
+
+  /// No description provided for @quizNoQuestionHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisissez un type ci-dessous : choix multiple, vrai / faux, réponse courte, texte à trous ou question ouverte.'**
+  String get quizNoQuestionHint;
+
+  /// No description provided for @quizNotTakenYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de tentative envoyée.'**
+  String get quizNotTakenYet;
+
+  /// No description provided for @quizPublished.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quiz publié.'**
+  String get quizPublished;
+
+  /// No description provided for @quizScoreKept.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note retenue'**
+  String get quizScoreKept;
+
+  /// No description provided for @quizScoreOutOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'{score} sur {max} : toutes les questions sont corrigées.'**
+  String quizScoreOutOf(String score, int max);
+
+  /// No description provided for @quizSentTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est envoyé !'**
+  String get quizSentTitle;
+
+  /// No description provided for @quizSettings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages'**
+  String get quizSettings;
+
+  /// No description provided for @quizShowAnswers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montrer les réponses'**
+  String get quizShowAnswers;
+
+  /// No description provided for @quizShuffle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Questions dans le désordre'**
+  String get quizShuffle;
+
+  /// No description provided for @quizWaitingOne.
+  ///
+  /// In fr, this message translates to:
+  /// **'{points, plural, =0{La question {number} attend la correction de l\'enseignante.} =1{La question {number} attend la correction de l\'enseignante (1 point).} other{La question {number} attend la correction de l\'enseignante ({points} points).}}'**
+  String quizWaitingOne(int number, int points);
+
+  /// No description provided for @quizWaitingSome.
+  ///
+  /// In fr, this message translates to:
+  /// **'{points, plural, =0{Rien n\'attend la correction.} =1{1 point attend la correction de l\'enseignante.} other{{points} points attendent la correction de l\'enseignante.}}'**
+  String quizWaitingSome(int points);
+
+  /// No description provided for @removeAnswer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer cette réponse'**
+  String get removeAnswer;
+
+  /// No description provided for @removeChoice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer ce choix'**
+  String get removeChoice;
+
+  /// No description provided for @resumeQuiz.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reprendre le quiz'**
+  String get resumeQuiz;
+
+  /// No description provided for @rightAnswerIs.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonne réponse :'**
+  String get rightAnswerIs;
+
+  /// No description provided for @scoreBest.
+  ///
+  /// In fr, this message translates to:
+  /// **'La meilleure'**
+  String get scoreBest;
+
+  /// No description provided for @scoreLast.
+  ///
+  /// In fr, this message translates to:
+  /// **'La dernière'**
+  String get scoreLast;
+
+  /// No description provided for @scoreOutOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre 0 et {max}, par demi-points.'**
+  String scoreOutOf(int max);
+
+  /// No description provided for @sendQuiz.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer'**
+  String get sendQuiz;
+
+  /// No description provided for @sendQuizAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes les questions ont une réponse.'**
+  String get sendQuizAll;
+
+  /// No description provided for @sendQuizMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Toutes les questions ont une réponse.} =1{1 question est sans réponse.} other{{count} questions sont sans réponse.}}'**
+  String sendQuizMissing(int count);
+
+  /// No description provided for @sendQuizTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer le quiz ?'**
+  String get sendQuizTitle;
+
+  /// No description provided for @shortAnswerHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta réponse, ex. : 2,5'**
+  String get shortAnswerHint;
+
+  /// No description provided for @startAgain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle tentative'**
+  String get startAgain;
+
+  /// No description provided for @startQuiz.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commencer le quiz'**
+  String get startQuiz;
+
+  /// No description provided for @timeLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Temps restant {time}'**
+  String timeLeft(String time);
+
+  /// No description provided for @timerNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'{minutes} minutes dès le début : le quiz s\'envoie tout seul à la fin.'**
+  String timerNote(int minutes);
+
+  /// No description provided for @toolBlank.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trou'**
+  String get toolBlank;
+
+  /// No description provided for @trueFalseHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'La bonne réponse :'**
+  String get trueFalseHint;
+
+  /// No description provided for @unsavedQuizText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les dernières modifications n\'ont pas pu être enregistrées. Restez sur le quiz pour réessayer.'**
+  String get unsavedQuizText;
+
+  /// No description provided for @waitingCorrection.
+  ///
+  /// In fr, this message translates to:
+  /// **'{points, plural, =0{En attente de correction} =1{En attente de correction · 1 point} other{En attente de correction · {points} points}}'**
+  String waitingCorrection(int points);
+
+  /// No description provided for @waitingShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'en attente'**
+  String get waitingShort;
+
+  /// No description provided for @wellDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bien joué !'**
+  String get wellDone;
+
+  /// No description provided for @wellDoneName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bien joué, {name} !'**
+  String wellDoneName(String name);
 }
 
 class _AppLocalizationsDelegate

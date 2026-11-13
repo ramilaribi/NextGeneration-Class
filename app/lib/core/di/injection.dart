@@ -15,18 +15,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/remote/auth_api.dart';
 import '../../data/remote/content_api.dart';
+import '../../data/remote/page_api.dart';
+import '../../data/remote/quiz_api.dart';
 import '../../data/remote/homework_api.dart';
 import '../../data/remote/comments_api.dart';
 import '../../data/remote/results_api.dart';
 import '../../data/remote/search_api.dart';
 import '../../data/remote/student_import_api.dart';
 import '../../data/repository/content_repository_impl.dart';
+import '../../data/repository/page_repository_impl.dart';
+import '../../data/repository/quiz_repository_impl.dart';
 import '../../data/repository/homework_repository_impl.dart';
 import '../../data/repository/comment_repository_impl.dart';
 import '../../data/repository/results_repository_impl.dart';
 import '../../data/repository/search_repository_impl.dart';
 import '../../data/repository/student_import_repository_impl.dart';
 import '../../domain/repositories/content_repository.dart';
+import '../../domain/repositories/page_repository.dart';
+import '../../domain/repositories/quiz_repository.dart';
 import '../../domain/repositories/homework_repository.dart';
 import '../../domain/repositories/comment_repository.dart';
 import '../../domain/repositories/results_repository.dart';
@@ -125,6 +131,10 @@ void configureDependencies(AppConfig config) {
   // ── Contents: the library, Cours, the viewer ──
   sl.registerLazySingleton<ContentApi>(() => ContentApi(sl.get<DioClient>().dio));
   sl.registerLazySingleton<ContentRepository>(() => ContentRepositoryImpl(sl.get(), sl.get()));
+  sl.registerLazySingleton<PageApi>(() => PageApi(sl.get<DioClient>().dio));
+  sl.registerLazySingleton<PageRepository>(() => PageRepositoryImpl(sl.get(), sl.get()));
+  sl.registerLazySingleton<QuizApi>(() => QuizApi(sl.get<DioClient>().dio));
+  sl.registerLazySingleton<QuizRepository>(() => QuizRepositoryImpl(sl.get(), sl.get()));
   sl.registerFactory<LibraryCubit>(() => LibraryCubit(sl.get()));
 
   // ── Homework: given by the teacher, sent by the pupil or the parent ──

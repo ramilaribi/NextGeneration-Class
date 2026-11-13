@@ -27,6 +27,8 @@ String kindLabel(AppLocalizations l10n, FileKind kind) => switch (kind) {
   FileKind.pdf => l10n.kindPdf,
   FileKind.image => l10n.kindImage,
   FileKind.word => l10n.kindWord,
+  FileKind.page => l10n.kindPage,
+  FileKind.quiz => l10n.kindQuiz,
 };
 
 /// "640 Ko", "1,2 Mo": a comma for decimals, as written in Tunisia.
@@ -37,11 +39,11 @@ String fileSize(AppLocalizations l10n, int bytes) {
   return l10n.sizeMb(text);
 }
 
-/// "PDF · 3 pages · 1,2 Mo", "Photo · 380 Ko", "Word · 96 Ko · à télécharger".
+/// "PDF · 3 pages · 1,2 Mo", "Photo · 380 Ko", "Word · 96 Ko · à télécharger", "Page écrite".
 String documentDetail(AppLocalizations l10n, ContentDocument document) => [
   kindLabel(l10n, document.kind),
   if (document.kind == FileKind.pdf && document.pageCount != null) l10n.pagesCount(document.pageCount!),
-  fileSize(l10n, document.sizeBytes),
+  if (document.kind != FileKind.page && document.kind != FileKind.quiz) fileSize(l10n, document.sizeBytes),
   if (document.kind == FileKind.word) l10n.toDownload,
 ].join(l10n.dotSeparator);
 
@@ -61,7 +63,7 @@ String editedLabel(AppLocalizations l10n, AppLanguage language, DateTime instant
   return shortDate(day, language);
 }
 
-/// The file type as an icon badge: red PDF, turquoise photo, blue Word.
+/// The file type as an icon badge: red PDF, turquoise photo, blue Word, indigo page written in the app, violet quiz.
 class KindBadge extends StatelessWidget {
   const KindBadge({super.key, required this.kind, this.size = IconBadgeSize.large});
 
@@ -74,11 +76,15 @@ class KindBadge extends StatelessWidget {
       FileKind.pdf => LucideIcons.fileText,
       FileKind.image => LucideIcons.image,
       FileKind.word => LucideIcons.fileType,
+      FileKind.page => LucideIcons.filePen,
+      FileKind.quiz => LucideIcons.listChecks,
     },
     accent: switch (kind) {
       FileKind.pdf => Accent.red,
       FileKind.image => Accent.turquoise,
       FileKind.word => Accent.blue,
+      FileKind.page => Accent.indigo,
+      FileKind.quiz => Accent.violet,
     },
     size: size,
   );

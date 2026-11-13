@@ -25,10 +25,11 @@ public interface ContentItemRepository extends JpaRepository<ContentItem, UUID> 
 
 	/**
 	 * Published documents a pupil of these groups may open: shared with one of the groups, directly or
-	 * through their chapter (a shared chapter also shows documents added later).
+	 * through their chapter (a shared chapter also shows documents added later). Never a quiz: it comes as homework.
 	 */
 	@Query("""
-			select i from ContentItem i where i.status = com.ngclass.backend.content.domain.ContentStatus.PUBLISHED and (
+			select i from ContentItem i where i.status = com.ngclass.backend.content.domain.ContentStatus.PUBLISHED
+				and i.type <> com.ngclass.backend.content.domain.ContentType.QUIZ and (
 				exists (select 1 from ContentShare s where s.itemId = i.id and s.groupId in :groupIds)
 				or (i.chapterId is not null and exists (select 1 from ContentShare s where s.chapterId = i.chapterId and s.groupId in :groupIds)))""")
 	List<ContentItem> visibleTo(@Param("groupIds") Collection<UUID> groupIds);
