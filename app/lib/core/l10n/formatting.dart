@@ -34,6 +34,9 @@ String fullDate(DateTime date, AppLanguage language) {
   return language == AppLanguage.fr && date.day == 1 ? text.replaceFirst(RegExp(r'^1 '), '1er ') : text;
 }
 
+/// "oct." / "أكتوبر": a month on a chart axis.
+String monthShort(DateTime date, AppLanguage language) => DateFormat.MMM(language.dateLocale).format(date);
+
 /// "Octobre 2026".
 String monthYear(DateTime date, AppLanguage language) => _capitalized(DateFormat.yMMMM(language.dateLocale).format(date));
 

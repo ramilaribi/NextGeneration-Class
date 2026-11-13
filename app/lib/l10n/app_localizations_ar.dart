@@ -4628,4 +4628,120 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get worksheetShort => 'ورقة عمل';
+
+  @override
+  String get endSessionPanel => 'نهاية الحصة';
+
+  @override
+  String get coveredLabel => 'ما تمّ إنجازه';
+
+  @override
+  String get coveredChapterHint => 'اختيار محور';
+
+  @override
+  String get coveredNoDocuments => 'لا توجد وثيقة في هذا المحور.';
+
+  @override
+  String get coveredDetailsHint => 'مثال: التمارين من 1 إلى 4، الصفحة 32';
+
+  @override
+  String coveredFamiliesHint(String day) {
+    return 'يراه التلاميذ والأولياء في الدروس: «شوهد في القسم يوم $day».';
+  }
+
+  @override
+  String get dayContentDocument => 'محتوى اليوم';
+
+  @override
+  String get sessionNoteLabel => 'ملاحظة الحصة';
+
+  @override
+  String get sessionNoteHint => 'مثال: مراجعة الاختزال مع ريان';
+
+  @override
+  String get endThen => 'بعد ذلك';
+
+  @override
+  String get endGiveHomework => 'إعطاء فرض';
+
+  @override
+  String get endGiveHomeworkHint =>
+      'يُفتح بهذه المجموعة وهذا المحور بعد «إنهاء».';
+
+  @override
+  String get endNextInSeries => 'الحصص القادمة موجودة في الجدول كل أسبوع.';
+
+  @override
+  String get endPlanNext => 'برمجة الحصة القادمة';
+
+  @override
+  String get endPlanNextHint =>
+      'مقترحة في نفس اليوم من الأسبوع القادم وفي نفس الساعة.';
+
+  @override
+  String get nextSessionPlanned => 'أُضيفت الحصة القادمة إلى الجدول.';
+
+  @override
+  String previousCovered(String chapter) {
+    return 'شوهد · $chapter';
+  }
+
+  @override
+  String previousHomework(String titles) {
+    return 'فرض مُعطى: $titles';
+  }
+
+  @override
+  String get seenInClass => 'شوهد في القسم';
+
+  @override
+  String seenInClassOn(String day) {
+    return 'شوهد في القسم يوم $day';
+  }
+
+  @override
+  String get chaptersSeen => 'المحاور المنجزة';
+
+  @override
+  String get chartGradesTitle => 'الأعداد على مدار السنة';
+
+  @override
+  String get chartGradesHint => 'كل نقطة عدد محوّل على 20.';
+
+  @override
+  String get chartOneGrade => 'يظهر المنحنى بداية من العدد الثاني.';
+
+  @override
+  String get chartTapHint => 'المس نقطة لرؤية العدد.';
+
+  @override
+  String get chartMonthlyTitle => 'كل شهر';
+
+  @override
+  String get chartMonthlyHint => 'الفروض المسلّمة والحضور، كل المواد.';
+
+  @override
+  String get chartHomework => 'الفروض المسلّمة';
+
+  @override
+  String get chartAttendance => 'الحضور';
+
+  @override
+  String get showAsTable => 'عرض في جدول';
+
+  @override
+  String get gradesTableTitle => 'الأعداد في جدول';
+
+  @override
+  String get tableGrades => 'الأعداد';
+
+  @override
+  String get tableMonths => 'كل شهر';
+
+  @override
+  String get tableSameNumbers =>
+      'نفس الأرقام الموجودة في الرسوم، لقراءتها واحدًا واحدًا.';
+
+  @override
+  String get monthNoData => 'لا توجد أرقام بعد هذا الشهر.';
 }

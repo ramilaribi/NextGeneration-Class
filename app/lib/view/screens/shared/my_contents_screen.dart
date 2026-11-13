@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/l10n/formatting.dart';
+import '../../../core/l10n/tunis_time.dart';
 import '../../../core/router/routes.dart';
 import '../../../core/theme/app_text.dart';
 import '../../../core/theme/brand_colors.dart';
@@ -138,6 +139,7 @@ class _Section extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final text = AppText.of(context);
     final language = context.watch<LanguageCubit>().state;
+    final covered = section.covered;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -155,9 +157,33 @@ class _Section extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 6),
-        Text(section.chapter?.title ?? l10n.unfiled, style: text.style(19, FontWeight.w800)),
+        Wrap(
+          spacing: 10,
+          runSpacing: 6,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(section.chapter?.title ?? l10n.unfiled, style: text.style(19, FontWeight.w800)),
+            if (covered != null) StatusChip(key: Key('seen-${section.chapter?.id}'), label: l10n.seenInClass, accent: Accent.green),
+          ],
+        ),
+        if (covered != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            [
+              l10n.seenInClassOn(dayInSentence(TunisTime.day(covered.coveredOn), language)),
+              if (covered.details != null) isolated(covered.details!),
+            ].join(l10n.dotSeparator),
+            style: text.style(14, FontWeight.w600, color: BrandColors.slate, height: 1.4),
+          ),
+        ],
         const SizedBox(height: 10),
-        CardColumns(gap: 10, children: [for (final document in section.documents) _DocumentTile(document: document)]),
+        CardColumns(
+          gap: 10,
+          children: [
+            for (final document in section.documents)
+              _DocumentTile(document: document, seen: covered?.contentIds.contains(document.id) ?? false),
+          ],
+        ),
         const SizedBox(height: 10),
       ],
     );
@@ -166,9 +192,12 @@ class _Section extends StatelessWidget {
 
 /// A document to open: a size up for young readers, "Nouveau" until opened.
 class _DocumentTile extends StatelessWidget {
-  const _DocumentTile({required this.document});
+  const _DocumentTile({required this.document, this.seen = false});
 
   final SharedDocument document;
+
+  /// Used in class ("Vu en classe").
+  final bool seen;
 
   Future<void> _open(BuildContext context) async {
     final parent = context.read<AuthCubit>().user?.role == UserRole.parent;
@@ -195,7 +224,10 @@ class _DocumentTile extends StatelessWidget {
               children: [
                 Text(document.title, maxLines: 2, overflow: TextOverflow.ellipsis, style: text.style(16, FontWeight.w700)),
                 const SizedBox(height: 2),
-                Text(sharedDetail(l10n, document), style: text.style(14, FontWeight.w500, color: BrandColors.slate)),
+                Text(
+                  seen ? [sharedDetail(l10n, document), l10n.seenInClass].join(l10n.dotSeparator) : sharedDetail(l10n, document),
+                  style: text.style(14, FontWeight.w500, color: BrandColors.slate),
+                ),
               ],
             ),
           ),

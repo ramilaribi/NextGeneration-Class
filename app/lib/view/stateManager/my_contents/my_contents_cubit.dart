@@ -8,23 +8,36 @@ import '../common/load_status.dart';
 
 /// A chapter (or "Sans chapitre") of a subject, with its documents, for the Cours list.
 class CoursSection extends Equatable {
-  const CoursSection({required this.subject, required this.chapter, required this.documents});
+  const CoursSection({required this.subject, required this.chapter, required this.documents, this.covered});
 
   final SubjectRef subject;
   final ChapterRef? chapter;
   final List<SharedDocument> documents;
 
+  /// "Vu en classe" (Release 4): when the chapter was last covered, and the documents used.
+  final CoveredChapter? covered;
+
   @override
-  List<Object?> get props => [subject, chapter, documents];
+  List<Object?> get props => [subject, chapter, documents, covered];
 }
 
 class MyContentsState extends Equatable {
-  const MyContentsState({this.status = LoadStatus.loading, this.documents = const [], this.subjectId, this.studentId, this.failure});
+  const MyContentsState({
+    this.status = LoadStatus.loading,
+    this.documents = const [],
+    this.covered = const {},
+    this.subjectId,
+    this.studentId,
+    this.failure,
+  });
 
   final LoadStatus status;
 
   /// Ordered by the server: subject, chapter, newest share first.
   final List<SharedDocument> documents;
+
+  /// The chapters covered in class, by chapter id.
+  final Map<String, CoveredChapter> covered;
 
   /// The subject filter; null shows everything.
   final String? subjectId;
@@ -46,9 +59,9 @@ class MyContentsState extends Equatable {
     for (final d in documents.where((d) => subjectId == null || d.subject.id == subjectId)) {
       final last = out.lastOrNull;
       if (last != null && last.subject.id == d.subject.id && last.chapter?.id == d.chapter?.id) {
-        out[out.length - 1] = CoursSection(subject: last.subject, chapter: last.chapter, documents: [...last.documents, d]);
+        out[out.length - 1] = CoursSection(subject: last.subject, chapter: last.chapter, documents: [...last.documents, d], covered: last.covered);
       } else {
-        out.add(CoursSection(subject: d.subject, chapter: d.chapter, documents: [d]));
+        out.add(CoursSection(subject: d.subject, chapter: d.chapter, documents: [d], covered: covered[d.chapter?.id]));
       }
     }
     return out;
@@ -59,19 +72,21 @@ class MyContentsState extends Equatable {
   MyContentsState copyWith({
     LoadStatus? status,
     List<SharedDocument>? documents,
+    Map<String, CoveredChapter>? covered,
     String? Function()? subjectId,
     String? Function()? studentId,
     ApiFailure? Function()? failure,
   }) => MyContentsState(
     status: status ?? this.status,
     documents: documents ?? this.documents,
+    covered: covered ?? this.covered,
     subjectId: subjectId != null ? subjectId() : this.subjectId,
     studentId: studentId != null ? studentId() : this.studentId,
     failure: failure != null ? failure() : this.failure,
   );
 
   @override
-  List<Object?> get props => [status, documents, subjectId, studentId, failure?.code];
+  List<Object?> get props => [status, documents, covered, subjectId, studentId, failure?.code];
 }
 
 /// Cours (spec 09): what is shared with the pupil's groups, for the pupil or for a parent.
@@ -94,8 +109,16 @@ class MyContentsCubit extends Cubit<MyContentsState> {
     );
     try {
       final documents = await _repository.mine(studentId: studentId);
+      // "Vu en classe" is a plus: Cours still opens without it.
+      final covered = await _repository.covered(studentId: studentId).then<List<CoveredChapter>?>((c) => c, onError: (_) => null);
       if (isClosed) return;
-      emit(state.copyWith(status: LoadStatus.ready, documents: documents));
+      emit(
+        state.copyWith(
+          status: LoadStatus.ready,
+          documents: documents,
+          covered: covered == null ? null : {for (final c in covered) c.chapterId: c},
+        ),
+      );
     } on Object catch (error) {
       if (isClosed) return;
       emit(state.copyWith(status: LoadStatus.failure, failure: () => ApiFailure.from(error)));

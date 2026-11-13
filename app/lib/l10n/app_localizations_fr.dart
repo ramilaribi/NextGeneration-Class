@@ -4513,4 +4513,122 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get worksheetShort => 'Fiche';
+
+  @override
+  String get endSessionPanel => 'Fin de séance';
+
+  @override
+  String get coveredLabel => 'Ce qui a été vu';
+
+  @override
+  String get coveredChapterHint => 'Choisir un chapitre';
+
+  @override
+  String get coveredNoDocuments => 'Aucun document dans ce chapitre.';
+
+  @override
+  String get coveredDetailsHint => 'Ex. : exercices 1 à 4, page 32';
+
+  @override
+  String coveredFamiliesHint(String day) {
+    return 'Les élèves et les parents le voient dans Cours : « Vu en classe le $day ».';
+  }
+
+  @override
+  String get dayContentDocument => 'Contenu du jour';
+
+  @override
+  String get sessionNoteLabel => 'Note de séance';
+
+  @override
+  String get sessionNoteHint => 'Ex. : revoir la simplification avec Rayen';
+
+  @override
+  String get endThen => 'Ensuite';
+
+  @override
+  String get endGiveHomework => 'Donner un devoir';
+
+  @override
+  String get endGiveHomeworkHint =>
+      'S\'ouvre avec ce groupe et ce chapitre, après « Terminer ».';
+
+  @override
+  String get endNextInSeries =>
+      'Les séances suivantes sont déjà au planning, chaque semaine.';
+
+  @override
+  String get endPlanNext => 'Planifier la prochaine séance';
+
+  @override
+  String get endPlanNextHint =>
+      'Proposée le même jour la semaine suivante, à la même heure.';
+
+  @override
+  String get nextSessionPlanned => 'Prochaine séance ajoutée au planning.';
+
+  @override
+  String previousCovered(String chapter) {
+    return 'Vu · $chapter';
+  }
+
+  @override
+  String previousHomework(String titles) {
+    return 'Devoir donné : $titles';
+  }
+
+  @override
+  String get seenInClass => 'Vu en classe';
+
+  @override
+  String seenInClassOn(String day) {
+    return 'Vu en classe le $day';
+  }
+
+  @override
+  String get chaptersSeen => 'Chapitres vus';
+
+  @override
+  String get chartGradesTitle => 'Les notes au fil de l\'année';
+
+  @override
+  String get chartGradesHint => 'Chaque point est une note, ramenée sur 20.';
+
+  @override
+  String get chartOneGrade => 'La courbe apparaît dès la deuxième note.';
+
+  @override
+  String get chartTapHint => 'Touchez un point pour voir la note.';
+
+  @override
+  String get chartMonthlyTitle => 'Chaque mois';
+
+  @override
+  String get chartMonthlyHint =>
+      'Les devoirs rendus et la présence, toutes matières.';
+
+  @override
+  String get chartHomework => 'Devoirs rendus';
+
+  @override
+  String get chartAttendance => 'Présence';
+
+  @override
+  String get showAsTable => 'Voir en tableau';
+
+  @override
+  String get gradesTableTitle => 'Les notes en tableau';
+
+  @override
+  String get tableGrades => 'Notes';
+
+  @override
+  String get tableMonths => 'Chaque mois';
+
+  @override
+  String get tableSameNumbers =>
+      'Les mêmes chiffres que les graphiques, pour les lire un par un.';
+
+  @override
+  String get monthNoData => 'Pas encore de chiffres ce mois-ci.';
 }

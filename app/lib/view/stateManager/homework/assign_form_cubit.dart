@@ -124,7 +124,7 @@ class AssignFormState extends Equatable {
 /// "Nouveau devoir" (design `r2/NouveauDevoir.png`): a published document, a group or some of its pupils, a
 /// deadline (in two days at 18:00 by default), photos or nothing to send.
 class AssignFormCubit extends Cubit<AssignFormState> {
-  AssignFormCubit(this._homework, this._contents, this._groups, Now now, {String? contentItemId, String? groupId})
+  AssignFormCubit(this._homework, this._contents, this._groups, Now now, {String? contentItemId, String? groupId, this.chapterId})
     : super(AssignFormState(date: TunisTime.addDays(TunisTime.day(now()), 2), contentItemId: contentItemId, groupId: groupId)) {
     _now = now;
   }
@@ -134,12 +134,18 @@ class AssignFormCubit extends Cubit<AssignFormState> {
   final GroupRepository _groups;
   late final Now _now;
 
+  /// From "Fin de séance": the documents of the session's chapter come first.
+  final String? chapterId;
+
   /// The documents to choose from, and the pupils of a preset group.
   Future<void> load() async {
     try {
       final library = await _contents.library();
       if (isClosed) return;
       final documents = library.documents.where((d) => d.published).toList();
+      if (chapterId != null) {
+        documents.sort((a, b) => (b.chapterId == chapterId ? 1 : 0).compareTo(a.chapterId == chapterId ? 1 : 0));
+      }
       emit(
         state.copyWith(
           documents: documents,

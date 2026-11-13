@@ -96,6 +96,13 @@ public final class ContentDtos {
 	}
 
 	/** A document in a pupil's (or parent's) Cours. [isNew]: not opened yet by this user. */
+	/**
+	 * A chapter covered in class ("Vu en classe", Release 4): the last time ([coveredOn]) with its line, and every
+	 * document used for it in class.
+	 */
+	public record CoveredChapter(UUID chapterId, Instant coveredOn, String details, List<UUID> contentIds) {
+	}
+
 	public record MyContentItem(
 			UUID id,
 			String title,

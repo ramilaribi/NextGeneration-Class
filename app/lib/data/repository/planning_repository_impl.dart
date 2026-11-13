@@ -51,7 +51,12 @@ class PlanningRepositoryImpl implements PlanningRepository {
   Future<SessionDetail> start(String sessionId) => guard(() async => SessionDetailDto(await _api.start(sessionId)).toDomain());
 
   @override
-  Future<SessionDetail> end(String sessionId) => guard(() async => SessionDetailDto(await _api.end(sessionId)).toDomain());
+  Future<SessionDetail> end(String sessionId, {SessionEnd? end}) => guard(() async {
+    final body = end == null
+        ? null
+        : {'chapterId': end.chapterId, 'contentIds': end.contentIds, 'details': end.details, 'sessionNote': end.sessionNote};
+    return SessionDetailDto(await _api.end(sessionId, body)).toDomain();
+  });
 
   @override
   Future<SessionDetail> saveAttendance(String sessionId, Map<String, AttendanceStatus> marks) => guard(() async {

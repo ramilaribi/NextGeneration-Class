@@ -28,6 +28,8 @@ import '../../../widgets/page_frame.dart';
 import '../../../widgets/panels.dart';
 import '../../../widgets/school_widgets.dart';
 import '../../../widgets/text_field.dart';
+import '../homework/assign_panel.dart';
+import 'end_session_panel.dart';
 
 /// "Démarrer la séance" (spec 03, design `SessionMode.png`): attendance in a few taps, next to Meet.
 class SessionModeScreen extends StatelessWidget {
@@ -48,7 +50,8 @@ class SessionModeView extends StatelessWidget {
     final state = context.watch<SessionModeCubit>().state;
     final detail = state.detail;
     return BlocListener<SessionModeCubit, SessionModeState>(
-      listenWhen: (previous, current) => !previous.ended && current.ended && previous.ending,
+      // With "Donner un devoir", the header opens "Nouveau devoir" first, then leaves.
+      listenWhen: (previous, current) => !previous.ended && current.ended && previous.ending && !current.homeworkNext,
       listener: (context, state) {
         showNotice(context, l10n.sessionEnded);
         context.go(Routes.teacherHome);
@@ -98,27 +101,25 @@ class _HeaderState extends State<_Header> {
     super.dispose();
   }
 
+  /// "Fin de séance" (Release 4): what was covered, the note and what comes next, then the session ends.
   Future<void> _end(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
     final cubit = context.read<SessionModeCubit>();
-    final state = cubit.state;
-    final summary = [
-      l10n.presentCount(state.count(AttendanceStatus.present)),
-      l10n.absentCount(state.count(AttendanceStatus.absent)),
-      l10n.lateCount(state.count(AttendanceStatus.late)),
-    ].join(l10n.listSeparator);
-    final ok = await confirmAction(
-      context,
-      title: l10n.endSessionTitle,
-      text: l10n.endSessionText(summary),
-      confirmLabel: l10n.endSession,
-      icon: LucideIcons.circleCheck,
-      danger: false,
-    );
-    if (ok) await cubit.end();
+    final choice = await EndSessionPanel.open(context);
+    if (choice == null || !context.mounted) return;
+    final planned = await cubit.end(end: choice.end, next: choice.next, homeworkNext: choice.giveHomework);
     if (!context.mounted) return;
-    final failure = cubit.state.failure;
-    if (failure != null && !cubit.state.ended) showNotice(context, failureText(l10n, failure));
+    final state = cubit.state;
+    if (!state.ended) {
+      if (state.failure != null) showNotice(context, failureText(l10n, state.failure!));
+      return;
+    }
+    if (choice.next != null) showNotice(context, planned ? l10n.nextSessionPlanned : l10n.errorUnknown);
+    if (choice.giveHomework) {
+      showNotice(context, l10n.sessionEnded);
+      await AssignPanel.open(context, groupId: state.detail?.session.group.id, chapterId: choice.chapterId);
+      if (context.mounted) context.go(Routes.teacherHome);
+    }
   }
 
   @override
@@ -173,32 +174,37 @@ class _HeaderState extends State<_Header> {
       ),
     );
 
-    final endButton = Material(
-      color: done ? Colors.white : BrandColors.amber,
-      borderRadius: BorderRadius.circular(AppRadii.md),
-      child: InkWell(
+    // On a narrow phone the button is its icon alone: the tooltip says what it does, to a screen reader too.
+    final endButton = Tooltip(
+      key: const Key('end-session'),
+      message: done ? l10n.close : l10n.endSession,
+      child: Material(
+        color: done ? Colors.white : BrandColors.amber,
         borderRadius: BorderRadius.circular(AppRadii.md),
-        onTap: session == null || state.ending
-            ? null
-            : done
-            ? () => context.go(Routes.teacherPlanning)
-            : () => _end(context),
-        child: Container(
-          height: 46,
-          padding: const EdgeInsets.symmetric(horizontal: 18),
-          alignment: Alignment.center,
-          child: state.ending
-              ? const SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: BrandColors.ink))
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(done ? LucideIcons.x : LucideIcons.circleCheck, size: 18, color: BrandColors.ink),
-                    if (!compact || done) ...[
-                      const SizedBox(width: 8),
-                      Text(done ? l10n.close : l10n.endSession, style: text.style(15, FontWeight.w800)),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppRadii.md),
+          onTap: session == null || state.ending
+              ? null
+              : done
+              ? () => context.go(Routes.teacherPlanning)
+              : () => _end(context),
+          child: Container(
+            height: 46,
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            alignment: Alignment.center,
+            child: state.ending
+                ? const SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: BrandColors.ink))
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(done ? LucideIcons.x : LucideIcons.circleCheck, size: 18, color: BrandColors.ink),
+                      if (!compact || done) ...[
+                        const SizedBox(width: 8),
+                        Text(done ? l10n.close : l10n.endSession, style: text.style(15, FontWeight.w800)),
+                      ],
                     ],
-                  ],
-                ),
+                  ),
+          ),
         ),
       ),
     );
@@ -394,6 +400,7 @@ class _SideColumn extends StatelessWidget {
   }
 }
 
+/// "Dernière séance": what it covered, its absences, its note and the homework given that day.
 class _PreviousNote extends StatelessWidget {
   const _PreviousNote();
 
@@ -404,7 +411,15 @@ class _PreviousNote extends StatelessWidget {
     final language = context.watch<LanguageCubit>().state;
     final previous = context.select((SessionModeCubit c) => c.state.detail?.previous);
     final note = previous?.note;
+    final covered = previous?.covered;
+    final chips = [
+      if (covered?.chapterTitle != null) StatusChip(label: l10n.previousCovered(isolated(covered!.chapterTitle!)), accent: Accent.indigo),
+      if ((previous?.absent ?? 0) > 0) StatusChip(label: l10n.absentCount(previous!.absent), accent: Accent.red),
+      if ((previous?.late ?? 0) > 0) StatusChip(label: l10n.lateCount(previous!.late), accent: Accent.orange),
+    ];
+    final seen = [...?covered?.documents.map((d) => isolated(d.title)), if (covered?.details != null) covered!.details!];
     return Container(
+      key: const Key('previous-session'),
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         color: const Color(0xFFFFF8E8),
@@ -420,11 +435,25 @@ class _PreviousNote extends StatelessWidget {
             ),
             style: text.overline(color: Accent.amber.onSoft),
           ),
+          if (chips.isNotEmpty) ...[const SizedBox(height: 10), Wrap(spacing: 8, runSpacing: 8, children: chips)],
+          if (seen.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Text(seen.join(l10n.dotSeparator), textDirection: writtenDirection(seen.join(' ')), style: text.style(14, FontWeight.w600, height: 1.5)),
+          ],
           const SizedBox(height: 10),
-          Text(
-            note ?? l10n.noPreviousNote,
-            style: note == null ? text.style(15, FontWeight.w500, color: BrandColors.body) : text.style(16, FontWeight.w600, height: 1.5),
-          ),
+          if (note != null || previous == null || previous.isEmpty)
+            Text(
+              note ?? l10n.noPreviousNote,
+              textDirection: note == null ? null : writtenDirection(note),
+              style: note == null ? text.style(15, FontWeight.w500, color: BrandColors.body) : text.style(15, FontWeight.w500, height: 1.5),
+            ),
+          if (previous != null && previous.homework.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              l10n.previousHomework(previous.homework.map(isolated).join(l10n.listSeparator)),
+              style: text.style(13, FontWeight.w600, color: BrandColors.slate),
+            ),
+          ],
         ],
       ),
     );

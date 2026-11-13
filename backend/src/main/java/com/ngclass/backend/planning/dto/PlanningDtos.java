@@ -54,6 +54,20 @@ public final class PlanningDtos {
 	public record NotesRequest(@Size(max = 5000) String prepNote, @Size(max = 5000) String quickNote, @Size(max = 5000) String sessionNote) {
 	}
 
+	/**
+	 * "Fin de séance" (Release 4): what was covered and the private note, all optional. [details]: a short line
+	 * ("Exercices 1 à 4"). A null [sessionNote] keeps the note as it is.
+	 */
+	public record EndRequest(UUID chapterId, @Size(max = 20) List<UUID> contentIds, @Size(max = 300) String details, @Size(max = 5000) String sessionNote) {
+	}
+
+	public record CoveredDocument(UUID id, String title, String kind) {
+	}
+
+	/** What a finished session covered: the chapter, the line and the documents (each may be missing). */
+	public record Covered(UUID chapterId, String chapterTitle, String details, List<CoveredDocument> documents) {
+	}
+
 	public record AttendanceEntry(@NotNull UUID studentId, @NotNull String status) {
 	}
 
@@ -93,10 +107,15 @@ public final class PlanningDtos {
 	}
 
 	/** Everything session mode shows. */
-	public record SessionDetail(SessionResponse session, List<RosterEntry> roster, String quickNote, String sessionNote, PreviousSession previous) {
+	public record SessionDetail(
+			SessionResponse session, List<RosterEntry> roster, String quickNote, String sessionNote, PreviousSession previous, Covered covered) {
 	}
 
-	public record PreviousSession(Instant startsAt, String sessionNote, String quickNote) {
+	/**
+	 * "Dernière séance": its notes, what it covered, its absences and late arrivals, and the homework given to the
+	 * group that day ([homework]: titles).
+	 */
+	public record PreviousSession(Instant startsAt, String sessionNote, String quickNote, Covered covered, int absent, int late, List<String> homework) {
 	}
 
 	/** Student and parent view: no private notes; parents never get the link. */

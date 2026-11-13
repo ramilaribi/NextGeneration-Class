@@ -1,6 +1,7 @@
 package com.ngclass.backend.content.controller;
 
 import com.ngclass.backend.auth.service.AuthenticatedUser;
+import com.ngclass.backend.content.dto.ContentDtos.CoveredChapter;
 import com.ngclass.backend.content.dto.ContentDtos.MyContentItem;
 import com.ngclass.backend.content.service.MyContentService;
 import java.util.List;
@@ -24,5 +25,11 @@ public class MyContentController {
 	@GetMapping
 	public List<MyContentItem> mine(@AuthenticationPrincipal AuthenticatedUser user, @RequestParam(required = false) UUID studentId) {
 		return contents.mine(user, studentId);
+	}
+
+	/** The chapters covered in class ("Vu en classe"), latest first. */
+	@GetMapping("/covered")
+	public List<CoveredChapter> covered(@AuthenticationPrincipal AuthenticatedUser user, @RequestParam(required = false) UUID studentId) {
+		return contents.covered(user, studentId);
 	}
 }

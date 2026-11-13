@@ -1,14 +1,19 @@
 package com.ngclass.backend.planning.domain;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,6 +75,19 @@ public class ClassSession {
 
 	@Column(columnDefinition = "text")
 	private String sessionNote;
+
+	/** What was covered (Release 4, "Fin de séance"): a chapter of the group's subject and level. */
+	private UUID coveredChapterId;
+
+	@Column(length = 300)
+	private String coveredDetails;
+
+	/** The documents used in the session. */
+	@Default
+	@ElementCollection
+	@CollectionTable(name = "session_contents", joinColumns = @JoinColumn(name = "session_id"))
+	@Column(name = "content_id")
+	private Set<UUID> coveredContentIds = new LinkedHashSet<>();
 
 	/** Changed on this date only: later edits of the whole series leave it alone. */
 	@Column(name = "is_exception", nullable = false)

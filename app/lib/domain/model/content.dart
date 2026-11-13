@@ -303,3 +303,16 @@ class DocumentView extends Equatable {
   @override
   List<Object?> get props => [id, title, subjectName, chapterTitle, kind, tag, fileName, sizeBytes, pageUrls, downloadUrl, body, pictureUrls];
 }
+
+/// A chapter covered in class (Release 4, "Vu en classe"): the last time, its line, the documents used.
+class CoveredChapter extends Equatable {
+  const CoveredChapter({required this.chapterId, required this.coveredOn, this.details, this.contentIds = const {}});
+
+  final String chapterId;
+  final DateTime coveredOn;
+  final String? details;
+  final Set<String> contentIds;
+
+  @override
+  List<Object?> get props => [chapterId, coveredOn, details, contentIds];
+}

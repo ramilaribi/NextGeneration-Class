@@ -43,4 +43,7 @@ class ContentApi {
 
   Future<List<Json>> mine({String? studentId}) async =>
       jsonList((await _dio.get<List<dynamic>>('/me/contents', queryParameters: {'studentId': ?studentId})).data);
+
+  Future<List<Json>> covered({String? studentId}) async =>
+      jsonList((await _dio.get<List<dynamic>>('/me/contents/covered', queryParameters: {'studentId': ?studentId})).data);
 }

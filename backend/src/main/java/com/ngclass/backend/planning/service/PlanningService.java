@@ -1,7 +1,12 @@
 package com.ngclass.backend.planning.service;
 
+import com.ngclass.backend.auth.service.CurrentTeacher;
 import com.ngclass.backend.common.ApiException;
 import com.ngclass.backend.config.AppProperties;
+import com.ngclass.backend.content.domain.Chapter;
+import com.ngclass.backend.content.domain.ContentItem;
+import com.ngclass.backend.content.repository.ChapterRepository;
+import com.ngclass.backend.content.repository.ContentItemRepository;
 import com.ngclass.backend.groups.domain.ClassGroup;
 import com.ngclass.backend.groups.domain.GroupMember;
 import com.ngclass.backend.groups.repository.ClassGroupRepository;
@@ -17,7 +22,10 @@ import com.ngclass.backend.planning.domain.RecurrenceRule;
 import com.ngclass.backend.planning.domain.SessionMode;
 import com.ngclass.backend.planning.domain.SessionStatus;
 import com.ngclass.backend.planning.dto.PlanningDtos.AttendanceEntry;
+import com.ngclass.backend.planning.dto.PlanningDtos.Covered;
+import com.ngclass.backend.planning.dto.PlanningDtos.CoveredDocument;
 import com.ngclass.backend.planning.dto.PlanningDtos.CreatedSessions;
+import com.ngclass.backend.planning.dto.PlanningDtos.EndRequest;
 import com.ngclass.backend.planning.dto.PlanningDtos.GroupRef;
 import com.ngclass.backend.planning.dto.PlanningDtos.NotesRequest;
 import com.ngclass.backend.planning.dto.PlanningDtos.PreviousSession;
@@ -31,6 +39,8 @@ import com.ngclass.backend.planning.repository.AttendanceRepository;
 import com.ngclass.backend.planning.repository.ClassSessionRepository;
 import com.ngclass.backend.planning.repository.RecurrenceRuleRepository;
 import com.ngclass.backend.school.service.SchoolYearService;
+import com.ngclass.backend.work.domain.Assignment;
+import com.ngclass.backend.work.repository.AssignmentRepository;
 import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -76,6 +86,10 @@ public class PlanningService {
 	private final GroupService groupService;
 	private final SchoolYearService schoolYears;
 	private final NotificationService notificationService;
+	private final ChapterRepository chapters;
+	private final ContentItemRepository items;
+	private final AssignmentRepository assignments;
+	private final CurrentTeacher teacher;
 	private final AppProperties properties;
 	private final Clock clock;
 
@@ -116,9 +130,46 @@ public class PlanningService {
 				.toList();
 		PreviousSession previous = sessions.findPreviousDone(session.getGroupId(), session.getStartsAt()).stream()
 				.findFirst()
-				.map(p -> new PreviousSession(p.getStartsAt(), p.getSessionNote(), p.getQuickNote()))
+				.map(this::previous)
 				.orElse(null);
-		return new SessionDetail(withSeries(responses(List.of(session)).getFirst(), session), roster, session.getQuickNote(), session.getSessionNote(), previous);
+		return new SessionDetail(withSeries(responses(List.of(session)).getFirst(), session), roster, session.getQuickNote(), session.getSessionNote(), previous,
+				covered(session));
+	}
+
+	/** "Dernière séance": its notes, what it covered, its absences, and the homework given to the group that day. */
+	private PreviousSession previous(ClassSession p) {
+		int absent = 0;
+		int late = 0;
+		for (Attendance a : attendance.findById_SessionId(p.getId())) {
+			if (a.getStatus() == AttendanceStatus.ABSENT) {
+				absent++;
+			} else if (a.getStatus() == AttendanceStatus.LATE) {
+				late++;
+			}
+		}
+		LocalDate day = localDate(p.getStartsAt());
+		ZoneId zone = properties.zoneId();
+		List<String> homework = assignments.findByGroupIdAndCreatedAtGreaterThanEqualAndCreatedAtLessThanOrderByCreatedAtAsc(
+						p.getGroupId(), day.atStartOfDay(zone).toInstant(), day.plusDays(1).atStartOfDay(zone).toInstant())
+				.stream()
+				.map(Assignment::getTitle)
+				.toList();
+		return new PreviousSession(p.getStartsAt(), p.getSessionNote(), p.getQuickNote(), covered(p), absent, late, homework);
+	}
+
+	/** What a session covered, or null when nothing was said. Deleted documents are left out. */
+	private Covered covered(ClassSession s) {
+		if (s.getCoveredChapterId() == null && s.getCoveredDetails() == null && s.getCoveredContentIds().isEmpty()) {
+			return null;
+		}
+		String chapterTitle = s.getCoveredChapterId() == null ? null : chapters.findById(s.getCoveredChapterId()).map(Chapter::getTitle).orElse(null);
+		Map<UUID, ContentItem> byId = items.findAllById(s.getCoveredContentIds()).stream().collect(Collectors.toMap(ContentItem::getId, Function.identity()));
+		List<CoveredDocument> documents = s.getCoveredContentIds().stream()
+				.map(byId::get)
+				.filter(i -> i != null)
+				.map(i -> new CoveredDocument(i.getId(), i.getTitle(), i.kindName()))
+				.toList();
+		return new Covered(chapterTitle == null ? null : s.getCoveredChapterId(), chapterTitle, s.getCoveredDetails(), documents);
 	}
 
 	/** Sessions that would overlap [date start-end], for the warning in the form (allowed anyway). */
@@ -295,11 +346,38 @@ public class PlanningService {
 		return detail(sessionId);
 	}
 
+	/**
+	 * "Terminer la séance". With [end] ("Fin de séance", Release 4): what was covered and the private note. A
+	 * finished session can be ended again to change them. The chapter must be one of the teacher's, of the group's
+	 * subject and level; the documents must be hers.
+	 */
 	@Transactional
-	public SessionDetail end(UUID sessionId) {
+	public SessionDetail end(UUID sessionId, EndRequest end) {
 		ClassSession session = require(sessionId);
 		if (session.getStatus() == SessionStatus.CANCELLED) {
 			throw new ApiException(HttpStatus.CONFLICT, "session_cancelled");
+		}
+		if (end != null) {
+			UUID me = teacher.id();
+			if (end.chapterId() != null) {
+				Chapter chapter = chapters.findByIdAndTeacherId(end.chapterId(), me).orElseThrow(() -> ApiException.notFound("chapter_not_found"));
+				ClassGroup group = group(session.getGroupId());
+				if (!chapter.getSubjectId().equals(group.getSubject().getId()) || !chapter.getLevelId().equals(group.getLevel().getId())) {
+					throw ApiException.badRequest("chapter_not_of_group");
+				}
+			}
+			Set<UUID> contentIds = new java.util.LinkedHashSet<>();
+			for (UUID id : end.contentIds() == null ? List.<UUID>of() : end.contentIds()) {
+				items.findByIdAndTeacherId(id, me).orElseThrow(() -> ApiException.notFound("content_not_found"));
+				contentIds.add(id);
+			}
+			session.setCoveredChapterId(end.chapterId());
+			session.setCoveredDetails(trimmed(end.details()));
+			session.getCoveredContentIds().clear();
+			session.getCoveredContentIds().addAll(contentIds);
+			if (end.sessionNote() != null) {
+				session.setSessionNote(trimmed(end.sessionNote()));
+			}
 		}
 		markUnmarkedPresent(session);
 		session.setStatus(SessionStatus.DONE);

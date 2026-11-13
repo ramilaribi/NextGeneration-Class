@@ -133,6 +133,12 @@ class FakeContentRepository implements ContentRepository {
   final List<String?> mineAskedFor = [];
   final Map<String, DocumentView> views = {};
 
+  /// "Vu en classe" for the families.
+  List<CoveredChapter> coveredChapters = const [];
+
+  @override
+  Future<List<CoveredChapter>> covered({String? studentId}) async => coveredChapters;
+
   @override
   Future<Library> library() async {
     if (failure != null) throw failure!;

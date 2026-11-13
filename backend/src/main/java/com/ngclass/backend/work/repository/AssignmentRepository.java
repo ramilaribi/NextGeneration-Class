@@ -15,6 +15,9 @@ public interface AssignmentRepository extends JpaRepository<Assignment, UUID> {
 
 	List<Assignment> findByIdIn(Collection<UUID> ids);
 
+	/** Homework given to a group on one day ("Dernière séance": "Devoir donné"). */
+	List<Assignment> findByGroupIdAndCreatedAtGreaterThanEqualAndCreatedAtLessThanOrderByCreatedAtAsc(UUID groupId, Instant from, Instant to);
+
 	List<Assignment> findByContentItemId(UUID contentItemId);
 
 	List<Assignment> findByGroupIdAndWholeGroupTrueAndClosedAtIsNullAndDeadlineAtAfter(UUID groupId, Instant now);

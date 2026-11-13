@@ -20,6 +20,7 @@ class SessionModeState extends Equatable {
     this.attendanceSave = SaveStatus.idle,
     this.ending = false,
     this.ended = false,
+    this.homeworkNext = false,
     this.failure,
   });
 
@@ -33,6 +34,9 @@ class SessionModeState extends Equatable {
   final SaveStatus attendanceSave;
   final bool ending;
   final bool ended;
+
+  /// Ended with "Donner un devoir": the screen opens "Nouveau devoir" before leaving.
+  final bool homeworkNext;
   final ApiFailure? failure;
 
   int count(AttendanceStatus status) => marks.values.where((m) => m == status).length;
@@ -48,6 +52,7 @@ class SessionModeState extends Equatable {
     SaveStatus? attendanceSave,
     bool? ending,
     bool? ended,
+    bool? homeworkNext,
     ApiFailure? Function()? failure,
   }) => SessionModeState(
     status: status ?? this.status,
@@ -58,11 +63,12 @@ class SessionModeState extends Equatable {
     attendanceSave: attendanceSave ?? this.attendanceSave,
     ending: ending ?? this.ending,
     ended: ended ?? this.ended,
+    homeworkNext: homeworkNext ?? this.homeworkNext,
     failure: failure != null ? failure() : this.failure,
   );
 
   @override
-  List<Object?> get props => [status, detail, marks, quickNote, noteSave, attendanceSave, ending, ended, failure?.code];
+  List<Object?> get props => [status, detail, marks, quickNote, noteSave, attendanceSave, ending, ended, homeworkNext, failure?.code];
 }
 
 /// "Démarrer la séance" (spec 03): one tap per student, saved on its own; the quick note saves itself.
@@ -118,19 +124,32 @@ class SessionModeCubit extends Cubit<SessionModeState> {
     _noteTimer = Timer(noteDelay, _saveNote);
   }
 
-  /// Saves what is pending, then ends the session. Students nobody tapped are present.
-  Future<void> end() async {
-    if (state.ending) return;
+  /// Saves what is pending, then ends the session. Students nobody tapped are present. With [end] ("Fin de
+  /// séance", Release 4): what was covered and the note; with [next]: the next session of a one-off group.
+  /// [homeworkNext]: the screen opens "Nouveau devoir" before leaving. Returns whether [next] was planned.
+  Future<bool> end({SessionEnd? end, SessionDraft? next, bool homeworkNext = false}) async {
+    if (state.ending) return false;
     emit(state.copyWith(ending: true, failure: () => null));
     _attendanceTimer?.cancel();
     _noteTimer?.cancel();
     try {
       if (_noteDirty) await _saveNote();
       await _saveAttendance(force: true);
-      final detail = await _repository.end(sessionId);
-      if (!isClosed) emit(state.copyWith(detail: detail, ending: false, ended: true));
+      final detail = await _repository.end(sessionId, end: end);
+      var planned = false;
+      if (next != null) {
+        try {
+          await _repository.create(next);
+          planned = true;
+        } on Object {
+          // The session is ended; the next one can still be added from the planning.
+        }
+      }
+      if (!isClosed) emit(state.copyWith(detail: detail, ending: false, ended: true, homeworkNext: homeworkNext));
+      return planned;
     } on Object catch (error) {
       if (!isClosed) emit(state.copyWith(ending: false, failure: () => ApiFailure.from(error)));
+      return false;
     }
   }
 

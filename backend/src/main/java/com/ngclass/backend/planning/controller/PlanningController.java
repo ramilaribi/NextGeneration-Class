@@ -3,6 +3,7 @@ package com.ngclass.backend.planning.controller;
 import com.ngclass.backend.planning.dto.PlanningDtos.AttendanceRequest;
 import com.ngclass.backend.planning.dto.PlanningDtos.CancelRequest;
 import com.ngclass.backend.planning.dto.PlanningDtos.CreatedSessions;
+import com.ngclass.backend.planning.dto.PlanningDtos.EndRequest;
 import com.ngclass.backend.planning.dto.PlanningDtos.NotesRequest;
 import com.ngclass.backend.planning.dto.PlanningDtos.Scope;
 import com.ngclass.backend.planning.dto.PlanningDtos.SessionDetail;
@@ -92,8 +93,8 @@ public class PlanningController {
 	}
 
 	@PostMapping("/sessions/{id}/end")
-	public SessionDetail end(@PathVariable UUID id) {
-		return planning.end(id);
+	public SessionDetail end(@PathVariable UUID id, @Valid @RequestBody(required = false) EndRequest request) {
+		return planning.end(id, request);
 	}
 
 	@PutMapping("/sessions/{id}/attendance")

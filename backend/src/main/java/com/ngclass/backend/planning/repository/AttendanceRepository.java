@@ -30,6 +30,13 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Attendan
 			group by g.subject.id, a.status""")
 	List<Object[]> countBySubject(@Param("studentId") UUID studentId);
 
+	/** Every attendance mark of a student in finished sessions since [from]. Rows: startsAt, status. */
+	@Query("""
+			select s.startsAt, a.status from Attendance a, ClassSession s
+			where s.id = a.id.sessionId and s.status = com.ngclass.backend.planning.domain.SessionStatus.DONE
+			and a.id.studentId = :studentId and s.startsAt >= :from""")
+	List<Object[]> marksSince(@Param("studentId") UUID studentId, @Param("from") java.time.Instant from);
+
 	/** The last attendance marks of a student, newest first. Rows: startsAt, status. */
 	@Query("""
 			select s.startsAt, a.status from Attendance a, ClassSession s

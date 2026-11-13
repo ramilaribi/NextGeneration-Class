@@ -42,9 +42,19 @@ public final class ResultsDtos {
 			int submitted,
 			int due,
 			Integer attendanceRate,
-			List<GradeItem> grades) {
+			List<GradeItem> grades,
+			/** The chapters covered in class this year, in the order they were first covered (Release 4). */
+			List<String> chaptersSeen) {
 	}
 
-	public record MyResults(List<SubjectResult> subjects) {
+	/**
+	 * One month of the school year so far ([month]: "2026-09"), all subjects: homework [submitted] out of [due] (by
+	 * deadline month, the same rules as a subject's), and [attendanceRate] in % (null without a counted session).
+	 */
+	public record MonthProgress(String month, int submitted, int due, Integer attendanceRate) {
+	}
+
+	/** [months]: September to this month, for the "Chaque mois" chart (Release 4). */
+	public record MyResults(List<SubjectResult> subjects, List<MonthProgress> months) {
 	}
 }

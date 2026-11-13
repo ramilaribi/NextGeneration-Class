@@ -28,7 +28,7 @@ class PlanningApi {
 
   Future<Json> start(String id) async => (await _dio.post<Json>('/sessions/$id/start')).data!;
 
-  Future<Json> end(String id) async => (await _dio.post<Json>('/sessions/$id/end')).data!;
+  Future<Json> end(String id, [Json? body]) async => (await _dio.post<Json>('/sessions/$id/end', data: body)).data!;
 
   Future<Json> attendance(String id, List<Json> entries) async =>
       (await _dio.put<Json>('/sessions/$id/attendance', data: {'entries': entries})).data!;

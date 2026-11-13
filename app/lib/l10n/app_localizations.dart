@@ -7122,6 +7122,216 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Fiche'**
   String get worksheetShort;
+
+  /// No description provided for @endSessionPanel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fin de séance'**
+  String get endSessionPanel;
+
+  /// No description provided for @coveredLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce qui a été vu'**
+  String get coveredLabel;
+
+  /// No description provided for @coveredChapterHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir un chapitre'**
+  String get coveredChapterHint;
+
+  /// No description provided for @coveredNoDocuments.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun document dans ce chapitre.'**
+  String get coveredNoDocuments;
+
+  /// No description provided for @coveredDetailsHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : exercices 1 à 4, page 32'**
+  String get coveredDetailsHint;
+
+  /// No description provided for @coveredFamiliesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les élèves et les parents le voient dans Cours : « Vu en classe le {day} ».'**
+  String coveredFamiliesHint(String day);
+
+  /// No description provided for @dayContentDocument.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contenu du jour'**
+  String get dayContentDocument;
+
+  /// No description provided for @sessionNoteLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note de séance'**
+  String get sessionNoteLabel;
+
+  /// No description provided for @sessionNoteHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : revoir la simplification avec Rayen'**
+  String get sessionNoteHint;
+
+  /// No description provided for @endThen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ensuite'**
+  String get endThen;
+
+  /// No description provided for @endGiveHomework.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donner un devoir'**
+  String get endGiveHomework;
+
+  /// No description provided for @endGiveHomeworkHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'S\'ouvre avec ce groupe et ce chapitre, après « Terminer ».'**
+  String get endGiveHomeworkHint;
+
+  /// No description provided for @endNextInSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les séances suivantes sont déjà au planning, chaque semaine.'**
+  String get endNextInSeries;
+
+  /// No description provided for @endPlanNext.
+  ///
+  /// In fr, this message translates to:
+  /// **'Planifier la prochaine séance'**
+  String get endPlanNext;
+
+  /// No description provided for @endPlanNextHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Proposée le même jour la semaine suivante, à la même heure.'**
+  String get endPlanNextHint;
+
+  /// No description provided for @nextSessionPlanned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prochaine séance ajoutée au planning.'**
+  String get nextSessionPlanned;
+
+  /// No description provided for @previousCovered.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vu · {chapter}'**
+  String previousCovered(String chapter);
+
+  /// No description provided for @previousHomework.
+  ///
+  /// In fr, this message translates to:
+  /// **'Devoir donné : {titles}'**
+  String previousHomework(String titles);
+
+  /// No description provided for @seenInClass.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vu en classe'**
+  String get seenInClass;
+
+  /// No description provided for @seenInClassOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vu en classe le {day}'**
+  String seenInClassOn(String day);
+
+  /// No description provided for @chaptersSeen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chapitres vus'**
+  String get chaptersSeen;
+
+  /// No description provided for @chartGradesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les notes au fil de l\'année'**
+  String get chartGradesTitle;
+
+  /// No description provided for @chartGradesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque point est une note, ramenée sur 20.'**
+  String get chartGradesHint;
+
+  /// No description provided for @chartOneGrade.
+  ///
+  /// In fr, this message translates to:
+  /// **'La courbe apparaît dès la deuxième note.'**
+  String get chartOneGrade;
+
+  /// No description provided for @chartTapHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez un point pour voir la note.'**
+  String get chartTapHint;
+
+  /// No description provided for @chartMonthlyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque mois'**
+  String get chartMonthlyTitle;
+
+  /// No description provided for @chartMonthlyHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les devoirs rendus et la présence, toutes matières.'**
+  String get chartMonthlyHint;
+
+  /// No description provided for @chartHomework.
+  ///
+  /// In fr, this message translates to:
+  /// **'Devoirs rendus'**
+  String get chartHomework;
+
+  /// No description provided for @chartAttendance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Présence'**
+  String get chartAttendance;
+
+  /// No description provided for @showAsTable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir en tableau'**
+  String get showAsTable;
+
+  /// No description provided for @gradesTableTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les notes en tableau'**
+  String get gradesTableTitle;
+
+  /// No description provided for @tableGrades.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notes'**
+  String get tableGrades;
+
+  /// No description provided for @tableMonths.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque mois'**
+  String get tableMonths;
+
+  /// No description provided for @tableSameNumbers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les mêmes chiffres que les graphiques, pour les lire un par un.'**
+  String get tableSameNumbers;
+
+  /// No description provided for @monthNoData.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de chiffres ce mois-ci.'**
+  String get monthNoData;
 }
 
 class _AppLocalizationsDelegate

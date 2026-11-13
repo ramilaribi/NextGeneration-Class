@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'content.dart';
+
 import 'clock_time.dart';
 import 'localized_text.dart';
 
@@ -133,23 +135,67 @@ class RosterEntry extends Equatable {
   List<Object?> get props => [studentId, firstName, lastName, status];
 }
 
+/// A document used in a session ("Fin de séance").
+class CoveredDocument extends Equatable {
+  const CoveredDocument({required this.id, required this.title, required this.kind});
+
+  final String id;
+  final String title;
+  final FileKind kind;
+
+  @override
+  List<Object?> get props => [id, title, kind];
+}
+
+/// What a finished session covered (Release 4, design `r4/FinDeSeance.png`): a chapter, a short line, the documents.
+class Covered extends Equatable {
+  const Covered({this.chapterId, this.chapterTitle, this.details, this.documents = const []});
+
+  final String? chapterId;
+  final String? chapterTitle;
+
+  /// "Exercices 1 à 4".
+  final String? details;
+  final List<CoveredDocument> documents;
+
+  @override
+  List<Object?> get props => [chapterId, chapterTitle, details, documents];
+}
+
+/// "Dernière séance": its notes, what it covered, its absences and the homework given that day.
 class PreviousSession extends Equatable {
-  const PreviousSession({required this.startsAt, this.sessionNote, this.quickNote});
+  const PreviousSession({
+    required this.startsAt,
+    this.sessionNote,
+    this.quickNote,
+    this.covered,
+    this.absent = 0,
+    this.late = 0,
+    this.homework = const [],
+  });
 
   final DateTime startsAt;
   final String? sessionNote;
   final String? quickNote;
+  final Covered? covered;
+  final int absent;
+  final int late;
+
+  /// Titles of the homework given to the group that day.
+  final List<String> homework;
 
   /// What session mode shows under "Dernière séance".
   String? get note => (sessionNote?.isNotEmpty ?? false) ? sessionNote : quickNote;
 
+  bool get isEmpty => note == null && covered == null && absent == 0 && late == 0 && homework.isEmpty;
+
   @override
-  List<Object?> get props => [startsAt, sessionNote, quickNote];
+  List<Object?> get props => [startsAt, sessionNote, quickNote, covered, absent, late, homework];
 }
 
 /// Everything the session panel and session mode show.
 class SessionDetail extends Equatable {
-  const SessionDetail({required this.session, required this.roster, this.quickNote, this.sessionNote, this.previous});
+  const SessionDetail({required this.session, required this.roster, this.quickNote, this.sessionNote, this.previous, this.covered});
 
   final Session session;
   final List<RosterEntry> roster;
@@ -157,8 +203,24 @@ class SessionDetail extends Equatable {
   final String? sessionNote;
   final PreviousSession? previous;
 
+  /// What this session covered, once ended with "Fin de séance".
+  final Covered? covered;
+
   @override
-  List<Object?> get props => [session, roster, quickNote, sessionNote, previous];
+  List<Object?> get props => [session, roster, quickNote, sessionNote, previous, covered];
+}
+
+/// "Fin de séance": what was covered and the private note, all optional.
+class SessionEnd extends Equatable {
+  const SessionEnd({this.chapterId, this.contentIds = const [], this.details, this.sessionNote});
+
+  final String? chapterId;
+  final List<String> contentIds;
+  final String? details;
+  final String? sessionNote;
+
+  @override
+  List<Object?> get props => [chapterId, contentIds, details, sessionNote];
 }
 
 /// A new session, or a weekly series. [date] is a calendar day (time ignored), times are Tunisian.

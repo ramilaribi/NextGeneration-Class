@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Fin de séance</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'Plus Jakarta Sans',sans-serif;color:#1A1D3A;background:#F6F7FB}
+[dir=rtl] body, body[dir=rtl]{font-family:'IBM Plex Sans Arabic',sans-serif}
+a{color:#2B3990;text-decoration:none}
+.app{display:flex;min-height:900px;align-items:stretch}
+.side{width:264px;flex-shrink:0;background:#fff;border-inline-end:1px solid #E6E8F0;padding:24px 16px;display:flex;flex-direction:column;gap:28px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px}
+.brand img{height:34px}
+.brand div{font-size:17px;letter-spacing:-.3px;line-height:1.1;direction:ltr}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav a{display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:12px;color:#4A4F72;font-size:14px;font-weight:600}
+.nav a.on{background:#EEF0FA;color:#2B3990;font-weight:700}
+.over{padding:0 12px 6px;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#6B7090}
+.grp{display:flex;align-items:center;gap:12px;height:40px;padding:0 12px;border-radius:12px;color:#1A1D3A;font-size:14px;font-weight:600}
+.sq{width:24px;height:24px;border-radius:7px;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ucard{margin-top:auto;display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #E6E8F0;border-radius:16px}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;direction:ltr}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{height:72px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 32px;background:#fff;border-bottom:1px solid #E6E8F0}
+.search{flex:0 1 420px;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px;background:#F6F7FB;border:1px solid #E6E8F0;border-radius:12px;color:#6B7090;font-size:14px}
+.btn{height:44px;padding:0 18px;border:none;border-radius:12px;font-family:inherit;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;cursor:pointer}
+.primary{background:#2B3990;color:#fff}
+.secondary{background:#fff;color:#1A1D3A;border:1px solid #E6E8F0}
+.tonal{background:#EEF0FA;color:#2B3990;font-weight:800}
+.ghost{background:transparent;color:#4A4F72}
+.danger{background:#fff;color:#B42525;border:1px solid #F6C9C9}
+.sm{height:38px;padding:0 14px;font-size:13px}
+.page{width:100%;max-width:1240px;padding:32px;display:flex;flex-direction:column;gap:24px}
+.ptitle{margin:0;font-size:38px;font-weight:800;letter-spacing:-1px}
+.card{background:#fff;border:1px solid #E6E8F0;border-radius:24px;padding:24px}
+.ch{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.ch h2{margin:0;flex:1;font-size:18px;font-weight:800}
+.count{padding:3px 9px;border-radius:999px;font-size:12px;font-weight:800}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.dot{width:6px;height:6px;border-radius:3px}
+.badge{display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.row{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid #F0F1F6}
+.t15{font-size:15px;font-weight:700}
+.s13{font-size:13px;color:#6B7090}
+.cap{font-size:12px;font-weight:700;color:#6B7090}
+.tabs{display:inline-flex;padding:4px;background:#fff;border:1px solid #E6E8F0;border-radius:14px;gap:2px}
+.tabs span{height:36px;padding:0 16px;border-radius:10px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#6B7090}
+.tabs span.on{background:#EEF0FA;color:#2B3990;font-weight:700}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label{font-size:14px;font-weight:600}
+.input{display:flex;align-items:center;gap:10px;min-height:48px;padding:0 14px;background:#F6F7FB;border:1px solid #E6E8F0;border-radius:14px;color:#1A1D3A;font-size:15px}
+.input.focus{border:1.5px solid #2B3990}
+.hint{font-size:12px;color:#6B7090}
+.note{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:#F6F7FB;font-size:13px;line-height:1.5;color:#4A4F72}
+.scrim{position:absolute;inset:0;background:rgba(26,29,58,.28)}
+.panel{position:absolute;top:0;bottom:0;inset-inline-end:0;width:520px;background:#fff;box-shadow:0 0 40px rgba(28,37,102,.18);display:flex;flex-direction:column}
+.panel-h{display:flex;align-items:center;gap:12px;padding:22px 24px;border-bottom:1px solid #E6E8F0}
+.panel-b{flex:1;overflow:hidden;padding:24px;display:flex;flex-direction:column;gap:20px}
+.panel-f{display:flex;gap:10px;justify-content:flex-end;padding:18px 24px;border-top:1px solid #E6E8F0}
+.seg{display:flex;padding:4px;background:#F6F7FB;border:1px solid #E6E8F0;border-radius:14px;gap:4px}
+.seg span{flex:1;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;color:#6B7090}
+.seg span.on{background:#fff;color:#2B3990;font-weight:700;box-shadow:0 1px 3px rgba(26,29,58,.12)}
+.ann{position:absolute;padding:6px 10px;border-radius:8px;background:#1A1D3A;color:#fff;font-size:12px;font-weight:700}
+</style></head>
+<body style="width:1440px;min-height:1000px;position:relative">
+<div style="min-height:1000px;background:#F6F7FB"><div style="height:76px;background:#1C2566;display:flex;align-items:center;gap:16px;padding:0 32px;color:#fff">
+  <span class="btn" style="height:40px;background:rgba(255,255,255,.1);color:#fff;font-size:13px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Ma journée</span>
+  <div style="flex:1"><div style="font-size:20px;font-weight:800">4ème année · Maths</div><div style="font-size:13px;opacity:.75;font-weight:600">10:00 à 11:30 · Présentiel · Salle 2</div></div>
+  <span class="chip" style="background:rgba(18,163,154,.2);color:#7FE3DA"><span class="dot" style="background:#7FE3DA"></span>En cours</span>
+  <span class="btn" style="background:#fff;color:#1A1D3A"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>Terminer la séance</span>
+</div>
+<div style="padding:32px;display:flex;gap:24px;align-items:flex-start">
+  <div class="card" style="flex:1.1;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center"><div style="flex:1;font-size:18px;font-weight:800">Présences</div><span class="s13">Touchez un élève pour changer</span></div>
+    <div style="display:flex;gap:8px"><span class="chip" style="background:#E7F6EA;color:#237A35"><span class="dot" style="background:#2F9E44"></span>5 présents</span><span class="chip" style="background:#FDECEC;color:#B42525"><span class="dot" style="background:#E03131"></span>1 absent</span><span class="chip" style="background:#FDEEE4;color:#B5440A"><span class="dot" style="background:#E8590C"></span>0 en retard</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#E7F6EA;border:1px solid #B9E3C2;border-radius:16px"><span class="av" style="width:36px;height:36px;background:#fff;color:#237A35;font-size:13px">AG</span><span style="flex:1;font-size:15px;font-weight:700">Adam Gharbi</span><span style="font-size:13px;font-weight:800;color:#237A35">Présent</span></div><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#FDECEC;border:1px solid #F6C9C9;border-radius:16px"><span class="av" style="width:36px;height:36px;background:#fff;color:#B42525;font-size:13px">AK</span><span style="flex:1;font-size:15px;font-weight:700">Amine Kefi</span><span style="font-size:13px;font-weight:800;color:#B42525">Absent</span></div><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#E7F6EA;border:1px solid #B9E3C2;border-radius:16px"><span class="av" style="width:36px;height:36px;background:#fff;color:#237A35;font-size:13px">RM</span><span style="flex:1;font-size:15px;font-weight:700">Rayen Mansour</span><span style="font-size:13px;font-weight:800;color:#237A35">Présent</span></div><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#E7F6EA;border:1px solid #B9E3C2;border-radius:16px"><span class="av" style="width:36px;height:36px;background:#fff;color:#237A35;font-size:13px">YB</span><span style="flex:1;font-size:15px;font-weight:700">Yasmine Ben Ali</span><span style="font-size:13px;font-weight:800;color:#237A35">Présent</span></div><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#E7F6EA;border:1px solid #B9E3C2;border-radius:16px"><span class="av" style="width:36px;height:36px;background:#fff;color:#237A35;font-size:13px">ET</span><span style="flex:1;font-size:15px;font-weight:700">Eya Trabelsi</span><span style="font-size:13px;font-weight:800;color:#237A35">Présent</span></div><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#E7F6EA;border:1px solid #B9E3C2;border-radius:16px"><span class="av" style="width:36px;height:36px;background:#fff;color:#237A35;font-size:13px">MB</span><span style="flex:1;font-size:15px;font-weight:700">Malek Ben Ali</span><span style="font-size:13px;font-weight:800;color:#237A35">Présent</span></div></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:24px">
+    <div class="card" style="display:flex;flex-direction:column;gap:12px"><div style="display:flex;align-items:center"><div style="flex:1;font-size:18px;font-weight:800">Contenu du jour</div><span class="chip" style="background:#EEF0FA;color:#2B3990"><span class="dot" style="background:#2B3990"></span>Chapitre · Les fractions</span></div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #E6E8F0;border-radius:16px"><span class="badge" style="width:40px;height:40px;border-radius:12px;background:#FDECEC;color:#B42525"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg></span><div style="flex:1"><div class="t15">Série 1 : les fractions</div><div class="s13">Page écrite · Série</div></div><span class="btn secondary sm">Ouvrir</span></div></div>
+    <div class="card" style="display:flex;flex-direction:column;gap:10px"><div class="cap" style="letter-spacing:1px">NOTE RAPIDE</div><div class="input" style="min-height:70px;align-items:flex-start;padding:12px 14px;font-size:14px;line-height:1.5">Amine absent. Revoir la simplification avec Rayen.</div></div>
+  </div>
+</div></div><div class="scrim"></div>
+<div class="panel" style="width:560px">
+  <div class="panel-h"><span class="badge" style="width:44px;height:44px;border-radius:14px;background:#E7F6EA;color:#237A35"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg></span><div style="flex:1"><div style="font-size:20px;font-weight:800">Fin de séance</div>
+    <div class="s13">4ème année · Maths · mardi 6 octobre · 10:00 à 11:30</div></div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B7090" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M18 6 6 18M6 6l12 12"/></svg></div>
+  <div class="panel-b" style="gap:22px">
+    <div class="field"><label>Présences</label>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="chip" style="background:#E7F6EA;color:#237A35"><span class="dot" style="background:#2F9E44"></span>5 présents</span><span class="chip" style="background:#FDECEC;color:#B42525"><span class="dot" style="background:#E03131"></span>1 absent · Amine Kefi</span><span class="chip" style="background:#FDEEE4;color:#B5440A"><span class="dot" style="background:#E8590C"></span>0 en retard</span>
+      <span style="flex:1"></span><span style="font-size:13px;font-weight:700;color:#2B3990">Modifier</span></div></div>
+    <div class="field"><label>Ce qui a été vu</label>
+      <div class="input" style="justify-content:space-between"><span style="display:flex;align-items:center;gap:10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B3990" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Les fractions</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7090" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid #C9CEEC;border-radius:14px;background:#F4F5FC"><span style="color:#2B3990;display:flex;flex-shrink:0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m8 12 3 3 5-6"/></svg></span><span class="badge" style="width:32px;height:32px;border-radius:10px;background:#FDECEC;color:#B42525"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg></span><div style="flex:1"><div style="font-size:14px;font-weight:700">Série 1 : les fractions</div><div class="s13" style="font-size:12px">Contenu du jour</div></div></div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid #E6E8F0;border-radius:14px;background:#fff"><span style="display:block;width:22px;height:22px;border:2px solid #CDD0DE;border-radius:6px;flex-shrink:0"></span><span class="badge" style="width:32px;height:32px;border-radius:10px;background:#F1ECFD;color:#5B34D6"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8"/></svg></span><div style="flex:1"><div style="font-size:14px;font-weight:700">Quiz : les fractions</div><div class="s13" style="font-size:12px">Les fractions</div></div></div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid #E6E8F0;border-radius:14px;background:#fff"><span style="display:block;width:22px;height:22px;border:2px solid #CDD0DE;border-radius:6px;flex-shrink:0"></span><span class="badge" style="width:32px;height:32px;border-radius:10px;background:#FDECEC;color:#B42525"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></svg></span><div style="flex:1"><div style="font-size:14px;font-weight:700">Cours : comparer deux fractions</div><div class="s13" style="font-size:12px">Les fractions</div></div></div>
+      </div>
+      <div class="input" style="font-size:14px">Exercices 1 à 4, la comparaison au même dénominateur.</div>
+      <div class="hint">Les élèves et les parents le voient dans Cours : « Vu en classe le mardi 6 octobre ».</div></div>
+    <div class="field"><label>Note de séance <span class="s13" style="font-weight:500">· visible par vous uniquement</span></label>
+      <div class="input" style="min-height:64px;align-items:flex-start;padding:12px 14px;font-size:14px;line-height:1.5">Amine absent. Revoir la simplification avec Rayen.</div></div>
+    <div class="field"><label>Ensuite</label>
+      <div style="display:flex;align-items:center;gap:14px;padding:14px;border:1px solid #C9CEEC;border-radius:16px;background:#F4F5FC"><span style="position:relative;width:46px;height:28px;border-radius:14px;background:#2B3990;flex-shrink:0"><span style="position:absolute;top:3px;inset-inline-end:3px;width:22px;height:22px;border-radius:11px;background:#fff;box-shadow:0 1px 3px rgba(26,29,58,.2)"></span></span>
+        <div style="flex:1"><div class="t15">Donner un devoir</div><div class="s13">S'ouvre avec ce groupe et Les fractions, après « Terminer ».</div></div></div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:#F6F7FB"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B3990" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+        <div style="flex:1;font-size:13px;color:#4A4F72">Prochaine séance déjà au planning : <b style="color:#1A1D3A">jeudi 8 octobre · 10:00</b></div></div></div>
+  </div>
+  <div class="panel-f"><span class="btn ghost">Retour</span><span class="btn primary"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M20 6 9 17l-5-5"/></svg>Terminer la séance</span></div>
+</div>
+</body></html>
