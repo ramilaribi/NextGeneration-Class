@@ -24,6 +24,23 @@ String? tryFormulaTex(String source) {
   }
 }
 
+/// "3/4" typed in the fast entry becomes a fraction: each word that reads as a formula (a /, a ^, sqrt(…))
+/// is put between two $; text already between $ stays as it is.
+String autoFormulas(String line) {
+  if (line.contains(r'$')) return line;
+  final words = line.split(' ');
+  return [for (final word in words) _looksLikeFormula(word) ? '\$${word.trim()}\$' : word].join(' ');
+}
+
+final _formulaMark = RegExp(r'(\d\s*/\s*\d|\^|sqrt\(|racine\(|<=|>=|!=)');
+final _wordLetters = RegExp(r'[A-Za-zÀ-ɏ؀-ۿ]{3,}');
+
+bool _looksLikeFormula(String word) {
+  final w = word.trim();
+  if (w.isEmpty || !_formulaMark.hasMatch(w) || _wordLetters.hasMatch(w.replaceAll(RegExp(r'sqrt|racine'), ''))) return false;
+  return tryFormulaTex(w) != null;
+}
+
 enum _Kind { number, word, symbol, open, close, other }
 
 class _Token {

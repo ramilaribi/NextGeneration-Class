@@ -186,25 +186,6 @@ List<Map<String, dynamic>> deltaFromLine(String line) {
   ];
 }
 
-/// "3/4" typed in the fast entry becomes a fraction: each word that reads as a formula (a /, a ^, sqrt(…))
-/// is put between two $; text already between $ stays as it is.
-String autoFormulas(String line) {
-  if (line.contains(r'$')) return line;
-  final words = line.split(' ');
-  return [
-    for (final word in words) _looksLikeFormula(word) ? '\$${word.trim()}\$' : word,
-  ].join(' ');
-}
-
-final _formulaMark = RegExp(r'(\d\s*/\s*\d|\^|sqrt\(|racine\(|<=|>=|!=)');
-final _wordLetters = RegExp(r'[A-Za-zÀ-ɏ؀-ۿ]{3,}');
-
-bool _looksLikeFormula(String word) {
-  final w = word.trim();
-  if (w.isEmpty || !_formulaMark.hasMatch(w) || _wordLetters.hasMatch(w.replaceAll(RegExp(r'sqrt|racine'), ''))) return false;
-  return tryFormulaTex(w) != null;
-}
-
 /// "Réponses acceptées : 1 · 4/4 · 1,0" as small green pills.
 class AnswerPills extends StatelessWidget {
   const AnswerPills({super.key, required this.answers, this.accent = Accent.green});

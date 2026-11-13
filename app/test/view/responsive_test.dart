@@ -41,7 +41,15 @@ import 'package:ngclass/view/screens/student/student_destinations.dart';
 import 'package:ngclass/view/screens/student/student_home_screen.dart';
 import 'package:ngclass/view/screens/teacher/contents/contents_screen.dart';
 import 'package:ngclass/view/screens/teacher/contents/page/page_editor_screen.dart';
+import 'package:ngclass/view/widgets/worksheet_preview.dart';
+import 'package:ngclass/view/screens/teacher/contents/worksheet_screen.dart';
+import 'package:ngclass/domain/services/worksheet_maker.dart';
+import 'package:ngclass/view/widgets/buttons.dart';
 import 'package:ngclass/view/screens/teacher/contents/quiz/quiz_editor_screen.dart';
+import 'package:ngclass/view/screens/teacher/announcements/announcements_screen.dart';
+import 'package:ngclass/view/widgets/announcement_widgets.dart';
+import 'package:ngclass/view/stateManager/students/students_cubit.dart';
+import 'package:ngclass/domain/repositories/announcement_repository.dart';
 import 'package:ngclass/view/screens/teacher/homework/quiz_correction_body.dart';
 import 'package:ngclass/view/screens/shared/quiz/quiz_player_screen.dart';
 import 'package:ngclass/view/stateManager/quiz_player/quiz_session.dart';
@@ -81,8 +89,10 @@ import '../helpers/page_fixtures.dart';
 import '../helpers/quiz_fixtures.dart';
 import '../helpers/student_fixtures.dart';
 import 'admin_test.dart' show accounts, owner;
+import 'announcements_test.dart' show FakeAnnouncementRepository, announcementNotice;
 import 'search_test.dart' show FakeSearchRepository;
 import 'student_import_test.dart' show FakeDocumentPrinter, FakeStudentImportRepository;
+import 'worksheet_test.dart' show FakeWorksheetMaker;
 import 'teacher_notifications_test.dart' show teacherSample;
 
 /// Every size the app meets, from the smallest phone to a wide screen, short and tall windows.
@@ -140,6 +150,8 @@ void main() {
     registerContentServices().repository.views['page1'] = samplePageView();
     sl.registerSingleton<PageRepository>(FakePageRepository());
     sl.registerSingleton<QuizRepository>(FakeQuizRepository(timeLimitMin: 15));
+    sl.registerSingleton<AnnouncementRepository>(FakeAnnouncementRepository());
+    sl.registerFactory<StudentsCubit>(() => StudentsCubit(sl.get()));
     final homework = FakeHomeworkRepository();
     // One homework already sent, for the "C'est envoyé !" card.
     final sent = mineOf('h-sent', 'Série 2 : les fractions, exercices 1 à 3', status: HomeworkStatus.submitted, submittedAt: at(5, 16, 40));
@@ -297,6 +309,43 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
+      testWidgets('Annonces and "Nouvelle annonce" fit, $label', (tester) async {
+        await pumpSignedIn(
+          tester,
+          AdaptiveShell(destinations: teacherDestinations(), location: Routes.teacherAnnouncements, child: const AnnouncementsScreen()),
+          language: language,
+          size: size,
+        );
+        expect(tester.takeException(), isNull);
+        await tester.tap(find.byKey(const Key('new-announcement')));
+        await tester.pumpAndSettle();
+        await tester.enterText(
+          find.byKey(const Key('announcement-body')),
+          'Jeudi 15 octobre, sortie au musée du Bardo. Départ à 9 h, retour à 13 h.',
+        );
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull, reason: 'panel');
+      });
+
+      testWidgets('an announcement on the families\' home fits, $label', (tester) async {
+        await pumpSignedIn(
+          tester,
+          Scaffold(
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: FamilyAnnouncements(
+                items: [announcementNotice('n1', now.subtract(const Duration(hours: 2)), studentId: 'me')],
+                now: now,
+              ),
+            ),
+          ),
+          user: parent,
+          language: language,
+          size: size,
+        );
+        expect(tester.takeException(), isNull);
+      });
+
       testWidgets('the quiz builder and its fast entry fit, $label', (tester) async {
         final l10n = l10nOf(language);
         await pumpSignedIn(
@@ -362,6 +411,36 @@ void main() {
           size: size,
         );
         expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('a printed sheet (Fiche) and its settings fit, $label', (tester) async {
+        sl.registerSingleton<DocumentPrinter>(FakeDocumentPrinter());
+        sl.registerSingleton<WorksheetMaker>(FakeWorksheetMaker());
+        for (final (kind, id) in [(FileKind.quiz, 'quiz1'), (FileKind.page, 'page1')]) {
+          await pumpSignedIn(
+            tester,
+            AdaptiveShell(
+              destinations: teacherDestinations(),
+              location: Routes.teacherWorksheet(kind, id),
+              phoneFullScreen: Routes.isTeacherPage,
+              child: WorksheetScreen(key: ValueKey(id), id: id, kind: kind),
+            ),
+            language: language,
+            size: size,
+          );
+          await tester.pumpAndSettle();
+          expect(find.byType(WorksheetPreview), findsOneWidget);
+          expect(tester.takeException(), isNull, reason: '$kind');
+          final settings = find.byKey(const Key('worksheet-settings'));
+          if (settings.evaluate().isNotEmpty) {
+            await tester.tap(settings);
+            await tester.pumpAndSettle();
+            expect(find.byType(WorksheetSettings), findsOneWidget);
+            expect(tester.takeException(), isNull, reason: '$kind settings');
+            await tester.tap(find.byType(PrimaryButton).last);
+            await tester.pumpAndSettle();
+          }
+        }
       });
 
       testWidgets('the Word-like page, its formula and table windows, its Corrigé fit, $label', (tester) async {

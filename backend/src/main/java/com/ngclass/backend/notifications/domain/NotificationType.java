@@ -11,5 +11,7 @@ public enum NotificationType {
 	/** The teacher: work sent by a pupil or a parent; one unread row per homework gathers them. */
 	WORK_SUBMITTED,
 	/** The teacher: a homework's deadline passed; who did not send. */
-	DEADLINE_PASSED
+	DEADLINE_PASSED,
+	/** The teacher's announcement (Release 4): its title and text, for a pupil or a parent. */
+	ANNOUNCEMENT
 }

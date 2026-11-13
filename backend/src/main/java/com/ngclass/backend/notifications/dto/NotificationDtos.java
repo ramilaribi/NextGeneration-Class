@@ -22,7 +22,8 @@ public final class NotificationDtos {
 	 * DEADLINE_PASSED (the homework in [assignmentId], [title], [startsAt]; [pupils] who sent, or who did not;
 	 * [late]: some work came after the deadline). [childFirstName]: the child it is about
 	 * (null for a child's own notifications). [previousStartsAt]: a moved session's former time.
-	 * [sessionCount]: more than 1 when a whole series changed at once.
+	 * [sessionCount]: more than 1 when a whole series changed at once. ANNOUNCEMENT: [title], [body] and
+	 * [announcementId]; [groupName] says who it went to; [author] who wrote it.
 	 */
 	public record NotificationItem(
 			UUID id,
@@ -41,6 +42,9 @@ public final class NotificationDtos {
 			List<NamedPupil> pupils,
 			boolean late,
 			Instant createdAt,
-			boolean read) {
+			boolean read,
+			UUID announcementId,
+			String body,
+			String author) {
 	}
 }

@@ -1,4 +1,5 @@
 import '../../domain/model/app_user.dart';
+import '../../domain/model/content.dart';
 import '../../view/stateManager/auth/auth_state.dart';
 
 /// Every path of the app. Each role has its own area; a user never sees another role's screens.
@@ -34,8 +35,13 @@ abstract final class Routes {
 
   /// A quiz in its builder (release 3).
   static String teacherQuiz(String id) => '$teacherContents/quiz/$id';
+
+  /// "Imprimer une fiche" for a page or a quiz (release 3 step 4).
+  static String teacherWorksheet(FileKind kind, String id) => '$teacherContents/fiche/${kind == FileKind.quiz ? 'quiz' : 'page'}/$id';
   static bool isTeacherPage(String location) =>
-      location.startsWith('$teacherContents/page/') || location.startsWith('$teacherContents/quiz/');
+      location.startsWith('$teacherContents/page/') ||
+      location.startsWith('$teacherContents/quiz/') ||
+      location.startsWith('$teacherContents/fiche/');
 
   /// Contenus opened on one chapter (from the search).
   static String teacherChapter(String id) => '$teacherContents/chapitre/$id';

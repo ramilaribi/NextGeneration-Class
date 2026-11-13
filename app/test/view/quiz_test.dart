@@ -3,6 +3,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ngclass/core/l10n/app_language.dart';
 import 'package:ngclass/core/l10n/formatting.dart';
+import 'package:ngclass/core/math/formula.dart';
 import 'package:ngclass/core/network/api_failure.dart';
 import 'package:ngclass/data/dto/quiz_dto.dart';
 import 'package:ngclass/domain/model/homework.dart';

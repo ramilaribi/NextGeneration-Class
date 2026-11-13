@@ -867,6 +867,12 @@ class _DocumentMenu extends StatelessWidget {
     if (saved != null && context.mounted) showNotice(context, AppLocalizations.of(context).detailsSaved);
   }
 
+  Future<void> _duplicate(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final failure = await context.read<LibraryCubit>().duplicate(document);
+    if (context.mounted) showNotice(context, failure == null ? l10n.documentDuplicated : failureText(l10n, failure));
+  }
+
   Future<void> _archive(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
     final ok = await confirmAction(
@@ -909,6 +915,20 @@ class _DocumentMenu extends StatelessWidget {
           leadingIcon: const Icon(LucideIcons.pencil, size: 16),
           onPressed: () => _edit(context),
           child: Text(l10n.actionEditDetails),
+        ),
+        // A page written in the app or a quiz prints as a sheet (an uploaded file prints as it is).
+        if (document.kind == FileKind.page || document.kind == FileKind.quiz)
+          MenuItemButton(
+            key: Key('worksheet-${document.id}'),
+            leadingIcon: const Icon(LucideIcons.printer, size: 16),
+            onPressed: () => context.go(Routes.teacherWorksheet(document.kind, document.id)),
+            child: Text(l10n.worksheetMenu),
+          ),
+        MenuItemButton(
+          key: Key('duplicate-${document.id}'),
+          leadingIcon: const Icon(LucideIcons.copy, size: 16),
+          onPressed: () => _duplicate(context),
+          child: Text(l10n.duplicate),
         ),
         MenuItemButton(
           leadingIcon: Icon(LucideIcons.archive, size: 16, color: Accent.red.onSoft),

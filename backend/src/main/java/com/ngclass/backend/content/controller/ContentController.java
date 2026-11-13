@@ -10,6 +10,7 @@ import com.ngclass.backend.content.service.ContentService;
 import com.ngclass.backend.content.service.MyContentService;
 import jakarta.validation.Valid;
 import java.util.UUID;
+import com.ngclass.backend.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ContentController {
 	private final ContentService contents;
 	private final MyContentService viewer;
+	private final QuizService quizzes;
 
 	@GetMapping
 	@PreAuthorize("hasRole('TEACHER')")
@@ -57,6 +59,14 @@ public class ContentController {
 	@PreAuthorize("hasRole('TEACHER')")
 	public ContentItemResponse share(@PathVariable UUID id, @Valid @RequestBody ShareRequest request) {
 		return contents.share(id, request.groupIds());
+	}
+
+	/** A new draft: a file or a page here, a quiz with its settings and questions. */
+	@PostMapping("/{id}/duplicate")
+	@PreAuthorize("hasRole('TEACHER')")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ContentItemResponse duplicate(@PathVariable UUID id) {
+		return contents.own(id).isQuiz() ? quizzes.duplicate(id).item() : contents.duplicate(id);
 	}
 
 	@PostMapping("/{id}/archive")

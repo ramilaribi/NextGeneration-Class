@@ -223,6 +223,17 @@ class LibraryCubit extends Cubit<LibraryState> {
   }
 
   /// Hidden from the library and from every Cours; nothing is deleted.
+  /// "Dupliquer": the copy shows in the library, in the same place; null when done.
+  Future<ApiFailure?> duplicate(ContentDocument document) async {
+    try {
+      final copy = await _repository.duplicate(document.id);
+      documentSaved(copy);
+      return null;
+    } on Object catch (error) {
+      return ApiFailure.from(error);
+    }
+  }
+
   Future<ApiFailure?> archive(ContentDocument document) async {
     try {
       await _repository.archive(document.id);

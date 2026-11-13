@@ -2459,5 +2459,165 @@
         "type": "String"
       }
     }
-  }
+  },
+  "documentDuplicated": "Copie créée : c'est un nouveau brouillon.",
+  "allLabel": "Toutes",
+  "announcementActions": "Actions de l'annonce",
+  "announcementAudience": "Qui la reçoit",
+  "announcementBodyHint": "Ex. : Jeudi 15 octobre, sortie au musée. Départ de l'école à 9 h.",
+  "announcementDeleted": "Annonce supprimée.",
+  "announcementFor": "Pour qui",
+  "announcementLabel": "Annonce",
+  "announcementOneWayNote": "Elle arrive dans leurs notifications et reste 7 jours sur leur accueil. Pas de réponse possible : les familles gardent leurs moyens habituels.",
+  "announcementSent": "{count, plural, =0{Annonce envoyée.} =1{Annonce envoyée à 1 personne.} other{Annonce envoyée à {count} personnes.}}",
+  "@announcementSent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "announcementTitleHint": "Ex. : Sortie au musée jeudi",
+  "announcementsEmptyHint": "Un message à un groupe, à un élève ou à leurs parents : une sortie, un jour sans séance, des félicitations.",
+  "announcementsEmptyTitle": "Pas encore d'annonce",
+  "announcementsNoneForGroup": "Aucune annonce pour ce groupe.",
+  "announcementsSubtitle": "Un message à un groupe, à un élève ou à leurs parents. Il reste 7 jours sur leur accueil.",
+  "audienceBoth": "Élèves et parents",
+  "audienceParents": "Parents",
+  "audiencePupils": "Élèves",
+  "choosePupil": "Choisir un élève",
+  "chooseRecipients": "Choisissez au moins un groupe, ou un élève.",
+  "deleteAnnouncementText": "Personne ne l'a encore lue : elle disparaît de leurs notifications.",
+  "deleteAnnouncementTitle": "Supprimer l'annonce ?",
+  "everyoneRead": "Tout le monde l'a lue.",
+  "messageLabel": "Message",
+  "newAnnouncement": "Nouvelle annonce",
+  "newAnnouncementShort": "Nouvelle",
+  "newAnnouncementSubtitle": "Elle arrive dans leurs notifications et sur leur accueil.",
+  "notReadYet": "Pas encore lue par",
+  "onePupil": "Un élève",
+  "parentsOnlyHint": "Une annonce aux parents n'est pas visible par les élèves.",
+  "previewForFamilies": "Ce que voient les familles",
+  "previewForParents": "Ce que voient les parents",
+  "previewForPupils": "Ce que voient les élèves",
+  "pupilRole": "Élève",
+  "pupilsCount": "{count, plural, =0{aucun élève} =1{1 élève} other{{count} élèves}}",
+  "@pupilsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pupilsNeedLoginHint": "Seuls les élèves qui ont leur propre accès la reçoivent.",
+  "readCount": "{read} / {total} lus",
+  "@readCount": {
+    "placeholders": {
+      "read": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sendAnnouncement": "Envoyer",
+  "someGroups": "Des groupes",
+  "titleLabel": "Titre",
+  "todayAt": "Aujourd'hui à {time}",
+  "@todayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "yesterdayAt": "Hier à {time}",
+  "@yesterdayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "worksheetMenu": "Imprimer une fiche",
+  "worksheetTitle": "Fiche : {title}",
+  "@worksheetTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "worksheetPupilVersion": "version élève",
+  "worksheetTeacherVersion": "version enseignante",
+  "worksheetSettings": "Réglages de la fiche",
+  "worksheetSettingsShort": "Réglages",
+  "worksheetFrom": "À partir de",
+  "worksheetFromHint": "Une page écrite dans l'application ou un quiz. Une série importée en PDF s'imprime déjà telle quelle.",
+  "worksheetChange": "Changer",
+  "worksheetChooseSource": "Choisir une page ou un quiz",
+  "worksheetNoSource": "Pas encore de page écrite ni de quiz.",
+  "worksheetVersion": "Version",
+  "worksheetPupil": "Élève",
+  "worksheetTeacher": "Enseignante",
+  "worksheetTeacherHint": "La version enseignante ajoute les bonnes réponses, en vert.",
+  "worksheetTitleHint": "Ex. : Contrôle : les fractions",
+  "worksheetRevision": "Fiche de révision : {title}",
+  "@worksheetRevision": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "worksheetTest": "Contrôle : {title}",
+  "@worksheetTest": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "worksheetHeader": "En-tête",
+  "worksheetShowPlace": "Matière, niveau et chapitre",
+  "worksheetShowDate": "Date : {date}",
+  "@worksheetShowDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "worksheetShowTeacher": "Votre nom : {name}",
+  "@worksheetShowTeacher": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "worksheetShowNameLine": "Ligne « Nom et prénom »",
+  "worksheetShowNameMark": "Ligne « Nom et prénom » et la note",
+  "worksheetSave": "L'enregistrer dans Contenus",
+  "worksheetSaveHint": "Comme une fiche (PDF), à partager ou donner en devoir",
+  "worksheetDownload": "Télécharger le PDF",
+  "worksheetPrint": "Imprimer",
+  "worksheetShare": "Partager",
+  "worksheetSaved": "Fiche enregistrée dans Contenus.",
+  "worksheetFailed": "La fiche n'a pas pu être préparée. Réessayez.",
+  "worksheetMarkLabel": "Note :",
+  "worksheetAnswer": "Réponse :",
+  "worksheetOr": " ou ",
+  "worksheetExplanation": "Explication :",
+  "worksheetToCorrect": "Question ouverte : à corriger.",
+  "worksheetPoints": "{count, plural, =0{0 pt} =1{1 pt} other{{count} pts}}",
+  "@worksheetPoints": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "worksheetShort": "Fiche"
 }

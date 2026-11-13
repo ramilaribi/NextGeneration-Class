@@ -98,4 +98,13 @@ public class Notification {
 	private Instant createdAt;
 
 	private Instant readAt;
+
+	/** An announcement (Release 4): which one, and its text as sent. */
+	private UUID announcementId;
+
+	@Column(length = 2000)
+	private String body;
+
+	@Column(length = 160)
+	private String author;
 }

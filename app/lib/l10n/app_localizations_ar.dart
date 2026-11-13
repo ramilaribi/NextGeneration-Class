@@ -4328,4 +4328,304 @@ class AppLocalizationsAr extends AppLocalizations {
   String wellDoneName(String name) {
     return 'أحسنت يا $name!';
   }
+
+  @override
+  String get documentDuplicated => 'أُنشئت نسخة: إنّها مسودّة جديدة.';
+
+  @override
+  String get allLabel => 'الكلّ';
+
+  @override
+  String get announcementActions => 'إجراءات الإعلان';
+
+  @override
+  String get announcementAudience => 'من يتلقّاه';
+
+  @override
+  String get announcementBodyHint =>
+      'مثال: يوم الخميس 15 أكتوبر، خرجة إلى المتحف. الانطلاق من المدرسة على الساعة 9.';
+
+  @override
+  String get announcementDeleted => 'تمّ حذف الإعلان.';
+
+  @override
+  String get announcementFor => 'لمن';
+
+  @override
+  String get announcementLabel => 'إعلان';
+
+  @override
+  String get announcementOneWayNote =>
+      'يصل إلى إشعاراتهم ويبقى 7 أيام في صفحتهم الرئيسية. لا يمكن الردّ عليه: تحتفظ العائلات بوسائلها المعتادة.';
+
+  @override
+  String announcementSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أُرسل الإعلان إلى $count شخص.',
+      many: 'أُرسل الإعلان إلى $count شخصًا.',
+      few: 'أُرسل الإعلان إلى $count أشخاص.',
+      two: 'أُرسل الإعلان إلى شخصين.',
+      one: 'أُرسل الإعلان إلى شخص واحد.',
+      zero: 'تمّ إرسال الإعلان.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get announcementTitleHint => 'مثال: خرجة إلى المتحف يوم الخميس';
+
+  @override
+  String get announcementsEmptyHint =>
+      'رسالة إلى مجموعة أو إلى تلميذ أو إلى أوليائهم: خرجة، يوم بلا حصّة، تهنئة.';
+
+  @override
+  String get announcementsEmptyTitle => 'لا إعلانات بعد';
+
+  @override
+  String get announcementsNoneForGroup => 'لا إعلان لهذه المجموعة.';
+
+  @override
+  String get announcementsSubtitle =>
+      'رسالة إلى مجموعة أو إلى تلميذ أو إلى أوليائهم. تبقى 7 أيام في صفحتهم الرئيسية.';
+
+  @override
+  String get audienceBoth => 'التلاميذ والأولياء';
+
+  @override
+  String get audienceParents => 'الأولياء';
+
+  @override
+  String get audiencePupils => 'التلاميذ';
+
+  @override
+  String get choosePupil => 'اختر تلميذًا';
+
+  @override
+  String get chooseRecipients => 'اختر مجموعة واحدة على الأقل، أو تلميذًا.';
+
+  @override
+  String get deleteAnnouncementText => 'لم يقرأه أحد بعد: سيختفي من إشعاراتهم.';
+
+  @override
+  String get deleteAnnouncementTitle => 'حذف الإعلان؟';
+
+  @override
+  String get everyoneRead => 'قرأه الجميع.';
+
+  @override
+  String get messageLabel => 'الرسالة';
+
+  @override
+  String get newAnnouncement => 'إعلان جديد';
+
+  @override
+  String get newAnnouncementShort => 'جديد';
+
+  @override
+  String get newAnnouncementSubtitle => 'يصل إلى إشعاراتهم وصفحتهم الرئيسية.';
+
+  @override
+  String get notReadYet => 'لم يقرأه بعد';
+
+  @override
+  String get onePupil => 'تلميذ واحد';
+
+  @override
+  String get parentsOnlyHint =>
+      'الإعلان الموجّه إلى الأولياء لا يراه التلاميذ.';
+
+  @override
+  String get previewForFamilies => 'ما تراه العائلات';
+
+  @override
+  String get previewForParents => 'ما يراه الأولياء';
+
+  @override
+  String get previewForPupils => 'ما يراه التلاميذ';
+
+  @override
+  String get pupilRole => 'تلميذ';
+
+  @override
+  String pupilsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count تلميذ',
+      many: '$count تلميذًا',
+      few: '$count تلاميذ',
+      two: 'تلميذان',
+      one: 'تلميذ واحد',
+      zero: 'لا تلاميذ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get pupilsNeedLoginHint =>
+      'يتلقّاه فقط التلاميذ الذين لديهم حساب خاصّ.';
+
+  @override
+  String readCount(int read, int total) {
+    return '$read / $total مقروء';
+  }
+
+  @override
+  String get sendAnnouncement => 'إرسال';
+
+  @override
+  String get someGroups => 'مجموعات';
+
+  @override
+  String get titleLabel => 'العنوان';
+
+  @override
+  String todayAt(String time) {
+    return 'اليوم على الساعة $time';
+  }
+
+  @override
+  String yesterdayAt(String time) {
+    return 'أمس على الساعة $time';
+  }
+
+  @override
+  String get worksheetMenu => 'طباعة ورقة عمل';
+
+  @override
+  String worksheetTitle(String title) {
+    return 'ورقة عمل: $title';
+  }
+
+  @override
+  String get worksheetPupilVersion => 'نسخة التلميذ';
+
+  @override
+  String get worksheetTeacherVersion => 'نسخة المعلمة';
+
+  @override
+  String get worksheetSettings => 'إعدادات الورقة';
+
+  @override
+  String get worksheetSettingsShort => 'الإعدادات';
+
+  @override
+  String get worksheetFrom => 'انطلاقًا من';
+
+  @override
+  String get worksheetFromHint =>
+      'صفحة مكتوبة في التطبيق أو اختبار. السلسلة المستوردة بصيغة PDF تُطبع كما هي.';
+
+  @override
+  String get worksheetChange => 'تغيير';
+
+  @override
+  String get worksheetChooseSource => 'اختيار صفحة أو اختبار';
+
+  @override
+  String get worksheetNoSource => 'لا توجد بعد صفحة مكتوبة ولا اختبار.';
+
+  @override
+  String get worksheetVersion => 'النسخة';
+
+  @override
+  String get worksheetPupil => 'التلميذ';
+
+  @override
+  String get worksheetTeacher => 'المعلمة';
+
+  @override
+  String get worksheetTeacherHint =>
+      'تضيف نسخة المعلمة الإجابات الصحيحة باللون الأخضر.';
+
+  @override
+  String get worksheetTitleHint => 'مثال: فرض: الكسور';
+
+  @override
+  String worksheetRevision(String title) {
+    return 'ورقة مراجعة: $title';
+  }
+
+  @override
+  String worksheetTest(String title) {
+    return 'فرض: $title';
+  }
+
+  @override
+  String get worksheetHeader => 'رأس الورقة';
+
+  @override
+  String get worksheetShowPlace => 'المادة والمستوى والمحور';
+
+  @override
+  String worksheetShowDate(String date) {
+    return 'التاريخ: $date';
+  }
+
+  @override
+  String worksheetShowTeacher(String name) {
+    return 'اسمك: $name';
+  }
+
+  @override
+  String get worksheetShowNameLine => 'سطر «الاسم واللقب»';
+
+  @override
+  String get worksheetShowNameMark => 'سطر «الاسم واللقب» والعدد';
+
+  @override
+  String get worksheetSave => 'حفظها في المحتويات';
+
+  @override
+  String get worksheetSaveHint => 'كورقة (PDF) للمشاركة أو لإعطائها كواجب';
+
+  @override
+  String get worksheetDownload => 'تنزيل PDF';
+
+  @override
+  String get worksheetPrint => 'طباعة';
+
+  @override
+  String get worksheetShare => 'مشاركة';
+
+  @override
+  String get worksheetSaved => 'حُفظت الورقة في المحتويات.';
+
+  @override
+  String get worksheetFailed => 'تعذّر إعداد الورقة. أعيدي المحاولة.';
+
+  @override
+  String get worksheetMarkLabel => 'العدد:';
+
+  @override
+  String get worksheetAnswer => 'الإجابة:';
+
+  @override
+  String get worksheetOr => ' أو ';
+
+  @override
+  String get worksheetExplanation => 'الشرح:';
+
+  @override
+  String get worksheetToCorrect => 'سؤال مفتوح: للتصحيح.';
+
+  @override
+  String worksheetPoints(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count نقطة',
+      many: '$count نقطة',
+      few: '$count نقاط',
+      two: 'نقطتان',
+      one: 'نقطة',
+      zero: '0 نقطة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get worksheetShort => 'ورقة عمل';
 }

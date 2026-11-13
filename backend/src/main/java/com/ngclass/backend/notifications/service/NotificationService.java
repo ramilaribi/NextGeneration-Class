@@ -82,6 +82,56 @@ public class NotificationService {
 		}
 	}
 
+	/**
+	 * An announcement (Release 4): one row per person, whatever the number of children or groups. [label] is who
+	 * it went to ("4ème année · Maths", or a pupil's name). Returns how many people received it.
+	 */
+	public int announce(UUID announcementId, String title, String body, String author, String label, Collection<Student> pupils,
+			boolean toPupils, boolean toParents, Instant at) {
+		Map<UUID, Notification> byUser = new java.util.LinkedHashMap<>();
+		Map<UUID, Student> children = pupils.stream()
+				.filter(s -> s.getArchivedAt() == null)
+				.collect(Collectors.toMap(Student::getId, Function.identity(), (a, b) -> a, java.util.LinkedHashMap::new));
+		if (toPupils) {
+			for (Student child : children.values()) {
+				User user = child.getUser();
+				if (user.isActive() && user.isLoginEnabled()) {
+					byUser.putIfAbsent(user.getId(), announcementRow(user.getId(), child, null, announcementId, title, body, author, label, at));
+				}
+			}
+		}
+		if (toParents && !children.isEmpty()) {
+			for (Parent parent : parents.findByChildren(children.keySet())) {
+				if (!parent.getUser().isActive()) {
+					continue;
+				}
+				Student child = parent.getChildren().stream().filter(c -> children.containsKey(c.getId())).findFirst().orElse(null);
+				if (child != null) {
+					byUser.putIfAbsent(parent.getUser().getId(),
+							announcementRow(parent.getUser().getId(), child, child.getUser().getFirstName(), announcementId, title, body, author, label, at));
+				}
+			}
+		}
+		notifications.saveAll(byUser.values());
+		return byUser.size();
+	}
+
+	private static Notification announcementRow(UUID userId, Student child, String childFirstName, UUID announcementId, String title,
+			String body, String author, String label, Instant at) {
+		return Notification.builder()
+				.userId(userId)
+				.type(NotificationType.ANNOUNCEMENT)
+				.studentId(child.getId())
+				.childFirstName(childFirstName)
+				.groupName(label.length() > 80 ? label.substring(0, 80) : label)
+				.startsAt(at)
+				.announcementId(announcementId)
+				.title(title)
+				.body(body)
+				.author(author)
+				.build();
+	}
+
 	/** New homework (spec 06): the pupils it is for and their parents, with its title and deadline. */
 	public void homeworkAssigned(ClassGroup group, Collection<UUID> studentIds, UUID assignmentId, String title, Instant deadline) {
 		notifyChildren(group, studentIds, NotificationType.HOMEWORK_ASSIGNED, null, deadline, null, 1, null, assignmentId, title, null);
@@ -264,6 +314,9 @@ public class NotificationService {
 				n.getPupils(),
 				n.isLate(),
 				n.getCreatedAt(),
-				n.getReadAt() != null);
+				n.getReadAt() != null,
+				n.getAnnouncementId(),
+				n.getBody(),
+				n.getAuthor());
 	}
 }

@@ -50,6 +50,9 @@ class ContentRepositoryImpl implements ContentRepository {
   Future<void> archive(String id) => guard(() => _api.archive(id));
 
   @override
+  Future<ContentDocument> duplicate(String id) => guard(() async => documentOf(await _api.duplicate(id)));
+
+  @override
   Future<DocumentView> view(String id) => guard(() async => documentViewOf(await _api.view(id), _config.apiBaseUrl));
 
   @override

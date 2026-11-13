@@ -199,6 +199,34 @@ class PageEditorTest {
 	}
 
 	@Test
+	void dupliquerMakesADraftCopyOfAFileOrAPageSharedWithNobody() throws Exception {
+		String chapter = createChapter(ines, maths, "Les fractions");
+		JsonNode file = body(upload(ines, pdf(2), "serie.pdf", meta("Série 2", chapter, "SERIE", false, List.of(group4A))).andExpect(status().isCreated()));
+		JsonNode fileCopy = body(call(post("/api/v1/contents/" + file.at("/id").asText() + "/duplicate"), ines).andExpect(status().isCreated()));
+		assertThat(fileCopy.at("/title").asText()).isEqualTo("Série 2 (copie)");
+		assertThat(fileCopy.at("/status").asText()).isEqualTo("DRAFT");
+		assertThat(fileCopy.at("/kind").asText()).isEqualTo("PDF");
+		assertThat(fileCopy.at("/chapterId").asText()).isEqualTo(chapter);
+		assertThat(fileCopy.at("/sharedGroupIds").size()).isZero();
+		call(get("/api/v1/contents/" + fileCopy.at("/id").asText() + "/view"), ines).andExpect(status().isOk()).andExpect(jsonPath("$.pageUrls.length()").value(2));
+
+		String page = body(call(post("/api/v1/contents/pages").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(
+				Map.of("title", "Série 3", "subjectId", maths, "levelId", levelId, "tag", "SERIE"))), ines)).at("/item/id").asText();
+		List<Object> text = List.of(Map.of("insert", "Exercice 1\n"));
+		List<Object> corrige = List.of(Map.of("insert", "5/4\n"));
+		call(put("/api/v1/contents/" + page + "/page").contentType(MediaType.APPLICATION_JSON)
+				.content(json.writeValueAsString(Map.of("body", text, "answerBody", corrige))), ines).andExpect(status().isOk());
+		String pageCopy = body(call(post("/api/v1/contents/" + page + "/duplicate"), ines).andExpect(status().isCreated())).at("/id").asText();
+		JsonNode copied = body(call(get("/api/v1/contents/" + pageCopy + "/page"), ines).andExpect(status().isOk()));
+		assertThat(copied.at("/body/0/insert").asText()).isEqualTo("Exercice 1\n");
+		assertThat(copied.at("/answerBody/0/insert").asText()).isEqualTo("5/4\n");
+
+		// Only the teacher's own documents.
+		account(Role.TEACHER, "autre");
+		call(post("/api/v1/contents/" + page + "/duplicate"), token("autre", PASSWORD)).andExpect(status().isNotFound());
+	}
+
+	@Test
 	void aPageKeepsOnlyDeltaOperationsAndAPictureMustBeAnImage() throws Exception {
 		String id = body(call(post("/api/v1/contents/pages").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(
 				Map.of("title", "Leçon : les fractions", "subjectId", maths, "levelId", levelId, "tag", "COURS"))), ines)

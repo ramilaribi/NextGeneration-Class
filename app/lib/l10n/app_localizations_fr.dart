@@ -4218,4 +4218,299 @@ class AppLocalizationsFr extends AppLocalizations {
   String wellDoneName(String name) {
     return 'Bien joué, $name !';
   }
+
+  @override
+  String get documentDuplicated => 'Copie créée : c\'est un nouveau brouillon.';
+
+  @override
+  String get allLabel => 'Toutes';
+
+  @override
+  String get announcementActions => 'Actions de l\'annonce';
+
+  @override
+  String get announcementAudience => 'Qui la reçoit';
+
+  @override
+  String get announcementBodyHint =>
+      'Ex. : Jeudi 15 octobre, sortie au musée. Départ de l\'école à 9 h.';
+
+  @override
+  String get announcementDeleted => 'Annonce supprimée.';
+
+  @override
+  String get announcementFor => 'Pour qui';
+
+  @override
+  String get announcementLabel => 'Annonce';
+
+  @override
+  String get announcementOneWayNote =>
+      'Elle arrive dans leurs notifications et reste 7 jours sur leur accueil. Pas de réponse possible : les familles gardent leurs moyens habituels.';
+
+  @override
+  String announcementSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Annonce envoyée à $count personnes.',
+      one: 'Annonce envoyée à 1 personne.',
+      zero: 'Annonce envoyée.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get announcementTitleHint => 'Ex. : Sortie au musée jeudi';
+
+  @override
+  String get announcementsEmptyHint =>
+      'Un message à un groupe, à un élève ou à leurs parents : une sortie, un jour sans séance, des félicitations.';
+
+  @override
+  String get announcementsEmptyTitle => 'Pas encore d\'annonce';
+
+  @override
+  String get announcementsNoneForGroup => 'Aucune annonce pour ce groupe.';
+
+  @override
+  String get announcementsSubtitle =>
+      'Un message à un groupe, à un élève ou à leurs parents. Il reste 7 jours sur leur accueil.';
+
+  @override
+  String get audienceBoth => 'Élèves et parents';
+
+  @override
+  String get audienceParents => 'Parents';
+
+  @override
+  String get audiencePupils => 'Élèves';
+
+  @override
+  String get choosePupil => 'Choisir un élève';
+
+  @override
+  String get chooseRecipients => 'Choisissez au moins un groupe, ou un élève.';
+
+  @override
+  String get deleteAnnouncementText =>
+      'Personne ne l\'a encore lue : elle disparaît de leurs notifications.';
+
+  @override
+  String get deleteAnnouncementTitle => 'Supprimer l\'annonce ?';
+
+  @override
+  String get everyoneRead => 'Tout le monde l\'a lue.';
+
+  @override
+  String get messageLabel => 'Message';
+
+  @override
+  String get newAnnouncement => 'Nouvelle annonce';
+
+  @override
+  String get newAnnouncementShort => 'Nouvelle';
+
+  @override
+  String get newAnnouncementSubtitle =>
+      'Elle arrive dans leurs notifications et sur leur accueil.';
+
+  @override
+  String get notReadYet => 'Pas encore lue par';
+
+  @override
+  String get onePupil => 'Un élève';
+
+  @override
+  String get parentsOnlyHint =>
+      'Une annonce aux parents n\'est pas visible par les élèves.';
+
+  @override
+  String get previewForFamilies => 'Ce que voient les familles';
+
+  @override
+  String get previewForParents => 'Ce que voient les parents';
+
+  @override
+  String get previewForPupils => 'Ce que voient les élèves';
+
+  @override
+  String get pupilRole => 'Élève';
+
+  @override
+  String pupilsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count élèves',
+      one: '1 élève',
+      zero: 'aucun élève',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get pupilsNeedLoginHint =>
+      'Seuls les élèves qui ont leur propre accès la reçoivent.';
+
+  @override
+  String readCount(int read, int total) {
+    return '$read / $total lus';
+  }
+
+  @override
+  String get sendAnnouncement => 'Envoyer';
+
+  @override
+  String get someGroups => 'Des groupes';
+
+  @override
+  String get titleLabel => 'Titre';
+
+  @override
+  String todayAt(String time) {
+    return 'Aujourd\'hui à $time';
+  }
+
+  @override
+  String yesterdayAt(String time) {
+    return 'Hier à $time';
+  }
+
+  @override
+  String get worksheetMenu => 'Imprimer une fiche';
+
+  @override
+  String worksheetTitle(String title) {
+    return 'Fiche : $title';
+  }
+
+  @override
+  String get worksheetPupilVersion => 'version élève';
+
+  @override
+  String get worksheetTeacherVersion => 'version enseignante';
+
+  @override
+  String get worksheetSettings => 'Réglages de la fiche';
+
+  @override
+  String get worksheetSettingsShort => 'Réglages';
+
+  @override
+  String get worksheetFrom => 'À partir de';
+
+  @override
+  String get worksheetFromHint =>
+      'Une page écrite dans l\'application ou un quiz. Une série importée en PDF s\'imprime déjà telle quelle.';
+
+  @override
+  String get worksheetChange => 'Changer';
+
+  @override
+  String get worksheetChooseSource => 'Choisir une page ou un quiz';
+
+  @override
+  String get worksheetNoSource => 'Pas encore de page écrite ni de quiz.';
+
+  @override
+  String get worksheetVersion => 'Version';
+
+  @override
+  String get worksheetPupil => 'Élève';
+
+  @override
+  String get worksheetTeacher => 'Enseignante';
+
+  @override
+  String get worksheetTeacherHint =>
+      'La version enseignante ajoute les bonnes réponses, en vert.';
+
+  @override
+  String get worksheetTitleHint => 'Ex. : Contrôle : les fractions';
+
+  @override
+  String worksheetRevision(String title) {
+    return 'Fiche de révision : $title';
+  }
+
+  @override
+  String worksheetTest(String title) {
+    return 'Contrôle : $title';
+  }
+
+  @override
+  String get worksheetHeader => 'En-tête';
+
+  @override
+  String get worksheetShowPlace => 'Matière, niveau et chapitre';
+
+  @override
+  String worksheetShowDate(String date) {
+    return 'Date : $date';
+  }
+
+  @override
+  String worksheetShowTeacher(String name) {
+    return 'Votre nom : $name';
+  }
+
+  @override
+  String get worksheetShowNameLine => 'Ligne « Nom et prénom »';
+
+  @override
+  String get worksheetShowNameMark => 'Ligne « Nom et prénom » et la note';
+
+  @override
+  String get worksheetSave => 'L\'enregistrer dans Contenus';
+
+  @override
+  String get worksheetSaveHint =>
+      'Comme une fiche (PDF), à partager ou donner en devoir';
+
+  @override
+  String get worksheetDownload => 'Télécharger le PDF';
+
+  @override
+  String get worksheetPrint => 'Imprimer';
+
+  @override
+  String get worksheetShare => 'Partager';
+
+  @override
+  String get worksheetSaved => 'Fiche enregistrée dans Contenus.';
+
+  @override
+  String get worksheetFailed =>
+      'La fiche n\'a pas pu être préparée. Réessayez.';
+
+  @override
+  String get worksheetMarkLabel => 'Note :';
+
+  @override
+  String get worksheetAnswer => 'Réponse :';
+
+  @override
+  String get worksheetOr => ' ou ';
+
+  @override
+  String get worksheetExplanation => 'Explication :';
+
+  @override
+  String get worksheetToCorrect => 'Question ouverte : à corriger.';
+
+  @override
+  String worksheetPoints(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pts',
+      one: '1 pt',
+      zero: '0 pt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get worksheetShort => 'Fiche';
 }

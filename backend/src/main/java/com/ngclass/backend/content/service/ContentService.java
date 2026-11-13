@@ -192,6 +192,34 @@ public class ContentService {
 		return response(item, kept);
 	}
 
+	/**
+	 * "Dupliquer" (spec 05, duplicate content): a new draft in the same place, shared with nobody. A file is
+	 * shared with its copy (it never changes); a page copies its text and its Corrigé. A quiz duplicates
+	 * through QuizService, with its settings and questions.
+	 */
+	@Transactional
+	public ContentItemResponse duplicate(UUID id) {
+		ContentItem source = own(id);
+		if (source.isQuiz()) {
+			throw ApiException.badRequest("content_not_found");
+		}
+		String title = source.getTitle() + " (copie)";
+		ContentItem copy = items.saveAndFlush(ContentItem.builder()
+				.teacherId(source.getTeacherId())
+				.type(source.getType())
+				.title(title.length() > 160 ? title.substring(0, 160) : title)
+				.subjectId(source.getSubjectId())
+				.levelId(source.getLevelId())
+				.chapterId(source.getChapterId())
+				.status(ContentStatus.DRAFT)
+				.tag(source.getTag())
+				.file(source.getFile())
+				.body(source.getBody() == null ? null : source.getBody().deepCopy())
+				.answerBody(source.getAnswerBody() == null ? null : source.getAnswerBody().deepCopy())
+				.build());
+		return response(copy, List.of());
+	}
+
 	/** Hidden from the library and from every Cours; nothing is deleted (spec 04). */
 	@Transactional
 	public void archive(UUID id) {

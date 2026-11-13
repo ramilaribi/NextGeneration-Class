@@ -6642,6 +6642,486 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Bien joué, {name} !'**
   String wellDoneName(String name);
+
+  /// No description provided for @documentDuplicated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copie créée : c\'est un nouveau brouillon.'**
+  String get documentDuplicated;
+
+  /// No description provided for @allLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes'**
+  String get allLabel;
+
+  /// No description provided for @announcementActions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actions de l\'annonce'**
+  String get announcementActions;
+
+  /// No description provided for @announcementAudience.
+  ///
+  /// In fr, this message translates to:
+  /// **'Qui la reçoit'**
+  String get announcementAudience;
+
+  /// No description provided for @announcementBodyHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Jeudi 15 octobre, sortie au musée. Départ de l\'école à 9 h.'**
+  String get announcementBodyHint;
+
+  /// No description provided for @announcementDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annonce supprimée.'**
+  String get announcementDeleted;
+
+  /// No description provided for @announcementFor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour qui'**
+  String get announcementFor;
+
+  /// No description provided for @announcementLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annonce'**
+  String get announcementLabel;
+
+  /// No description provided for @announcementOneWayNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle arrive dans leurs notifications et reste 7 jours sur leur accueil. Pas de réponse possible : les familles gardent leurs moyens habituels.'**
+  String get announcementOneWayNote;
+
+  /// No description provided for @announcementSent.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Annonce envoyée.} =1{Annonce envoyée à 1 personne.} other{Annonce envoyée à {count} personnes.}}'**
+  String announcementSent(int count);
+
+  /// No description provided for @announcementTitleHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Sortie au musée jeudi'**
+  String get announcementTitleHint;
+
+  /// No description provided for @announcementsEmptyHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un message à un groupe, à un élève ou à leurs parents : une sortie, un jour sans séance, des félicitations.'**
+  String get announcementsEmptyHint;
+
+  /// No description provided for @announcementsEmptyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore d\'annonce'**
+  String get announcementsEmptyTitle;
+
+  /// No description provided for @announcementsNoneForGroup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune annonce pour ce groupe.'**
+  String get announcementsNoneForGroup;
+
+  /// No description provided for @announcementsSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un message à un groupe, à un élève ou à leurs parents. Il reste 7 jours sur leur accueil.'**
+  String get announcementsSubtitle;
+
+  /// No description provided for @audienceBoth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Élèves et parents'**
+  String get audienceBoth;
+
+  /// No description provided for @audienceParents.
+  ///
+  /// In fr, this message translates to:
+  /// **'Parents'**
+  String get audienceParents;
+
+  /// No description provided for @audiencePupils.
+  ///
+  /// In fr, this message translates to:
+  /// **'Élèves'**
+  String get audiencePupils;
+
+  /// No description provided for @choosePupil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir un élève'**
+  String get choosePupil;
+
+  /// No description provided for @chooseRecipients.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisissez au moins un groupe, ou un élève.'**
+  String get chooseRecipients;
+
+  /// No description provided for @deleteAnnouncementText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Personne ne l\'a encore lue : elle disparaît de leurs notifications.'**
+  String get deleteAnnouncementText;
+
+  /// No description provided for @deleteAnnouncementTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer l\'annonce ?'**
+  String get deleteAnnouncementTitle;
+
+  /// No description provided for @everyoneRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout le monde l\'a lue.'**
+  String get everyoneRead;
+
+  /// No description provided for @messageLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Message'**
+  String get messageLabel;
+
+  /// No description provided for @newAnnouncement.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle annonce'**
+  String get newAnnouncement;
+
+  /// No description provided for @newAnnouncementShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle'**
+  String get newAnnouncementShort;
+
+  /// No description provided for @newAnnouncementSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle arrive dans leurs notifications et sur leur accueil.'**
+  String get newAnnouncementSubtitle;
+
+  /// No description provided for @notReadYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore lue par'**
+  String get notReadYet;
+
+  /// No description provided for @onePupil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un élève'**
+  String get onePupil;
+
+  /// No description provided for @parentsOnlyHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une annonce aux parents n\'est pas visible par les élèves.'**
+  String get parentsOnlyHint;
+
+  /// No description provided for @previewForFamilies.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que voient les familles'**
+  String get previewForFamilies;
+
+  /// No description provided for @previewForParents.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que voient les parents'**
+  String get previewForParents;
+
+  /// No description provided for @previewForPupils.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que voient les élèves'**
+  String get previewForPupils;
+
+  /// No description provided for @pupilRole.
+  ///
+  /// In fr, this message translates to:
+  /// **'Élève'**
+  String get pupilRole;
+
+  /// No description provided for @pupilsCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{aucun élève} =1{1 élève} other{{count} élèves}}'**
+  String pupilsCount(int count);
+
+  /// No description provided for @pupilsNeedLoginHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Seuls les élèves qui ont leur propre accès la reçoivent.'**
+  String get pupilsNeedLoginHint;
+
+  /// No description provided for @readCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{read} / {total} lus'**
+  String readCount(int read, int total);
+
+  /// No description provided for @sendAnnouncement.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer'**
+  String get sendAnnouncement;
+
+  /// No description provided for @someGroups.
+  ///
+  /// In fr, this message translates to:
+  /// **'Des groupes'**
+  String get someGroups;
+
+  /// No description provided for @titleLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre'**
+  String get titleLabel;
+
+  /// No description provided for @todayAt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui à {time}'**
+  String todayAt(String time);
+
+  /// No description provided for @yesterdayAt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hier à {time}'**
+  String yesterdayAt(String time);
+
+  /// No description provided for @worksheetMenu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Imprimer une fiche'**
+  String get worksheetMenu;
+
+  /// No description provided for @worksheetTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fiche : {title}'**
+  String worksheetTitle(String title);
+
+  /// No description provided for @worksheetPupilVersion.
+  ///
+  /// In fr, this message translates to:
+  /// **'version élève'**
+  String get worksheetPupilVersion;
+
+  /// No description provided for @worksheetTeacherVersion.
+  ///
+  /// In fr, this message translates to:
+  /// **'version enseignante'**
+  String get worksheetTeacherVersion;
+
+  /// No description provided for @worksheetSettings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages de la fiche'**
+  String get worksheetSettings;
+
+  /// No description provided for @worksheetSettingsShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages'**
+  String get worksheetSettingsShort;
+
+  /// No description provided for @worksheetFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'À partir de'**
+  String get worksheetFrom;
+
+  /// No description provided for @worksheetFromHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une page écrite dans l\'application ou un quiz. Une série importée en PDF s\'imprime déjà telle quelle.'**
+  String get worksheetFromHint;
+
+  /// No description provided for @worksheetChange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer'**
+  String get worksheetChange;
+
+  /// No description provided for @worksheetChooseSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir une page ou un quiz'**
+  String get worksheetChooseSource;
+
+  /// No description provided for @worksheetNoSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de page écrite ni de quiz.'**
+  String get worksheetNoSource;
+
+  /// No description provided for @worksheetVersion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version'**
+  String get worksheetVersion;
+
+  /// No description provided for @worksheetPupil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Élève'**
+  String get worksheetPupil;
+
+  /// No description provided for @worksheetTeacher.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enseignante'**
+  String get worksheetTeacher;
+
+  /// No description provided for @worksheetTeacherHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'La version enseignante ajoute les bonnes réponses, en vert.'**
+  String get worksheetTeacherHint;
+
+  /// No description provided for @worksheetTitleHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Contrôle : les fractions'**
+  String get worksheetTitleHint;
+
+  /// No description provided for @worksheetRevision.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fiche de révision : {title}'**
+  String worksheetRevision(String title);
+
+  /// No description provided for @worksheetTest.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contrôle : {title}'**
+  String worksheetTest(String title);
+
+  /// No description provided for @worksheetHeader.
+  ///
+  /// In fr, this message translates to:
+  /// **'En-tête'**
+  String get worksheetHeader;
+
+  /// No description provided for @worksheetShowPlace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Matière, niveau et chapitre'**
+  String get worksheetShowPlace;
+
+  /// No description provided for @worksheetShowDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date : {date}'**
+  String worksheetShowDate(String date);
+
+  /// No description provided for @worksheetShowTeacher.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre nom : {name}'**
+  String worksheetShowTeacher(String name);
+
+  /// No description provided for @worksheetShowNameLine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ligne « Nom et prénom »'**
+  String get worksheetShowNameLine;
+
+  /// No description provided for @worksheetShowNameMark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ligne « Nom et prénom » et la note'**
+  String get worksheetShowNameMark;
+
+  /// No description provided for @worksheetSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'enregistrer dans Contenus'**
+  String get worksheetSave;
+
+  /// No description provided for @worksheetSaveHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comme une fiche (PDF), à partager ou donner en devoir'**
+  String get worksheetSaveHint;
+
+  /// No description provided for @worksheetDownload.
+  ///
+  /// In fr, this message translates to:
+  /// **'Télécharger le PDF'**
+  String get worksheetDownload;
+
+  /// No description provided for @worksheetPrint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Imprimer'**
+  String get worksheetPrint;
+
+  /// No description provided for @worksheetShare.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager'**
+  String get worksheetShare;
+
+  /// No description provided for @worksheetSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fiche enregistrée dans Contenus.'**
+  String get worksheetSaved;
+
+  /// No description provided for @worksheetFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'La fiche n\'a pas pu être préparée. Réessayez.'**
+  String get worksheetFailed;
+
+  /// No description provided for @worksheetMarkLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note :'**
+  String get worksheetMarkLabel;
+
+  /// No description provided for @worksheetAnswer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponse :'**
+  String get worksheetAnswer;
+
+  /// No description provided for @worksheetOr.
+  ///
+  /// In fr, this message translates to:
+  /// **' ou '**
+  String get worksheetOr;
+
+  /// No description provided for @worksheetExplanation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Explication :'**
+  String get worksheetExplanation;
+
+  /// No description provided for @worksheetToCorrect.
+  ///
+  /// In fr, this message translates to:
+  /// **'Question ouverte : à corriger.'**
+  String get worksheetToCorrect;
+
+  /// No description provided for @worksheetPoints.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{0 pt} =1{1 pt} other{{count} pts}}'**
+  String worksheetPoints(int count);
+
+  /// No description provided for @worksheetShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fiche'**
+  String get worksheetShort;
 }
 
 class _AppLocalizationsDelegate
