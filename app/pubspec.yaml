@@ -89,6 +89,8 @@ flutter:
 
   assets:
     - assets/brand/
+    # Plus Jakarta Sans and IBM Plex Sans Arabic, the weights the app uses (SIL Open Font License, files beside).
+    - assets/google_fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

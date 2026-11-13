@@ -58,7 +58,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(fr.navAssignments), findsOneWidget);
-    expect(find.text(fr.navAnnouncements), findsOneWidget);
+    // Annonces waits for its design: nothing unfinished in the menu.
+    expect(find.text(fr.navAnnouncements), findsNothing);
     expect(find.text(fr.navSettings), findsOneWidget);
   });
 }
