@@ -1,3 +1,4 @@
+import '../../../core/async/wait_all.dart';
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
@@ -101,7 +102,7 @@ class HomeworkListCubit extends Cubit<HomeworkListState> {
     final first = state.items.isEmpty && state.queue.isEmpty;
     emit(state.copyWith(status: LoadStatus.loading, failure: () => null));
     try {
-      final (items, queue) = await (_repository.list(), _repository.toCorrect()).wait;
+      final (items, queue) = await waitBoth(_repository.list(), _repository.toCorrect());
       if (isClosed) return;
       emit(
         state.copyWith(
@@ -112,9 +113,6 @@ class HomeworkListCubit extends Cubit<HomeworkListState> {
         ),
       );
       await _loadEvaluations();
-    } on ParallelWaitError<(List<Assignment>?, List<ToCorrectGroup>?), (AsyncError?, AsyncError?)> catch (error) {
-      if (isClosed) return;
-      emit(state.copyWith(status: LoadStatus.failure, failure: () => ApiFailure.from((error.errors.$1 ?? error.errors.$2)!.error)));
     } on Object catch (error) {
       if (isClosed) return;
       emit(state.copyWith(status: LoadStatus.failure, failure: () => ApiFailure.from(error)));

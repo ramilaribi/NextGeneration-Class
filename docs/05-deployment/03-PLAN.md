@@ -6,7 +6,7 @@ Status values: **todo**, **doing**, **done (date)**, **skipped (why)**. Update t
 
 | # | Phase | Lead | Time | Done when | Status |
 |---|---|---|---|---|---|
-| P0 | Prepare (before buying) | Teammate | 2 to 4 days | Teammate runs the project locally; production rehearsal green on a laptop; T1 to T4 merged; CI green on `main`; privacy text sent to the teacher | todo |
+| P0 | Prepare (before buying) | Teammate | 2 to 4 days | Teammate runs the project locally; production rehearsal green on a laptop; T1 to T4 and T7 to T13 merged; CI green on `main`; privacy text sent to the teacher | todo |
 | P1 | Buy | Owner | 30 min + up to a day of waiting | VPS-1 delivered (IP in the email), `.com` active | todo |
 | P2 | Server access and DNS | Owner, with teammate | 30 min + up to an hour of DNS waiting | Both people enter the server with their own key; `dig +short <domain>` and `www.<domain>` give the VPS IP only | todo |
 | P3 | First deploy | Owner (types), teammate (reads logs) | about 20 min | `deploy.sh` ends with "Done: https://<domain> is up." | todo |
@@ -46,6 +46,20 @@ Each one is small. Work on a branch, open a pull request, the owner merges.
 | T4 | Off-site copy: `infra/pull-backups.sh` run on the Mac (rsync of `/var/backups/ngclass` to `~/NGClass-backups`, keeps 8 weeks), documented in the runbook. Also add `rclone` to `server-setup.sh` packages, since `backup.sh` calls it when `BACKUP_REMOTE` is set | The server and the OVHcloud account are one place; the Mac is a second one. `rclone` is not installed today, so `BACKUP_REMOTE` would fail | The script copies the latest dumps; a weekly reminder is in the owner's calendar | todo |
 | T5 | (P6, only if the client keeps it) Replace the `deploy` job in `.github/workflows/ci.yml`: run on `ubuntu-latest`, deploy over SSH (key in the `production` environment's secrets, owner as required reviewer), with the server's own `infra/.env` (no secrets duplicated in GitHub). Remove the self-hosted runner. Set "Require approval for all external contributors" for fork pull request workflows (Settings › Actions › General) | No runner of ours that a fork's pull request could reach; a deploy after green tests, approved by the owner | A push to `main` waits for the owner's approval, then deploys; `DEPLOY_ENABLED` documented | todo |
 | T6 | Monthly restore drill as a script, `infra/restore-drill.sh` (the throwaway-database check of `04-RUNBOOK.md` section 7), and the full drill done once in P4 | A backup is only real once restored; production data never leaves the server for a drill | The script prints the number of users and files of the latest backup and leaves nothing behind | todo |
+
+### Cleanup from the pre-production audit (P0)
+
+Found on 2026-11-16, details and evidence in `PREPROD_AUDIT.md`. Do T7 to T9 first.
+
+| # | Task | Done when | Status |
+|---|---|---|---|
+| T7 | Backend: answer missing parameters (400), wrong methods (405), wrong content types (415) and unproducible `Accept` (406) with the usual JSON error, logged at WARN without a stack; make `/error` public | The probes of `PREPROD_AUDIT.md` give these codes and no ERROR line | done (2026-11-16, branch preprod-cleanup) |
+| T8 | Backend: `DataIntegrityViolationException` → 409 `conflict` with an FR and AR message | Six identical creates at once give one 201 and five 409 | done (2026-11-16, branch preprod-cleanup) |
+| T9 | App: error card with "Réessayer" on the parent home when its data fails to load | Widget test with a failing planning repository | done (2026-11-16, branch preprod-cleanup) |
+| T10 | App: no blank page when browser storage is blocked (try around the language load, `TokenStore` catches any error); friendly `ErrorWidget.builder`; `FlutterError.onError` and `PlatformDispatcher.onError` | Tests for the store and the error widget; app starts with storage throwing | done (2026-11-16, branch preprod-cleanup) |
+| T11 | Backend: pupil work and correction uploads cut the file name like Contenus (`ContentService.cleanName`) | Test with a 300-character name gives 200 | done (2026-11-16, branch preprod-cleanup) |
+| T12 | App: `ApiFailure.from` unwraps `ParallelWaitError` | Unit test: a network failure inside `(a, b).wait` stays `network` | done (2026-11-16, branch preprod-cleanup) |
+| T13 | Caddy: `X-Frame-Options DENY`, `frame-ancestors 'none'`, `Permissions-Policy` keeping the camera for the site | Headers seen in the laptop rehearsal; photo scan still works | done (2026-11-16, branch preprod-cleanup) |
 
 Keep `DEPLOY_ENABLED` unset in the repository until T5 is done: the current `deploy` job targets a self-hosted runner.
 

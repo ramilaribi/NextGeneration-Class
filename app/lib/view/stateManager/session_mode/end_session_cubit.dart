@@ -1,3 +1,4 @@
+import '../../../core/async/wait_all.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -148,7 +149,7 @@ class EndSessionCubit extends Cubit<EndSessionState> {
     );
     try {
       // The chapters of the group's subject and level.
-      final (library, groups) = await (_contents.library(), _groups.list()).wait;
+      final (library, groups) = await waitBoth(_contents.library(), _groups.list());
       if (isClosed) return;
       final group = groups.where((g) => g.id == session.group.id).firstOrNull;
       final chapters = library.chapters.where((c) => c.subjectId == group?.subjectId && c.levelId == group?.levelId).toList()

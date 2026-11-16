@@ -1,3 +1,4 @@
+import '../../core/async/wait_all.dart';
 import '../../core/l10n/tunis_time.dart';
 import '../../domain/model/homework.dart';
 import '../../domain/model/teacher_dashboard.dart';
@@ -28,11 +29,11 @@ class DashboardRepositoryImpl implements DashboardRepository {
       }
     }
 
-    final (sessions, toCorrect, missing) = await (
+    final (sessions, toCorrect, missing) = await waitThree(
       _planning.sessions(from: TunisTime.instant(today), to: TunisTime.instant(TunisTime.addDays(today, _stripDays))),
       orNull<List<ToCorrectGroup>>(_homework.toCorrect()),
       orNull<List<MissingWork>>(_homework.missing()),
-    ).wait;
+    );
     List<T> on<T>(DateTime day, Iterable<T> list, DateTime Function(T) start) =>
         list.where((s) => TunisTime.sameDay(TunisTime.day(start(s)), day)).toList();
     return TeacherDashboard(

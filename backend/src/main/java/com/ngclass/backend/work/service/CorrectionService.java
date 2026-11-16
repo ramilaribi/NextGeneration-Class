@@ -7,6 +7,7 @@ import com.ngclass.backend.content.domain.FileAsset;
 import com.ngclass.backend.content.dto.ContentDtos.ContentViewResponse;
 import com.ngclass.backend.content.repository.ContentItemRepository;
 import com.ngclass.backend.content.repository.FileAssetRepository;
+import com.ngclass.backend.content.service.ContentService;
 import com.ngclass.backend.content.service.FileInspector;
 import com.ngclass.backend.content.service.FileInspector.Inspected;
 import com.ngclass.backend.content.storage.FileStorage;
@@ -170,7 +171,7 @@ public class CorrectionService {
 				.storageKey(storage.save(data))
 				.mimeType(inspected.mimeType())
 				.sizeBytes(data.length)
-				.originalName(fileName == null || fileName.isBlank() ? "correction.pdf" : fileName.trim())
+				.originalName(fileName == null || fileName.isBlank() ? "correction.pdf" : ContentService.cleanName(fileName))
 				.pageCount(inspected.pageCount())
 				.build()));
 		recipients.saveAndFlush(recipient);

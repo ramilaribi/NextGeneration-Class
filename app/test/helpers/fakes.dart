@@ -280,6 +280,9 @@ class FakeStudentRepository implements StudentRepository {
 class FakePlanningRepository implements PlanningRepository {
   List<Session> all = [];
   List<MySession> mine = [];
+
+  /// Thrown by [mySessions] when set (no network, server down).
+  ApiFailure? mineFailure;
   List<Session> overlapping = [];
   SessionDetail? detailResult;
   final List<({DateTime from, DateTime to, String? groupId})> ranges = [];
@@ -346,7 +349,11 @@ class FakePlanningRepository implements PlanningRepository {
   Future<void> saveNotes(String sessionId, {String? prepNote, String? quickNote, String? sessionNote}) async => quickNotes.add(quickNote);
 
   @override
-  Future<List<MySession>> mySessions({required DateTime from, required DateTime to, String? studentId}) async => mine;
+  Future<List<MySession>> mySessions({required DateTime from, required DateTime to, String? studentId}) async {
+    final failure = mineFailure;
+    if (failure != null) throw failure;
+    return mine;
+  }
 }
 
 /// Notifications in memory: what the list and the badge read, and what was marked read.

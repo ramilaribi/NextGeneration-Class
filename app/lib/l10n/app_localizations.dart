@@ -206,6 +206,12 @@ abstract class AppLocalizations {
   /// **'Une erreur est survenue. Réessayez.'**
   String get errorUnknown;
 
+  /// No description provided for @errorDisplay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette partie n\'a pas pu s\'afficher. Actualisez la page.'**
+  String get errorDisplay;
+
   /// No description provided for @navTeacherHome.
   ///
   /// In fr, this message translates to:

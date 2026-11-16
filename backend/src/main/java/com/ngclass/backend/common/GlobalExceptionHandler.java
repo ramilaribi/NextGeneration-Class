@@ -6,10 +6,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -67,6 +72,38 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(NoResourceFoundException.class)
 	public ResponseEntity<ApiError> handleNoResource(NoResourceFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messages.error("not_found", null));
+	}
+
+	/** A required query parameter is missing: the caller's mistake, never logged as a server error. */
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	public ResponseEntity<ApiError> handleMissingParameter(MissingServletRequestParameterException ex) {
+		return ResponseEntity.badRequest().body(messages.error("missing_parameter", null));
+	}
+
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<ApiError> handleMethod(HttpRequestMethodNotSupportedException ex) {
+		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(messages.error("method_not_allowed", null));
+	}
+
+	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+	public ResponseEntity<ApiError> handleMediaType(HttpMediaTypeNotSupportedException ex) {
+		return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(messages.error("unsupported_media_type", null));
+	}
+
+	/** The caller accepts no format the API writes (JSON only): no body, since it could not be read either. */
+	@ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+	public ResponseEntity<Void> handleNotAcceptable(HttpMediaTypeNotAcceptableException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+	}
+
+	/**
+	 * The database refused a write the service had checked, usually the same action sent twice at once
+	 * (a double click, two tabs): the first one won. One line in the log, in case it is something else.
+	 */
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<ApiError> handleConflict(DataIntegrityViolationException ex) {
+		log.warn("Refused by the database: {}", ex.getMostSpecificCause().getMessage());
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(messages.error("conflict", null));
 	}
 
 	@ExceptionHandler(Exception.class)

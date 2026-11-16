@@ -18,6 +18,7 @@
   "hidePassword": "إخفاء كلمة المرور",
   "errorNetwork": "تعذّر الاتصال بالخادم. تحقّق من اتصالك بالإنترنت.",
   "errorUnknown": "حدث خطأ. يرجى إعادة المحاولة.",
+  "errorDisplay": "تعذّر عرض هذا الجزء. يرجى تحديث الصفحة.",
   "navTeacherHome": "يومي",
   "navPlanning": "الجدول",
   "navStudents": "التلاميذ",

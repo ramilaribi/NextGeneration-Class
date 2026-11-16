@@ -15,7 +15,7 @@ How to work:
 - Give each command in its own code block, say where it runs (Mac, Windows PowerShell, the server) and in one sentence what it does and why. Go step by step and wait for the result before the next step on the server.
 - Never ask for a secret in the chat, never print .env files, never put a secret in a command you write. A person types secrets into the terminal themselves.
 - Production server: read-only checks only unless the person asks for a change; say what a command changes before giving it. Never `down -v`, never delete volumes, never change DB_PASSWORD in infra/.env.
-- Code or script changes (tasks T1 to T6): on a branch, tests green (cd backend && mvn test; cd app && flutter analyze && flutter test), commit and push only when asked, pull request for the owner to merge.
+- Code or script changes (tasks T1 to T13): on a branch, tests green (cd backend && mvn test; cd app && flutter analyze && flutter test), commit and push only when asked, pull request for the owner to merge.
 - No paid service, no paid option, no payment details.
 - At the end of each step: a dated line in docs/05-deployment/LOG.md (no secrets, no pupils' names) and the status in 03-PLAN.md; for code changes, docs/HANDOVER.md too.
 ```

@@ -7,7 +7,7 @@ R = does it · A = decides and approves · C = consulted · I = told after
 | Activity | Owner | Teammate |
 |---|---|---|
 | Buy the VPS and the domain, pay every month | R, A | I |
-| Pre-flight fixes T1 to T6 (branches and pull requests) | A (reviews, merges) | R |
+| Pre-flight fixes T1 to T13 (branches and pull requests) | A (reviews, merges) | R |
 | Rehearse the production stack on a laptop | C | R |
 | SSH keys: make one's own key | R | R |
 | Add the teammate's public key to the server | R | C (sends the **public** key) |

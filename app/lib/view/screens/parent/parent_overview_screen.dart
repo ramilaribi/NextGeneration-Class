@@ -23,6 +23,7 @@ import '../../stateManager/notifications/notifications_cubit.dart';
 import '../../widgets/announcement_widgets.dart';
 import '../../widgets/cards.dart';
 import '../../widgets/classmates.dart';
+import '../../widgets/feedback.dart';
 import '../../widgets/hero_card.dart';
 import '../../widgets/labels.dart';
 import '../../widgets/page_frame.dart';
@@ -117,7 +118,11 @@ class ParentOverviewView extends StatelessWidget {
           ],
         ),
         if (announcements.isNotEmpty) FamilyAnnouncements(items: announcements, now: sl.get<Now>()()),
-        // On a computer the average and the four tiles sit side by side; one under the other on phones.
+        // No network or the server down: say it and offer to try again, rather than an empty week.
+        // Otherwise, on a computer the average and the four tiles sit side by side; one under the other on phones.
+        if (planning.status == LoadStatus.failure)
+          FailureBanner(planning.failure!, key: const Key('parent-failure'), onRetry: () => select(child.studentId))
+        else
         PairedBlocks(
           equalHeight: false,
           startFlex: 6,
