@@ -65,6 +65,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get errorUnknown => 'حدث خطأ. يرجى إعادة المحاولة.';
 
   @override
+  String get errorDisplay => 'تعذّر عرض هذا الجزء. يرجى تحديث الصفحة.';
+
+  @override
   String get navTeacherHome => 'يومي';
 
   @override

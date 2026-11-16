@@ -14,11 +14,12 @@ Written 2026-11-16, when the product was finished (Releases 1 to 4, privacy noti
 
 1. `01-STRATEGY.md` · what we deploy, where, how, and why (decisions, architecture, the two deploy paths, backups, risks).
 2. `02-ROLES_AND_ACCESS.md` · who does what, who holds which access, the rules on secrets.
-3. `03-PLAN.md` · the phases P0 to P6 and the pre-flight tasks T1 to T6, each with an owner and "done when". **The status column is the live status.**
+3. `03-PLAN.md` · the phases P0 to P6 and the pre-flight and cleanup tasks T1 to T13, each with an owner and "done when". **The status column is the live status.**
 4. `04-RUNBOOK.md` · every command: first deploy, updates, checks, logs, backups, restore, rollback, server care.
 5. `05-INCIDENTS.md` · symptom → check → fix, and how to tell the teacher.
 6. `06-GO_LIVE_CHECKLIST.md` · the go / no-go list before the teacher gets her account.
 7. `LOG.md` · what was done on production, dated (no secrets).
+   `PREPROD_AUDIT.md` · the audit of 2026-11-16: bugs and crash risks found before going live, with evidence (fixes are T7 to T13).
 8. `AGENT_PROMPT.md` · the prompt to start a new deployment session.
 
 Older documents, still true and referenced from here: `docs/04-delivery/05-DEPLOYMENT.md` (the decision of 2026-11-12), `05-DEPLOYMENT_GUIDE.pdf` (the owner's click-by-click guide to buy and set up, with the OVHcloud screens), `05-DEPLOYMENT_HANDOVER.md` (the teammate's October track: Windows setup, CI). The scripts are in `infra/`.

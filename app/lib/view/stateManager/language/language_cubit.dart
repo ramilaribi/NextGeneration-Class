@@ -9,14 +9,23 @@ class LanguageCubit extends Cubit<AppLanguage> {
 
   final LanguageStore _store;
 
+  /// A browser that blocks site data cannot read the saved choice: the device language stays.
   Future<void> load() async {
-    final saved = await _store.read();
-    if (saved != null) emit(saved);
+    try {
+      final saved = await _store.read();
+      if (saved != null) emit(saved);
+    } on Object {
+      // Nothing saved can be read: keep the device language.
+    }
   }
 
   Future<void> change(AppLanguage language) async {
     if (language == state) return;
     emit(language);
-    await _store.save(language);
+    try {
+      await _store.save(language);
+    } on Object {
+      // Not kept for next time when the browser blocks site data; the app still switches now.
+    }
   }
 }

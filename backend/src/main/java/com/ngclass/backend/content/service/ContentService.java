@@ -292,7 +292,8 @@ public class ContentService {
 	}
 
 	/** The name as uploaded, without any folder part, shortened to fit. */
-	static String cleanName(String original) {
+	/** The file name without any folder, at most 255 characters (the column), its extension kept. */
+	public static String cleanName(String original) {
 		String name = original == null || original.isBlank() ? "document" : original.replace('\\', '/');
 		name = name.substring(name.lastIndexOf('/') + 1).trim();
 		return name.length() > 255 ? name.substring(name.length() - 255) : name;

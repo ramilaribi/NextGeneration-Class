@@ -18,6 +18,7 @@
   "hidePassword": "Masquer le mot de passe",
   "errorNetwork": "Impossible de joindre le serveur. Vérifiez votre connexion.",
   "errorUnknown": "Une erreur est survenue. Réessayez.",
+  "errorDisplay": "Cette partie n'a pas pu s'afficher. Actualisez la page.",
   "navTeacherHome": "Ma journée",
   "navPlanning": "Planning",
   "navStudents": "Élèves",

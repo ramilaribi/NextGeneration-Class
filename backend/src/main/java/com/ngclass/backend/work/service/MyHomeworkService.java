@@ -8,6 +8,7 @@ import com.ngclass.backend.content.dto.ContentDtos.ContentViewResponse;
 import com.ngclass.backend.content.dto.ContentDtos.SubjectRef;
 import com.ngclass.backend.content.repository.ContentItemRepository;
 import com.ngclass.backend.content.repository.FileAssetRepository;
+import com.ngclass.backend.content.service.ContentService;
 import com.ngclass.backend.content.service.FileInspector;
 import com.ngclass.backend.content.service.FileInspector.Inspected;
 import com.ngclass.backend.content.storage.FileStorage;
@@ -136,7 +137,7 @@ public class MyHomeworkService {
 				.storageKey(storage.save(data))
 				.mimeType(inspected.mimeType())
 				.sizeBytes(data.length)
-				.originalName(fileName == null || fileName.isBlank() ? "travail.pdf" : fileName.trim())
+				.originalName(fileName == null || fileName.isBlank() ? "travail.pdf" : ContentService.cleanName(fileName))
 				.pageCount(inspected.pageCount())
 				.build());
 		submissions.save(Submission.builder()

@@ -1,11 +1,11 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// The session: access token in memory only; refresh token and the last known user in the OS secure
 /// storage, so the app reopens signed in, even without network (client decision: stay connected).
 ///
-/// When the secure storage is unavailable (PlatformException), values are kept in memory: login still
-/// works, the session just does not survive a restart.
+/// When the secure storage is unavailable (a PlatformException on a device; on the web, a browser that
+/// blocks site data throws its own errors), values are kept in memory: login still works, the session just
+/// does not survive a restart.
 class TokenStore {
   TokenStore(this._storage);
 
@@ -39,7 +39,7 @@ class TokenStore {
     try {
       await _storage.delete(key: _refreshKey);
       await _storage.delete(key: _userKey);
-    } on PlatformException {
+    } on Object {
       _storageUnavailable = true;
     }
   }
@@ -48,7 +48,7 @@ class TokenStore {
     if (_storageUnavailable) return _memory[key];
     try {
       return await _storage.read(key: key);
-    } on PlatformException {
+    } on Object {
       _storageUnavailable = true;
       return _memory[key];
     }
@@ -59,7 +59,7 @@ class TokenStore {
     if (_storageUnavailable) return;
     try {
       await _storage.write(key: key, value: value);
-    } on PlatformException {
+    } on Object {
       _storageUnavailable = true;
     }
   }

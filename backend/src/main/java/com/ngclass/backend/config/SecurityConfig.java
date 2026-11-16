@@ -54,6 +54,8 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/logout")
 						.permitAll()
 						.requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+						// Spring's error page: an error must keep its own status, not turn into 401.
+						.requestMatchers("/error").permitAll()
 						// Signed, short-lived links to documents (FileLinks): the signature is the permission.
 						.requestMatchers(HttpMethod.GET, "/api/v1/files/*").permitAll()
 						// The empty template of the pupils' import: no data in it.

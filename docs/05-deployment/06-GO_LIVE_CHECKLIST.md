@@ -12,6 +12,7 @@ All ticked before the teacher gets her account (end of P4). Who ticks it in brac
 - [ ] `main` is what runs, its commit noted in `LOG.md` (owner)
 - [ ] CI green on that commit (teammate)
 - [ ] T1 to T4 merged (teammate)
+- [ ] Audit cleanup T7 to T13 merged, audit probes give no 500 **(blocker for T7 to T9)** (teammate)
 
 ## Server
 - [ ] Both people enter with their own key; password login off **(blocker)** (teammate)

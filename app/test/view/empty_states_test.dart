@@ -222,6 +222,22 @@ void main() {
     expect(find.text(fr.absencesThisMonth(1)), findsOneWidget);
   });
 
+  testWidgets('parent overview without network says so and tries again', (tester) async {
+    final fr = l10nOf(AppLanguage.fr);
+    final planning = FakePlanningRepository()..mineFailure = const ApiFailure(code: ApiFailure.network);
+    await pumpSignedIn(tester, mine(planning, const ParentOverviewView(), studentId: '1'), user: parentUser, size: const Size(390, 1400));
+
+    expect(find.byKey(const Key('parent-failure')), findsOneWidget);
+    expect(find.text(fr.errorNetwork), findsOneWidget);
+    expect(find.text(fr.parentNoDataYet), findsNothing, reason: 'an empty week would hide the failure');
+
+    planning.mineFailure = null;
+    await tester.tap(find.text(fr.retry));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('parent-failure')), findsNothing);
+    expect(find.text(fr.parentNoDataYet), findsOneWidget);
+  });
+
   testWidgets('parent without a linked child is told what to do', (tester) async {
     final fr = l10nOf(AppLanguage.fr);
     const parent = AppUser(

@@ -101,7 +101,7 @@
 	<div class="toc">
 		<div><b>Part 1</b> The plan at a glance: decisions, how it runs, how a version goes online</div>
 		<div><b>Part 2</b> Who does what: roles, access, secrets, working together</div>
-		<div><b>Part 3</b> The phases P0 to P6 and the teammate's preparation tasks</div>
+		<div><b>Part 3</b> The phases P0 to P6, the teammate's preparation tasks, the audit cleanup</div>
 		<div><b>Part 4</b> Deploy day: keys, DNS, the deploy, the smoke test</div>
 		<div><b>Part 5</b> Living with it: updates, the weekly check, backups, restore, rollback</div>
 		<div><b>Part 6</b> When something goes wrong, and how to tell the teacher</div>
@@ -262,6 +262,18 @@
 		<tr><td class="r">T4</td><td><code>infra/pull-backups.sh</code> copies the backups to the owner's Mac (8 weeks kept); <code>rclone</code> added to <code>server-setup.sh</code></td><td>A second place for the backups; <code>backup.sh</code> calls <code>rclone</code>, which is not installed</td></tr>
 		<tr><td class="r">T5</td><td>(P6) GitHub deploys over SSH from GitHub's machines, owner approves each deploy; the self-hosted runner removed; fork pull requests need approval</td><td>Automatic, approved deploys without a runner a stranger could reach</td></tr>
 		<tr><td class="r">T6</td><td><code>infra/restore-drill.sh</code>: the monthly check that the latest backup restores, in a throwaway database on the server</td><td>A backup is real only once restored</td></tr>
+	</table>
+	<h3>Cleanup from the pre-production audit <span class="tag b">DONE 16 NOV</span></h3>
+	<p>The audit of 16 November (<code>docs/05-deployment/PREPROD_AUDIT.md</code>) ran every test and tried the API with wrong requests. What it found is fixed on branch <code>preprod-cleanup</code>; once merged, these need nothing more.</p>
+	<table>
+		<tr><th style="width:8%">#</th><th>Fixed</th></tr>
+		<tr><td class="r">T7</td><td>Wrong requests (missing value, wrong method or format) get a clear answer, not "server error", and no longer fill the log</td></tr>
+		<tr><td class="r">T8</td><td>A double click on "create" answers "Cette action vient d'être faite. Actualisez la page." instead of a server error</td></tr>
+		<tr><td class="r">T9</td><td>The parent's home says "no connection" with "Réessayer" instead of showing an empty week</td></tr>
+		<tr><td class="r">T10</td><td>No blank page when a browser blocks site data; a part that fails shows a sentence, not a grey box</td></tr>
+		<tr><td class="r">T11</td><td>Homework and correction files with very long names upload</td></tr>
+		<tr><td class="r">T12</td><td>"No connection" stays "no connection" on Ma journée, Devoirs and the end of a session</td></tr>
+		<tr><td class="r">T13</td><td>No other site can show the platform inside a frame; camera allowed for this site only</td></tr>
 	</table>
 	<div class="box info"><b>Until T5 is done</b>Leave the repository variable <code>DEPLOY_ENABLED</code> unset: today's GitHub deploy job targets a runner installed on a machine of ours.</div>
 
@@ -443,6 +455,7 @@ git switch main</pre><p>The last good commit is in <code>LOG.md</code>.</p></div
 				<li>The teacher knows the address and whom to call</li>
 				<li>CI green on the deployed commit, noted in <code>LOG.md</code></li>
 				<li>T1 to T4 merged</li>
+				<li>Audit cleanup (T7 to T13) merged <b>· blocker</b></li>
 			</ul>
 			<h3>Server</h3>
 			<ul class="check">

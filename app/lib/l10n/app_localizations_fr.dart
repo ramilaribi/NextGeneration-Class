@@ -67,6 +67,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorUnknown => 'Une erreur est survenue. Réessayez.';
 
   @override
+  String get errorDisplay =>
+      'Cette partie n\'a pas pu s\'afficher. Actualisez la page.';
+
+  @override
   String get navTeacherHome => 'Ma journée';
 
   @override

@@ -137,8 +137,11 @@ class CorrectionTest {
 		assertThat(saved.at("/status").asText()).isEqualTo("CORRECTED");
 		assertThat(saved.at("/score").decimalValue()).isEqualByComparingTo("14.5");
 		assertThat(saved.at("/comment").asText()).isEqualTo("Bon travail !");
+		// A very long name (over the 255 characters of the column) is cut, its end and extension kept.
+		String longName = "c".repeat(300) + ".pdf";
 		JsonNode attached = body(call(multipart(HttpMethod.PUT, correction(id, adamId) + "/file")
-				.file(new MockMultipartFile("file", "correction.pdf", "application/pdf", pdf(1))), ines).andExpect(status().isOk()));
+				.file(new MockMultipartFile("file", longName, "application/pdf", pdf(1))), ines).andExpect(status().isOk()));
+		assertThat(attached.at("/file/fileName").asText()).hasSize(255).endsWith(".pdf");
 		assertThat(attached.at("/file/pageCount").asInt()).isEqualTo(1);
 		assertThat(attached.at("/file/kind").asText()).isEqualTo("PDF");
 
