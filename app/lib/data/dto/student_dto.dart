@@ -44,7 +44,14 @@ class StudentDto {
     archived: json['archived'] as bool? ?? false,
     attendanceRate: json['attendanceRate'] as int?,
     absences: json['absences'] as int? ?? 0,
+    consent: consentOf(json['consent']),
   );
+}
+
+/// `Consent` of the API, or null while pending.
+StudentConsent? consentOf(Object? value) {
+  if (value is! Json) return null;
+  return StudentConsent(paper: value['method'] == 'PAPER', givenBy: value['givenBy'] as String?, givenAt: instant(value['givenAt'])!);
 }
 
 class StudentProfileDto {

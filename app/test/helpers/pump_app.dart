@@ -10,6 +10,7 @@ import 'package:ngclass/core/l10n/tunis_time.dart';
 import 'package:ngclass/core/platform/link_opener.dart';
 import 'package:ngclass/domain/model/app_user.dart';
 import 'package:ngclass/domain/repositories/auth_repository.dart';
+import 'package:ngclass/domain/repositories/privacy_repository.dart';
 import 'package:ngclass/l10n/app_localizations.dart';
 import 'package:ngclass/view/stateManager/auth/auth_cubit.dart';
 import 'package:ngclass/view/stateManager/groups/groups_cubit.dart';
@@ -56,6 +57,7 @@ RecordingLinkOpener registerTestServices(DateTime now) {
   sl.registerSingleton<Now>(() => now);
   final links = RecordingLinkOpener();
   sl.registerSingleton<LinkOpener>(links);
+  sl.registerSingleton<PrivacyRepository>(FakePrivacyRepository());
   return links;
 }
 

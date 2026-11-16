@@ -2682,5 +2682,88 @@
   "tableGrades": "Notes",
   "tableMonths": "Chaque mois",
   "tableSameNumbers": "Les mêmes chiffres que les graphiques, pour les lire un par un.",
-  "monthNoData": "Pas encore de chiffres ce mois-ci."
+  "monthNoData": "Pas encore de chiffres ce mois-ci.",
+  "privacyLink": "Confidentialité",
+  "privacyOverline": "Avant de commencer",
+  "privacyAgreementTitle": "Les informations de {names}",
+  "@privacyAgreementTitle": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyAgreementTitleNone": "Vos informations",
+  "privacyAgreementMessage": "{teacher} garde quelques informations pour suivre {names}. Voici l'essentiel, en quatre points.",
+  "@privacyAgreementMessage": {
+    "placeholders": {
+      "teacher": {
+        "type": "String"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyTeacherFallback": "L'enseignante",
+  "privacyKeptTitle": "Ce qui est gardé",
+  "privacyKeptShort": "Le nom de votre enfant, son niveau, ses présences, ses devoirs et ses notes, les mots de l'enseignante ; votre nom et votre téléphone.",
+  "privacySeenTitle": "Qui le voit",
+  "privacySeenShort": "L'enseignante, votre enfant et vous. Jamais les autres familles. Jamais de publicité, rien n'est vendu.",
+  "privacyHowLongTitle": "Combien de temps",
+  "privacyHowLongShort": "Cette année scolaire et la suivante, puis tout est effacé.",
+  "privacyRightsTitle": "Vos droits",
+  "privacyRightsShort": "Voir, corriger ou faire effacer ces informations : demandez-le à l'enseignante.",
+  "privacyReadAll": "Lire tout le texte",
+  "privacyAccept": "J'accepte que l'enseignante garde ces informations pour suivre {names}.",
+  "@privacyAccept": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyAcceptNone": "J'accepte que l'enseignante garde ces informations.",
+  "privacyContinue": "Continuer",
+  "privacyDisagree": "Pas d'accord ? Parlez-en à l'enseignante.",
+  "privacyPageTitle": "Vos informations et celles de votre enfant",
+  "privacyPageSubtitle": "Ce que l'enseignante garde, pourquoi, qui le voit et combien de temps. En mots simples.",
+  "privacyWhoTitle": "Qui est responsable",
+  "privacyWho": "L'enseignante de votre enfant. NextGeneration Class est l'outil qu'elle utilise pour ses séances, ses devoirs et le suivi de ses élèves.",
+  "privacyKept": "Pour l'enfant : nom, prénom, niveau et groupes ; présences ; devoirs rendus (photos et fichiers) ; notes et résultats ; les commentaires de l'enseignante. Pour vous : nom, prénom, téléphone, et le lien avec votre enfant. Pour se connecter : un identifiant et un mot de passe chiffré.",
+  "privacyWhyTitle": "Pourquoi",
+  "privacyWhy": "Organiser les séances, donner et corriger les devoirs, suivre les progrès et vous tenir informé. Rien d'autre : pas de publicité, pas de revente, pas d'envoi à d'autres services.",
+  "privacySeen": "L'enseignante voit ses élèves. Votre enfant et vous voyez les informations de votre enfant. Les autres familles ne voient jamais rien de vous. La personne qui gère la plateforme voit seulement les comptes des enseignantes, jamais le contenu de leur espace.",
+  "privacyWhereTitle": "Où",
+  "privacyWhere": "Sur un serveur loué en France (OVHcloud), avec une sauvegarde chaque nuit. Les échanges avec l'application sont chiffrés.",
+  "privacyHowLong": "Pendant l'année scolaire et l'année suivante. Ensuite, les informations d'un élève qui a quitté l'enseignante sont effacées. Vous pouvez demander l'effacement plus tôt.",
+  "privacyRights": "Vous pouvez voir les informations gardées, les faire corriger, ou demander qu'elles soient effacées : il suffit de le demander à l'enseignante. Ces droits viennent de la loi organique n° 2004-63 du 27 juillet 2004 sur la protection des données personnelles.",
+  "privacyUpdated": "Dernière mise à jour : 14 novembre 2026 · Une question : demandez à l'enseignante de votre enfant.",
+  "consentTitle": "Accord des parents",
+  "consentGiven": "Donné",
+  "consentPending": "En attente",
+  "consentByApp": "{name}, dans l'application, le {day}.",
+  "@consentByApp": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "consentByPaper": "Sur papier, enregistré le {day}.",
+  "@consentByPaper": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "consentPendingText": "Les parents n'ont pas encore répondu. S'ils ont signé la fiche papier :",
+  "consentPaper": "Accord reçu sur papier",
+  "consentPaperSaved": "Accord enregistré.",
+  "consentFilter": "Accord en attente",
+  "andSeparator": " et "
 }

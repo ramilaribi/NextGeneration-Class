@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../view/screens/admin/admin_destinations.dart';
 import '../../view/screens/parent/parent_destinations.dart';
 import '../../view/screens/shared/choose_password_screen.dart';
+import '../../view/screens/shared/privacy_screens.dart';
 import '../../view/screens/shared/document_screen.dart';
 import '../../domain/repositories/homework_repository.dart';
 import '../../view/screens/shared/login_screen.dart';
@@ -53,6 +54,8 @@ GoRouter buildRouter(AuthCubit auth) => GoRouter(
     GoRoute(path: Routes.splash, builder: (context, state) => const SplashScreen()),
     GoRoute(path: Routes.login, builder: (context, state) => const LoginScreen()),
     GoRoute(path: Routes.choosePassword, builder: (context, state) => const ChoosePasswordScreen()),
+    GoRoute(path: Routes.privacyAgreement, builder: (context, state) => const PrivacyAgreementScreen()),
+    GoRoute(path: Routes.privacy, builder: (context, state) => const PrivacyScreen()),
     // Session mode takes the whole screen, without the shell.
     GoRoute(
       path: Routes.sessionMode(':id'),

@@ -41,6 +41,8 @@ public final class AuthDtos {
 			String email,
 			String language,
 			boolean mustChangePassword,
-			List<ChildResponse> children) {
+			List<ChildResponse> children,
+			/** A parent who must accept the privacy notice before anything else. */
+			boolean privacyRequired) {
 	}
 }

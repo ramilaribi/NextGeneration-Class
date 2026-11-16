@@ -400,6 +400,8 @@ class QuizTest {
 		call(post("/api/v1/me/password").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(
 				Map.of("currentPassword", credential.at("/temporaryPassword").asText(), "newPassword", PASSWORD))), token)
 				.andExpect(status().isNoContent());
+		// Families accept the privacy notice first (a no-op for pupils).
+		call(post("/api/v1/me/privacy"), token).andExpect(status().isNoContent());
 		return token;
 	}
 

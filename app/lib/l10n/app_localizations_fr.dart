@@ -4631,4 +4631,155 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get monthNoData => 'Pas encore de chiffres ce mois-ci.';
+
+  @override
+  String get privacyLink => 'Confidentialité';
+
+  @override
+  String get privacyOverline => 'Avant de commencer';
+
+  @override
+  String privacyAgreementTitle(String names) {
+    return 'Les informations de $names';
+  }
+
+  @override
+  String get privacyAgreementTitleNone => 'Vos informations';
+
+  @override
+  String privacyAgreementMessage(String teacher, String names) {
+    return '$teacher garde quelques informations pour suivre $names. Voici l\'essentiel, en quatre points.';
+  }
+
+  @override
+  String get privacyTeacherFallback => 'L\'enseignante';
+
+  @override
+  String get privacyKeptTitle => 'Ce qui est gardé';
+
+  @override
+  String get privacyKeptShort =>
+      'Le nom de votre enfant, son niveau, ses présences, ses devoirs et ses notes, les mots de l\'enseignante ; votre nom et votre téléphone.';
+
+  @override
+  String get privacySeenTitle => 'Qui le voit';
+
+  @override
+  String get privacySeenShort =>
+      'L\'enseignante, votre enfant et vous. Jamais les autres familles. Jamais de publicité, rien n\'est vendu.';
+
+  @override
+  String get privacyHowLongTitle => 'Combien de temps';
+
+  @override
+  String get privacyHowLongShort =>
+      'Cette année scolaire et la suivante, puis tout est effacé.';
+
+  @override
+  String get privacyRightsTitle => 'Vos droits';
+
+  @override
+  String get privacyRightsShort =>
+      'Voir, corriger ou faire effacer ces informations : demandez-le à l\'enseignante.';
+
+  @override
+  String get privacyReadAll => 'Lire tout le texte';
+
+  @override
+  String privacyAccept(String names) {
+    return 'J\'accepte que l\'enseignante garde ces informations pour suivre $names.';
+  }
+
+  @override
+  String get privacyAcceptNone =>
+      'J\'accepte que l\'enseignante garde ces informations.';
+
+  @override
+  String get privacyContinue => 'Continuer';
+
+  @override
+  String get privacyDisagree => 'Pas d\'accord ? Parlez-en à l\'enseignante.';
+
+  @override
+  String get privacyPageTitle => 'Vos informations et celles de votre enfant';
+
+  @override
+  String get privacyPageSubtitle =>
+      'Ce que l\'enseignante garde, pourquoi, qui le voit et combien de temps. En mots simples.';
+
+  @override
+  String get privacyWhoTitle => 'Qui est responsable';
+
+  @override
+  String get privacyWho =>
+      'L\'enseignante de votre enfant. NextGeneration Class est l\'outil qu\'elle utilise pour ses séances, ses devoirs et le suivi de ses élèves.';
+
+  @override
+  String get privacyKept =>
+      'Pour l\'enfant : nom, prénom, niveau et groupes ; présences ; devoirs rendus (photos et fichiers) ; notes et résultats ; les commentaires de l\'enseignante. Pour vous : nom, prénom, téléphone, et le lien avec votre enfant. Pour se connecter : un identifiant et un mot de passe chiffré.';
+
+  @override
+  String get privacyWhyTitle => 'Pourquoi';
+
+  @override
+  String get privacyWhy =>
+      'Organiser les séances, donner et corriger les devoirs, suivre les progrès et vous tenir informé. Rien d\'autre : pas de publicité, pas de revente, pas d\'envoi à d\'autres services.';
+
+  @override
+  String get privacySeen =>
+      'L\'enseignante voit ses élèves. Votre enfant et vous voyez les informations de votre enfant. Les autres familles ne voient jamais rien de vous. La personne qui gère la plateforme voit seulement les comptes des enseignantes, jamais le contenu de leur espace.';
+
+  @override
+  String get privacyWhereTitle => 'Où';
+
+  @override
+  String get privacyWhere =>
+      'Sur un serveur loué en France (OVHcloud), avec une sauvegarde chaque nuit. Les échanges avec l\'application sont chiffrés.';
+
+  @override
+  String get privacyHowLong =>
+      'Pendant l\'année scolaire et l\'année suivante. Ensuite, les informations d\'un élève qui a quitté l\'enseignante sont effacées. Vous pouvez demander l\'effacement plus tôt.';
+
+  @override
+  String get privacyRights =>
+      'Vous pouvez voir les informations gardées, les faire corriger, ou demander qu\'elles soient effacées : il suffit de le demander à l\'enseignante. Ces droits viennent de la loi organique n° 2004-63 du 27 juillet 2004 sur la protection des données personnelles.';
+
+  @override
+  String get privacyUpdated =>
+      'Dernière mise à jour : 14 novembre 2026 · Une question : demandez à l\'enseignante de votre enfant.';
+
+  @override
+  String get consentTitle => 'Accord des parents';
+
+  @override
+  String get consentGiven => 'Donné';
+
+  @override
+  String get consentPending => 'En attente';
+
+  @override
+  String consentByApp(String name, String day) {
+    return '$name, dans l\'application, le $day.';
+  }
+
+  @override
+  String consentByPaper(String day) {
+    return 'Sur papier, enregistré le $day.';
+  }
+
+  @override
+  String get consentPendingText =>
+      'Les parents n\'ont pas encore répondu. S\'ils ont signé la fiche papier :';
+
+  @override
+  String get consentPaper => 'Accord reçu sur papier';
+
+  @override
+  String get consentPaperSaved => 'Accord enregistré.';
+
+  @override
+  String get consentFilter => 'Accord en attente';
+
+  @override
+  String get andSeparator => ' et ';
 }

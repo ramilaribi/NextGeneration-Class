@@ -32,4 +32,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
 	@Query("select u.mustChangePassword from User u where u.id = :id")
 	Optional<Boolean> findMustChangePassword(@Param("id") UUID id);
+
+	/** A parent who has not accepted [version] of the privacy notice yet. */
+	@Query("""
+			select count(u) > 0 from User u where u.id = :id and u.role = com.ngclass.backend.auth.domain.Role.PARENT
+			and (u.privacyVersion is null or u.privacyVersion < :version)""")
+	boolean privacyRequired(@Param("id") UUID id, @Param("version") int version);
 }

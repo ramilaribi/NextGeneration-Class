@@ -61,7 +61,17 @@ public final class StudentDtos {
 			boolean loginEnabled,
 			boolean archived,
 			Integer attendanceRate,
-			int absences) {
+			int absences,
+			/** The parents' agreement to the privacy notice; null while pending. */
+			Consent consent) {
+	}
+
+	/** [method]: APP (a parent in the app, [givenBy]) or PAPER (recorded by the teacher). */
+	public record Consent(String method, String givenBy, java.time.Instant givenAt) {
+	}
+
+	/** The agreement screen: [required] for a parent who has not accepted [version] yet. */
+	public record PrivacyInfo(boolean required, int version, String teacherName, List<String> children) {
 	}
 
 	public record AttendanceMark(Instant sessionStart, String status) {

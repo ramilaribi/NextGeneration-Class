@@ -153,7 +153,8 @@ public class AuthService {
 				user.getEmail(),
 				user.getLanguage(),
 				user.isMustChangePassword(),
-				user.getRole() == Role.PARENT ? parents.findActiveChildrenOfUser(user.getId()) : List.of());
+				user.getRole() == Role.PARENT ? parents.findActiveChildrenOfUser(user.getId()) : List.of(),
+				user.getRole() == Role.PARENT && (user.getPrivacyVersion() == null || user.getPrivacyVersion() < Privacy.VERSION));
 	}
 
 	private User requireUser(UUID userId) {

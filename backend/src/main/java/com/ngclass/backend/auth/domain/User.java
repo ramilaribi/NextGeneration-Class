@@ -81,6 +81,11 @@ public class User {
 
 	private Instant lastLoginAt;
 
+	/** The privacy notice version this parent accepted (null: not yet). */
+	private Integer privacyVersion;
+
+	private Instant privacyAcceptedAt;
+
 	@CreationTimestamp
 	@Column(nullable = false, updatable = false)
 	private Instant createdAt;

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/l10n/app_language.dart';
+import '../../core/router/routes.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/brand_colors.dart';
 import '../../domain/model/app_user.dart';
@@ -12,7 +14,7 @@ import '../stateManager/auth/auth_cubit.dart';
 import '../stateManager/language/language_cubit.dart';
 import 'cards.dart';
 
-enum _AccountAction { french, arabic, password, logout }
+enum _AccountAction { french, arabic, password, privacy, logout }
 
 String roleLabel(AppLocalizations l10n, UserRole role) => switch (role) {
   UserRole.admin => l10n.roleAdmin,
@@ -83,6 +85,7 @@ class AccountMenu extends StatelessWidget {
         item(_AccountAction.arabic, LucideIcons.languages, l10n.languageArabic, checked: language == AppLanguage.ar),
         const PopupMenuDivider(),
         item(_AccountAction.password, LucideIcons.lock, l10n.changePassword),
+        item(_AccountAction.privacy, LucideIcons.shieldCheck, l10n.privacyLink),
         item(_AccountAction.logout, LucideIcons.logOutDir, l10n.logout),
       ],
       child: builder(context, user),
@@ -97,6 +100,8 @@ class AccountMenu extends StatelessWidget {
         context.read<LanguageCubit>().change(AppLanguage.ar);
       case _AccountAction.password:
         showChangePasswordDialog(context);
+      case _AccountAction.privacy:
+        context.push(Routes.privacy);
       case _AccountAction.logout:
         context.read<AuthCubit>().logout();
     }
