@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NextGeneration Class · Deployment playbook</title>
+<!-- Source of ../DEPLOYMENT_PLAYBOOK.pdf. Rebuild from this folder:
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --no-pdf-header-footer --print-to-pdf=../DEPLOYMENT_PLAYBOOK.pdf playbook.html -->
+<style>
+	@page {
+		size: A4;
+		margin: 18mm 16mm 20mm 16mm;
+		@bottom-center { content: "NextGeneration Class · Deployment playbook · page " counter(page); font: 8.5pt -apple-system, Helvetica, Arial, sans-serif; color: #8a8fa8; }
+	}
+	@page:first { @bottom-center { content: none; } }
+	:root { --indigo: #2B3990; --deep: #1C2566; --soft: #EEF0FA; --turq: #12A39A; --turqDeep: #0B7C75; --ink: #1d2033; --muted: #5d6280; --line: #dfe2f0; --warn: #b45309; --warnSoft: #fff6e8; --ok: #0B7C75; --okSoft: #e8f6f5; }
+	* { box-sizing: border-box; }
+	body { font: 10.5pt/1.5 -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); margin: 0; }
+	h1, h2, h3 { color: var(--deep); line-height: 1.25; }
+	h2 { font-size: 17pt; margin: 0 0 4mm; padding-bottom: 2mm; border-bottom: 2px solid var(--soft); }
+	h3 { font-size: 12.5pt; margin: 6mm 0 2mm; display: flex; align-items: center; gap: 3mm; break-after: avoid; }
+	.num { display: inline-flex; align-items: center; justify-content: center; width: 7.5mm; height: 7.5mm; border-radius: 50%; background: var(--indigo); color: #fff; font-size: 10pt; font-weight: 700; flex: none; }
+	p { margin: 0 0 2.5mm; }
+	ul, ol { margin: 0 0 3mm; padding-inline-start: 6mm; }
+	li { margin-bottom: 1.2mm; }
+	code { font: 9.5pt ui-monospace, Menlo, monospace; background: var(--soft); padding: 0.3mm 1.2mm; border-radius: 1mm; color: var(--deep); }
+	pre { font: 9.3pt/1.45 ui-monospace, Menlo, monospace; background: #171b33; color: #e8ebff; padding: 3mm 4mm; border-radius: 2mm; margin: 1mm 0 3.5mm; white-space: pre-wrap; word-break: break-all; break-inside: avoid; }
+	pre .c { color: #8f97c7; }
+	table { width: 100%; border-collapse: collapse; margin: 1mm 0 4mm; font-size: 9.8pt; break-inside: avoid; }
+	th { text-align: start; background: var(--soft); color: var(--deep); font-weight: 600; }
+	th, td { padding: 1.8mm 2.5mm; border-bottom: 1px solid var(--line); vertical-align: top; }
+	.part { break-before: page; }
+	.kicker { color: var(--turqDeep); font-weight: 700; font-size: 9pt; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1mm; }
+	.box { border-radius: 2.5mm; padding: 3mm 4mm; margin: 2mm 0 4mm; break-inside: avoid; }
+	.box b:first-child { display: block; margin-bottom: 1mm; }
+	.warn { background: var(--warnSoft); border-inline-start: 4px solid var(--warn); }
+	.warn b:first-child { color: var(--warn); }
+	.ok { background: var(--okSoft); border-inline-start: 4px solid var(--ok); }
+	.ok b:first-child { color: var(--ok); }
+	.info { background: var(--soft); border-inline-start: 4px solid var(--indigo); }
+	.info b:first-child { color: var(--indigo); }
+	.check li { list-style: none; position: relative; }
+	.check li::before { content: ""; position: absolute; inset-inline-start: -5.5mm; top: 1.2mm; width: 3.2mm; height: 3.2mm; border: 1.4px solid var(--indigo); border-radius: 0.8mm; }
+	/* Cover */
+	.cover { height: 255mm; display: flex; flex-direction: column; }
+	.cover .band { background: linear-gradient(135deg, var(--deep), var(--indigo) 60%, var(--turqDeep)); color: #fff; border-radius: 4mm; padding: 14mm 12mm 12mm; }
+	.cover .logo { display: flex; align-items: center; gap: 4mm; margin-bottom: 14mm; }
+	.cover .logo img { width: 14mm; height: 14mm; border-radius: 3mm; background: #fff; }
+	.cover .logo span { font-size: 14pt; font-weight: 700; }
+	.cover .logo span i { font-style: normal; color: #7fe3dc; }
+	.cover h1 { color: #fff; font-size: 30pt; margin: 0 0 3mm; }
+	.cover .sub { font-size: 13pt; opacity: 0.9; margin: 0; }
+	.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin: 8mm 0; }
+	.fact { background: var(--soft); border-radius: 3mm; padding: 4mm; }
+	.fact .v { font-size: 17pt; font-weight: 800; color: var(--deep); }
+	.fact .l { font-size: 8.8pt; color: var(--muted); }
+	.toc { margin-top: 2mm; }
+	.toc div { display: flex; gap: 3mm; padding: 2mm 0; border-bottom: 1px dashed var(--line); }
+	.toc div b { color: var(--indigo); min-width: 18mm; }
+	.meta { margin-top: auto; color: var(--muted); font-size: 9pt; }
+	.ui { font-weight: 600; color: var(--deep); }
+</style>
+<style>
+	.lead { font-size: 11.5pt; color: var(--ink); }
+	.two { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+	.card { border: 1px solid var(--line); border-radius: 3mm; padding: 3.5mm 4mm; break-inside: avoid; }
+	.card h4 { margin: 0 0 1.5mm; color: var(--deep); font-size: 11pt; display: flex; align-items: center; gap: 2mm; }
+	.card p, .card li { font-size: 9.8pt; }
+	.tag { display: inline-block; font-size: 8pt; font-weight: 700; padding: 0.4mm 2mm; border-radius: 5mm; letter-spacing: 0.03em; }
+	.tag.o { background: #2B3990; color: #fff; }
+	.tag.t { background: #12A39A; color: #fff; }
+	.tag.b { background: #EEF0FA; color: #1C2566; border: 1px solid #c9cdea; }
+	.phases { display: grid; grid-template-columns: 22mm 1fr 30mm; gap: 0; margin: 2mm 0 4mm; font-size: 9.6pt; }
+	.phases > div { padding: 2.4mm 2.5mm; border-bottom: 1px solid var(--line); }
+	.phases .p { font-weight: 800; color: var(--indigo); font-size: 11pt; }
+	.phases .h { background: var(--soft); color: var(--deep); font-weight: 600; font-size: 9pt; }
+	.phases .w { color: var(--muted); }
+	.diagram { margin: 2mm 0 4mm; break-inside: avoid; }
+	.r { font-weight: 700; color: var(--turqDeep); }
+	td.c { text-align: center; white-space: nowrap; }
+	.small { font-size: 9pt; color: var(--muted); }
+	.quick pre { font-size: 8.8pt; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="cover">
+	<div class="band">
+		<div class="logo"><img src="icon.png" alt=""><span>NextGeneration <i>Class</i></span></div>
+		<h1>Deployment playbook</h1>
+		<p class="sub">How the owner and the teammate put the platform online, check it, and keep it running.</p>
+	</div>
+
+	<div class="facts">
+		<div class="fact"><div class="v">7</div><div class="l">phases, from preparing<br>to the end of the test month</div></div>
+		<div class="fact"><div class="v">1</div><div class="l">command to deploy,<br>from the owner's Mac</div></div>
+		<div class="fact"><div class="v">3</div><div class="l">copies of every backup,<br>in two places</div></div>
+		<div class="fact"><div class="v">≈ $6.50</div><div class="l">a month for the server<br>(with VAT), after the first</div></div>
+	</div>
+
+	<div class="toc">
+		<div><b>Part 1</b> The plan at a glance: decisions, how it runs, how a version goes online</div>
+		<div><b>Part 2</b> Who does what: roles, access, secrets, working together</div>
+		<div><b>Part 3</b> The phases P0 to P6 and the teammate's preparation tasks</div>
+		<div><b>Part 4</b> Deploy day: keys, DNS, the deploy, the smoke test</div>
+		<div><b>Part 5</b> Living with it: updates, the weekly check, backups, restore, rollback</div>
+		<div><b>Part 6</b> When something goes wrong, and how to tell the teacher</div>
+		<div><b>Part 7</b> Go-live checklist and the command card</div>
+	</div>
+
+	<p class="meta">Written 16 November 2026. The same plan for AI agents is in <code>docs/05-deployment/</code> (status of each phase in <code>03-PLAN.md</code>, every action in <code>LOG.md</code>). The click-by-click guide to buy the server and the domain, with the OVHcloud screens, is <code>docs/04-delivery/05-DEPLOYMENT_GUIDE.pdf</code>.</p>
+</section>
+
+<!-- PART 1 -->
+<section class="part">
+	<div class="kicker">Part 1</div>
+	<h2>The plan at a glance</h2>
+	<p class="lead">One small rented server in France runs the whole platform. The owner deploys it with one command from the Mac, always from tested code, always after a backup. Backups exist three times. A free alert emails both of us when the site is down. Automatic deploys from GitHub come later, and only if the client keeps the platform after the test month.</p>
+
+	<h3>Decisions</h3>
+	<table>
+		<tr><th style="width:28%">Topic</th><th>Choice</th><th style="width:34%">Why</th></tr>
+		<tr><td>Product</td><td>Web platform only; phones use the browser</td><td>No store apps (decided 11 November)</td></tr>
+		<tr><td>Server</td><td>OVHcloud VPS-1: 2 vCores, 4 GB, 40 GB NVMe, France, Ubuntu 24.04</td><td>Enough for 100 users; used in Tunisia; French panel</td></tr>
+		<tr><td>Billing</td><td>Monthly, no commitment</td><td>One test month first</td></tr>
+		<tr><td>Domain</td><td>a <code>.com</code> at OVHcloud</td><td>One account, one invoice</td></tr>
+		<tr><td>HTTPS</td><td>Let's Encrypt, automatic</td><td>Free, renews itself</td></tr>
+		<tr><td>Test place</td><td>The production files on a laptop (<code>DOMAIN=localhost</code>)</td><td>No paid test server needed</td></tr>
+		<tr><td>Deploy now</td><td><code>./infra/deploy.sh ubuntu@IP</code> from the owner's Mac</td><td>Already tested; secrets stay on the server</td></tr>
+		<tr><td>Deploy later</td><td>GitHub deploys over SSH after green tests, owner approves</td><td>No Mac needed; safe on a public repository</td></tr>
+		<tr><td>Not done</td><td>A GitHub runner installed on our server</td><td>On a public repository, a stranger's pull request could run code on it</td></tr>
+		<tr><td>Alerts</td><td>UptimeRobot (free) checks <code>/health</code> every 5 min</td><td>UP only when the API and the database work</td></tr>
+	</table>
+
+	<h3>How it runs</h3>
+	<div class="diagram">
+	<svg viewBox="0 0 680 300" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, Helvetica, Arial, sans-serif">
+		<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5d6280"/></marker></defs>
+		<rect x="10" y="10" width="150" height="54" rx="8" fill="#EEF0FA" stroke="#c9cdea"/>
+		<text x="85" y="33" text-anchor="middle" font-size="12" font-weight="700" fill="#1C2566">Browsers</text>
+		<text x="85" y="50" text-anchor="middle" font-size="10" fill="#5d6280">teacher · parents · pupils</text>
+		<line x1="160" y1="37" x2="222" y2="37" stroke="#5d6280" stroke-width="1.5" marker-end="url(#a)"/>
+		<text x="191" y="30" text-anchor="middle" font-size="9" fill="#5d6280">HTTPS</text>
+		<rect x="225" y="8" width="445" height="230" rx="10" fill="#fff" stroke="#2B3990" stroke-width="1.5"/>
+		<text x="240" y="27" font-size="11" font-weight="700" fill="#2B3990">OVHcloud VPS-1 · Ubuntu 24.04 · firewall: 22, 80, 443 only</text>
+		<rect x="240" y="38" width="415" height="50" rx="7" fill="#e8f6f5" stroke="#12A39A"/>
+		<text x="252" y="58" font-size="11.5" font-weight="700" fill="#0B7C75">Caddy</text>
+		<text x="252" y="76" font-size="9.5" fill="#1d2033">HTTPS certificate · the web app · /api → API · /health · www → main address</text>
+		<line x1="447" y1="88" x2="447" y2="106" stroke="#5d6280" stroke-width="1.5" marker-end="url(#a)"/>
+		<rect x="240" y="108" width="300" height="46" rx="7" fill="#EEF0FA" stroke="#2B3990"/>
+		<text x="252" y="127" font-size="11.5" font-weight="700" fill="#1C2566">API</text>
+		<text x="252" y="144" font-size="9.5" fill="#1d2033">Spring Boot · Java 21 · 1.5 GB cap</text>
+		<rect x="552" y="108" width="103" height="46" rx="7" fill="#fff6e8" stroke="#b45309"/>
+		<text x="603" y="127" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">files</text>
+		<text x="603" y="143" text-anchor="middle" font-size="9" fill="#1d2033">uploads volume</text>
+		<line x1="540" y1="131" x2="550" y2="131" stroke="#5d6280" stroke-width="1.5"/>
+		<line x1="390" y1="154" x2="390" y2="172" stroke="#5d6280" stroke-width="1.5" marker-end="url(#a)"/>
+		<rect x="240" y="174" width="300" height="46" rx="7" fill="#EEF0FA" stroke="#2B3990"/>
+		<text x="252" y="193" font-size="11.5" font-weight="700" fill="#1C2566">PostgreSQL 16</text>
+		<text x="252" y="210" font-size="9.5" fill="#1d2033">never reachable from the internet</text>
+		<rect x="552" y="174" width="103" height="46" rx="7" fill="#fff6e8" stroke="#b45309"/>
+		<text x="603" y="193" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">backup 02:00</text>
+		<text x="603" y="209" text-anchor="middle" font-size="9" fill="#1d2033">30 days kept</text>
+		<line x1="540" y1="197" x2="550" y2="197" stroke="#5d6280" stroke-width="1.5"/>
+		<rect x="10" y="180" width="150" height="58" rx="8" fill="#2B3990"/>
+		<text x="85" y="203" text-anchor="middle" font-size="11.5" font-weight="700" fill="#fff">Owner's Mac</text>
+		<text x="85" y="221" text-anchor="middle" font-size="9.5" fill="#dfe2f0">deploy.sh · backup copies</text>
+		<line x1="160" y1="200" x2="236" y2="150" stroke="#5d6280" stroke-width="1.5" marker-end="url(#a)"/>
+		<text x="196" y="160" text-anchor="middle" font-size="9" fill="#5d6280">ssh</text>
+		<rect x="10" y="100" width="150" height="54" rx="8" fill="#12A39A"/>
+		<text x="85" y="123" text-anchor="middle" font-size="11.5" font-weight="700" fill="#fff">Teammate</text>
+		<text x="85" y="140" text-anchor="middle" font-size="9.5" fill="#e8f6f5">checks over ssh</text>
+		<line x1="160" y1="127" x2="236" y2="127" stroke="#5d6280" stroke-width="1.5" marker-end="url(#a)"/>
+		<rect x="225" y="250" width="445" height="40" rx="8" fill="#fff" stroke="#c9cdea" stroke-dasharray="4 3"/>
+		<text x="240" y="268" font-size="10" font-weight="700" fill="#1C2566">Outside the server</text>
+		<text x="240" y="283" font-size="9.5" fill="#5d6280">OVHcloud daily backup · UptimeRobot checks /health · weekly backup copy on the Mac</text>
+	</svg>
+	</div>
+
+	<h3>How a version goes online</h3>
+	<div class="phases" style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr;">
+		<div class="h">1 · Branch + pull request</div><div class="h">2 · Tests green on GitHub</div><div class="h">3 · Owner merges into main</div><div class="h">4 · Backup, then deploy</div><div class="h">5 · Smoke test + log</div>
+		<div class="w">Teammate or an agent</div><div class="w">backend, analyze, app tests, web build</div><div class="w">only the owner</div><div class="w">evening or weekend, from the Mac</div><div class="w">one line in LOG.md with the commit</div>
+	</div>
+	<div class="box warn"><b>Deploy only clean, tested main</b><code>deploy.sh</code> sends the Mac's working copy: anything not committed would go online. Run <code>git status</code> first (task T2 makes the script refuse a dirty copy). A deploy restarts the API: about a minute of errors, so never during school hours.</div>
+</section>
+
+<!-- PART 2 -->
+<section class="part">
+	<div class="kicker">Part 2</div>
+	<h2>Who does what</h2>
+
+	<div class="two">
+		<div class="card"><h4><span class="tag o">OWNER</span> Rami, on the Mac</h4>
+			<ul><li>Pays; owns OVHcloud, the domain, GitHub, UptimeRobot</li><li>Holds the secrets; types the owner account at the first deploy</li><li>Decides; merges into <code>main</code>; runs the deploys</li><li>Adds teachers in the owner dashboard</li><li>Keeps the weekly backup copy</li></ul></div>
+		<div class="card"><h4><span class="tag t">TEAMMATE</span> on Windows or any machine</h4>
+			<ul><li>Prepares: tasks T1 to T6, rehearsal on a laptop</li><li>Checks the server over SSH every week</li><li>First response to incidents (restart, logs)</li><li>Restore drill</li><li>Keeps the runbook, the plan and the log current</li></ul></div>
+	</div>
+
+	<h3>Activities</h3>
+	<table>
+		<tr><th>Activity</th><th class="c">Owner</th><th class="c">Teammate</th></tr>
+		<tr><td>Buy and pay the VPS and the domain</td><td class="c">does, decides</td><td class="c">told</td></tr>
+		<tr><td>Preparation tasks T1 to T6 (pull requests)</td><td class="c">reviews, merges</td><td class="c">does</td></tr>
+		<tr><td>Rehearse the production stack on a laptop</td><td class="c">consulted</td><td class="c">does</td></tr>
+		<tr><td>DNS records</td><td class="c">does</td><td class="c">checks with <code>dig</code></td></tr>
+		<tr><td>First deploy</td><td class="c">types, decides</td><td class="c">reads the logs</td></tr>
+		<tr><td>Smoke test in the app</td><td class="c">does</td><td class="c">consulted</td></tr>
+		<tr><td>Weekly server check</td><td class="c">told</td><td class="c">does</td></tr>
+		<tr><td>Later deploys</td><td class="c">does</td><td class="c">helps (does it once T5 exists, if agreed)</td></tr>
+		<tr><td>Incident: restart, read logs</td><td class="c">does</td><td class="c">does</td></tr>
+		<tr><td>Incident: restore, rollback, tell the teacher</td><td class="c">decides</td><td class="c">consulted</td></tr>
+	</table>
+
+	<h3>Access</h3>
+	<table>
+		<tr><th>Access</th><th class="c">Owner</th><th class="c">Teammate</th><th>Note</th></tr>
+		<tr><td>OVHcloud account (panel, billing, DNS, reinstall)</td><td class="c">yes</td><td class="c">no</td><td>Never share its password; the teammate asks</td></tr>
+		<tr><td>Server SSH (<code>ubuntu</code>, sudo)</td><td class="c">own key</td><td class="c">own key</td><td>Removed when the mission ends</td></tr>
+		<tr><td>Server secrets (<code>infra/.env</code>)</td><td class="c">yes</td><td class="c">via sudo</td><td>Never copied off the server, never on screen share</td></tr>
+		<tr><td>GitHub</td><td class="c">admin</td><td class="c">write / pull requests</td><td>Only the owner merges into <code>main</code></td></tr>
+		<tr><td>The platform's owner account</td><td class="c">yes</td><td class="c">no</td><td>Not needed by the teammate</td></tr>
+		<tr><td>UptimeRobot</td><td class="c">account</td><td class="c">alerts</td><td>Both emails receive them</td></tr>
+		<tr><td>Backup copies on the Mac</td><td class="c">yes</td><td class="c">no</td><td>Children's data stays with the owner</td></tr>
+	</table>
+
+	<div class="box warn"><b>Secrets and children's data</b>
+	A secret is typed by a person into a terminal: never in a chat (with a person or an AI), an email, a commit or a screenshot. Production secrets are made on the server. Private SSH keys never leave the machine that made them: only the <code>.pub</code> line is sent. Pupils' data never leaves the server except as the owner's backup copy, and is never used for tests on a laptop.</div>
+
+	<h3>Working together</h3>
+	<ul>
+		<li><b>One channel</b> for production (a WhatsApp or Signal group): say before acting on the server, and after.</li>
+		<li><b>One person at a time</b> changes something on the server.</li>
+		<li><b>First deploy in pairs</b>: a call with screen share; the owner types, the teammate reads the logs and looks away during passwords.</li>
+		<li><b>Written trace</b>: each production action is one line in <code>docs/05-deployment/LOG.md</code>; the phase status is in <code>03-PLAN.md</code>.</li>
+		<li><b>With an AI agent</b>: start it with <code>docs/05-deployment/AGENT_PROMPT.md</code>. The agent explains, the person runs.</li>
+	</ul>
+</section>
+
+<!-- PART 3 -->
+<section class="part">
+	<div class="kicker">Part 3</div>
+	<h2>The phases</h2>
+	<div class="phases">
+		<div class="h">Phase</div><div class="h">What, and done when</div><div class="h">Lead · time</div>
+		<div class="p">P0</div><div><b>Prepare, before buying.</b> The teammate runs the project and rehearses production on a laptop; tasks T1 to T4 merged; CI green; privacy text sent to the teacher; domain name chosen.</div><div><span class="tag t">TEAMMATE</span><br><span class="w">2 to 4 days</span></div>
+		<div class="p">P1</div><div><b>Buy.</b> SSH key, OVHcloud account, VPS-1 monthly, the <code>.com</code>. Done when the VPS email with the IP arrived. Follow <code>05-DEPLOYMENT_GUIDE.pdf</code> steps 1 to 5.</div><div><span class="tag o">OWNER</span><br><span class="w">30 min + waiting</span></div>
+		<div class="p">P2</div><div><b>Access and DNS.</b> Both enter the server with their own key. The domain and <code>www</code> point only to the VPS: <code>dig</code> shows the VPS IP, no AAAA.</div><div><span class="tag b">BOTH</span><br><span class="w">30 min + up to 1 h</span></div>
+		<div class="p">P3</div><div><b>First deploy.</b> <code>./infra/deploy.sh ubuntu@IP</code>, the owner types the account; ends with "Done: https://… is up."</div><div><span class="tag o">OWNER</span> <span class="tag t">TEAMMATE</span><br><span class="w">about 20 min</span></div>
+		<div class="p">P4</div><div><b>Verify and harden.</b> Smoke test; password login off; UptimeRobot; OVHcloud backup seen; backup copied to the Mac; restore drill passed on the server before any real data.</div><div><span class="tag b">BOTH</span><br><span class="w">1 to 2 hours</span></div>
+		<div class="p">P5</div><div><b>Go live.</b> Go-live checklist all ticked; the teacher's account; her first sign-in; first group and parents. One week of close watching.</div><div><span class="tag o">OWNER</span><br><span class="w">1 week</span></div>
+		<div class="p">P6</div><div><b>After the test month.</b> Keep or stop. If kept: automatic deploys (T5) after two calm manual deploys. If stopped: last backup, cancel the renewals.</div><div><span class="tag o">OWNER</span><br><span class="w">decision</span></div>
+	</div>
+
+	<h3>The teammate's preparation tasks</h3>
+	<p>Small changes, one branch and one pull request each, the owner merges.</p>
+	<table>
+		<tr><th style="width:8%">#</th><th>Task</th><th style="width:38%">Why</th></tr>
+		<tr><td class="r">T1</td><td><code>deploy.sh</code> builds the web app with <code>--pwa-strategy=none</code>, like GitHub's build</td><td>Both ways must ship the same app; the default offline cache can keep an old version in a browser</td></tr>
+		<tr><td class="r">T2</td><td><code>deploy.sh</code> refuses a copy that is not clean <code>main</code> (with a <code>--force</code> for emergencies) and writes the deployed commit on the server</td><td>No uncommitted work online; the commit is needed to roll back</td></tr>
+		<tr><td class="r">T3</td><td><code>deploy.sh</code> runs <code>backup.sh</code> on the server before restarting</td><td>A backup from just before every deploy</td></tr>
+		<tr><td class="r">T4</td><td><code>infra/pull-backups.sh</code> copies the backups to the owner's Mac (8 weeks kept); <code>rclone</code> added to <code>server-setup.sh</code></td><td>A second place for the backups; <code>backup.sh</code> calls <code>rclone</code>, which is not installed</td></tr>
+		<tr><td class="r">T5</td><td>(P6) GitHub deploys over SSH from GitHub's machines, owner approves each deploy; the self-hosted runner removed; fork pull requests need approval</td><td>Automatic, approved deploys without a runner a stranger could reach</td></tr>
+		<tr><td class="r">T6</td><td><code>infra/restore-drill.sh</code>: the monthly check that the latest backup restores, in a throwaway database on the server</td><td>A backup is real only once restored</td></tr>
+	</table>
+	<div class="box info"><b>Until T5 is done</b>Leave the repository variable <code>DEPLOY_ENABLED</code> unset: today's GitHub deploy job targets a runner installed on a machine of ours.</div>
+
+	<h3>Risks we watch</h3>
+	<table>
+		<tr><th>Risk</th><th>What protects us</th></tr>
+		<tr><td>A deploy breaks the app in school hours</td><td>Deploy in the evening; the deploy stops itself if the app never gets healthy; rollback</td></tr>
+		<tr><td>HTTPS certificate not issued on day one</td><td>DNS checked with <code>dig</code> before the first deploy; parking lines deleted</td></tr>
+		<tr><td>Data deleted, server lost</td><td>Three backup copies, the restore tested</td></tr>
+		<tr><td>A secret leaks</td><td>Secrets only on the server; rotation steps in Part 6</td></tr>
+		<tr><td>The owner is unreachable during an incident</td><td>The teammate can restart and read logs; decisions wait</td></tr>
+		<tr><td>Privacy text not checked</td><td>A blocker in the go-live checklist</td></tr>
+	</table>
+</section>
+
+<!-- PART 4 -->
+<section class="part">
+	<div class="kicker">Part 4</div>
+	<h2>Deploy day</h2>
+	<p>Replace <code>IP</code> with the VPS address and <code>ngclass.com</code> with the real domain.</p>
+
+	<h3><span class="num">1</span> One SSH key each</h3>
+	<p><span class="tag o">OWNER</span> on the Mac (Terminal). The <code>.pub</code> line goes in the OVHcloud order.</p>
+	<pre>ssh-keygen -t ed25519 -f ~/.ssh/ngclass_ovh -C "owner-ngclass"
+cat ~/.ssh/ngclass_ovh.pub</pre>
+	<p><span class="tag t">TEAMMATE</span> on Windows (PowerShell). Send the <code>.pub</code> line to the owner; it is public.</p>
+	<pre>ssh-keygen -t ed25519 -f $HOME\.ssh\ngclass_ovh -C "teammate-ngclass"
+Get-Content $HOME\.ssh\ngclass_ovh.pub</pre>
+	<p><span class="tag o">OWNER</span> adds it on the server, then the teammate tries <code>ssh -i $HOME\.ssh\ngclass_ovh ubuntu@IP</code>.</p>
+	<pre>ssh -i ~/.ssh/ngclass_ovh ubuntu@IP
+echo 'ssh-ed25519 AAAA…the teammate line… teammate-ngclass' >> ~/.ssh/authorized_keys</pre>
+
+	<h3><span class="num">2</span> Point the domain to the server</h3>
+	<p><span class="tag o">OWNER</span> OVHcloud panel › domain › DNS zone: one <b>A</b> line for the domain and one for <code>www</code>, both to the VPS IP. Delete the parking A and <b>AAAA</b> lines. <span class="tag t">TEAMMATE</span> checks until the answers are right:</p>
+	<pre>dig +short ngclass.com          <span class="c"># the VPS IP</span>
+dig +short www.ngclass.com      <span class="c"># the VPS IP</span>
+dig +short AAAA ngclass.com     <span class="c"># nothing</span></pre>
+	<p class="small">On Windows without <code>dig</code>: <code>Resolve-DnsName ngclass.com</code> in PowerShell.</p>
+
+	<h3><span class="num">3</span> Deploy</h3>
+	<p><span class="tag o">OWNER</span> on the Mac, from the project folder, with the teammate on the call:</p>
+	<pre>git switch main && git pull && git status
+./infra/deploy.sh ubuntu@IP</pre>
+	<p>The first time, the server is prepared (time zone, updates, Docker, firewall, fail2ban, swap, nightly backup), then <code>make-env.sh</code> asks the domain and the owner's account: the owner types the password, the teammate looks away. The first build takes about 5 minutes. It ends with <b>Done: https://ngclass.com is up.</b></p>
+
+	<h3><span class="num">4</span> Smoke test</h3>
+	<pre>curl -sI https://ngclass.com | head -1        <span class="c"># HTTP/2 200</span>
+curl -s https://ngclass.com/health            <span class="c"># {"status":"UP"}</span>
+curl -sI http://ngclass.com | head -3         <span class="c"># redirect to https</span>
+curl -sI https://www.ngclass.com | head -3    <span class="c"># redirect to the main address</span></pre>
+	<ol class="check">
+		<li>The owner signs in, sets a new password, sees the owner dashboard.</li>
+		<li>The owner adds a test teacher; in a private window she signs in, changes the password, creates a subject and a group, uploads a PDF, plans a session.</li>
+		<li>She adds a pupil with a parent; the parent signs in, changes the password, accepts the privacy notice, sees the child.</li>
+		<li>On a phone: the site opens; Arabic reads right to left.</li>
+		<li>Deploy again (same commit): everything is still there.</li>
+	</ol>
+
+	<h3><span class="num">5</span> Harden and protect</h3>
+	<ul>
+		<li><b>Password login off</b> (keep one session open while doing it): <code>sudo sshd -T | grep -i '^passwordauthentication'</code>; if <code>yes</code>, write <code>PasswordAuthentication no</code> in <code>/etc/ssh/sshd_config.d/99-ngclass.conf</code>, <code>sudo systemctl reload ssh</code>, and open a new session to check.</li>
+		<li><b>UptimeRobot</b> (owner): an HTTP(s) monitor on <code>https://ngclass.com/health</code>, every 5 minutes, both emails as alert contacts.</li>
+		<li><b>OVHcloud backup</b> (owner): visible in the VPS panel.</li>
+		<li><b>Backup now and copy it</b>: <code>sudo /opt/ngclass/infra/backup.sh</code> on the server, then the copy to the Mac (Part 5).</li>
+		<li><b>Restore drill</b> (teammate, before any real data): back up, rename the test group and upload one more file, restore, check the change is gone and the files open.</li>
+	</ul>
+</section>
+
+<!-- PART 5 -->
+<section class="part">
+	<div class="kicker">Part 5</div>
+	<h2>Living with it</h2>
+	<p>On the server, every command below uses this shortcut (type it once per session):</p>
+	<pre>C="sudo docker compose -f /opt/ngclass/infra/docker-compose.prod.yml"</pre>
+
+	<h3>Put a new version online <span class="tag o">OWNER</span></h3>
+	<ol>
+		<li>The change is merged into <code>main</code> through a pull request, CI green.</li>
+		<li>Evening or weekend; say it in the channel.</li>
+		<li>On the Mac:</li>
+	</ol>
+	<pre>git switch main && git pull && git status
+ssh -i ~/.ssh/ngclass_ovh ubuntu@IP sudo /opt/ngclass/infra/backup.sh
+./infra/deploy.sh ubuntu@IP
+git rev-parse --short HEAD</pre>
+	<p>The second line is the backup (part of <code>deploy.sh</code> once T3 is done); the last one prints the commit for <code>LOG.md</code>. Then smoke test steps 1 and 2, and one line in <code>LOG.md</code>. Browsers take the new version on their next visit.</p>
+
+	<h3>The weekly check <span class="tag t">TEAMMATE</span> · 10 minutes</h3>
+	<pre>$C ps                                      <span class="c"># three parts Up, api and db (healthy)</span>
+df -h /                                    <span class="c"># below 70 %</span>
+free -h                                    <span class="c"># swap used stays small</span>
+tail -7 /var/log/ngclass-backup.log        <span class="c"># one line per night</span>
+$C logs --since 168h api | grep -c ERROR   <span class="c"># look closer if it jumps</span>
+cat /var/run/reboot-required 2>/dev/null   <span class="c"># a reboot waits: do it in the evening</span></pre>
+	<p>Reboot when asked, in the evening, after telling the channel: <code>sudo reboot</code>, then <code>$C ps</code> a minute later. One line in <code>LOG.md</code>.</p>
+
+	<h3>Backups</h3>
+	<table>
+		<tr><th>Copy</th><th>Where</th><th>When</th><th>Kept</th></tr>
+		<tr><td>OVHcloud backup</td><td>OVHcloud, outside the VPS</td><td>daily</td><td>as the panel shows</td></tr>
+		<tr><td><code>backup.sh</code></td><td><code>/var/backups/ngclass</code> on the VPS</td><td>02:00 and before each deploy</td><td>30 days</td></tr>
+		<tr><td>Off-site copy</td><td><code>~/NGClass-backups</code> on the owner's Mac</td><td>weekly</td><td>8 weeks</td></tr>
+	</table>
+	<div style="break-inside: avoid">
+	<p><span class="tag o">OWNER</span> weekly copy (<code>infra/pull-backups.sh</code> after T4):</p>
+	<pre>rsync -az -e "ssh -i $HOME/.ssh/ngclass_ovh" \
+  ubuntu@IP:/var/backups/ngclass/ ~/NGClass-backups/</pre>
+	</div>
+
+	<h3>Restore <span class="tag o">OWNER DECIDES</span></h3>
+	<p>Everything written after the backup is lost. On the server, <code>DATE</code> is the backup's stamp, for example <code>2026-11-20_0200</code>:</p>
+	<pre>cd /opt/ngclass/infra
+sudo docker compose -f docker-compose.prod.yml stop api
+sudo docker compose -f docker-compose.prod.yml exec -T db pg_restore --clean --if-exists -U ngclass -d ngclass &lt; /var/backups/ngclass/db_DATE.dump
+sudo docker compose -f docker-compose.prod.yml run --rm --no-deps --user root -v /var/backups/ngclass:/backup --entrypoint sh api -c "rm -rf /data/files/* &amp;&amp; tar -xzf /backup/files_DATE.tar.gz -C /data"
+sudo docker compose -f docker-compose.prod.yml start api</pre>
+
+	<h3>Roll back</h3>
+	<div class="two">
+		<div class="card"><h4>Code only (the usual case)</h4><pre>git switch --detach &lt;good commit&gt;
+./infra/deploy.sh ubuntu@IP
+git switch main</pre><p>The last good commit is in <code>LOG.md</code>.</p></div>
+		<div class="card"><h4>Code and data (last resort)</h4><p>The new version changed the tables and the old code cannot run on them: restore the backup taken just before the deploy, then deploy the old commit. Anything written in between is lost.</p></div>
+	</div>
+
+	<div class="box warn"><b>Never</b>
+	<code>down -v</code> or delete a Docker volume (the teacher's data and the HTTPS certificate) · change <code>DB_PASSWORD</code> in <code>infra/.env</code> (PostgreSQL keeps the first one) · deploy during school hours · run two changes on the server at the same time.</div>
+</section>
+
+<!-- PART 6 -->
+<section class="part">
+	<div class="kicker">Part 6</div>
+	<h2>When something goes wrong</h2>
+	<p>First say in the channel what you see and that you are looking. Restarting and reading logs: either of us. Restore, rollback with data, telling the teacher: the owner decides.</p>
+	<table>
+		<tr><th style="width:24%">Symptom</th><th style="width:30%">Look</th><th>Fix</th></tr>
+		<tr><td>Alert: site down</td><td><code>$C ps</code></td><td>A part not Up: <code>$C up -d --wait</code>. Keeps stopping: <code>$C logs --tail 200 api</code>, find the first error</td></tr>
+		<tr><td>No SSH at all</td><td>OVHcloud panel (owner), <code>status.ovhcloud.com</code></td><td>Reboot from the panel; or wait for OVHcloud</td></tr>
+		<tr><td>Certificate error</td><td><code>$C logs caddy</code>, <code>dig</code> A and AAAA</td><td>DNS only to the VPS, then <code>$C restart caddy</code>; do not loop restarts (Let's Encrypt limits attempts)</td></tr>
+		<tr><td>Deploy: "did not start"</td><td>the 80 lines printed</td><td>Migration error: fix in code, restore the pre-deploy backup if it half-ran. "password authentication failed": the first <code>DB_PASSWORD</code> back in <code>.env</code></td></tr>
+		<tr><td>Nobody can sign in</td><td><code>curl …/health</code>, API logs</td><td>DOWN: <code>$C restart db</code> then <code>api</code>. UP: check the clock and recent changes to <code>.env</code></td></tr>
+		<tr><td>One person cannot sign in</td><td></td><td>Teacher: reset from the owner dashboard. Parent or pupil: the teacher resets it from the pupil's page</td></tr>
+		<tr><td>Slow</td><td><code>sudo docker stats --no-stream</code>, <code>free -h</code></td><td><code>$C restart api</code> in the evening; if it comes back, tell the owner</td></tr>
+		<tr><td>Disk almost full</td><td><code>df -h /</code></td><td><code>sudo docker system prune -f</code> (never <code>--volumes</code>); old backups once copied to the Mac</td></tr>
+		<tr><td>Bad new version</td><td><code>LOG.md</code></td><td>Roll back (Part 5)</td></tr>
+		<tr><td>Something deleted by mistake</td><td>what and when</td><td>Often re-create by hand; a full restore loses all later work</td></tr>
+	</table>
+
+	<h3>A secret leaked</h3>
+	<table>
+		<tr><th style="width:28%">What</th><th>Do</th></tr>
+		<tr><td>The owner's app password</td><td>Change it in the app</td></tr>
+		<tr><td>A private SSH key</td><td>Delete its line from <code>~/.ssh/authorized_keys</code> on the server; make a new key</td></tr>
+		<tr><td><code>JWT_SECRET</code></td><td>New value (<code>openssl rand -hex 48</code>) in <code>infra/.env</code>, then <code>$C up -d</code>; people stay signed in</td></tr>
+		<tr><td><code>DB_PASSWORD</code></td><td>Change it inside PostgreSQL first, then in <code>.env</code>, then <code>$C up -d</code></td></tr>
+		<tr><td>Anything pushed to GitHub</td><td>The repository is public: change the secret, deleting the commit is not enough</td></tr>
+	</table>
+	<p>Note it in <code>LOG.md</code>, without the value.</p>
+
+	<h3>Telling the teacher</h3>
+	<p>Short, in her language, no technical words; only when she is affected.</p>
+	<div class="box info"><b>Down</b>« La plateforme est momentanément indisponible. Nous corrigeons, retour prévu vers HH:MM. Vos données sont en sécurité. »</div>
+	<div class="box ok"><b>Back</b>« La plateforme fonctionne à nouveau. Merci de votre patience. »</div>
+	<p>After a serious incident, five lines in <code>LOG.md</code> within two days: what, when, why, what fixed it, what prevents it next time.</p>
+</section>
+
+<!-- PART 7 -->
+<section class="part">
+	<div class="kicker">Part 7</div>
+	<h2>Go-live checklist</h2>
+	<p>All ticked before the teacher gets her account. <b>Blocker</b> lines mean no go.</p>
+	<div class="two">
+		<div>
+			<h3 style="margin-top:0">People and code</h3>
+			<ul class="check">
+				<li>The teacher (or a lawyer) read and agreed to the privacy text <b>· blocker</b></li>
+				<li>A native Arabic speaker read the Arabic screens</li>
+				<li>The owner looked at the owner dashboard</li>
+				<li>The teacher knows the address and whom to call</li>
+				<li>CI green on the deployed commit, noted in <code>LOG.md</code></li>
+				<li>T1 to T4 merged</li>
+			</ul>
+			<h3>Server</h3>
+			<ul class="check">
+				<li>Own key each; password login off <b>· blocker</b></li>
+				<li><code>sudo ufw status</code>: 22, 80, 443 only</li>
+				<li>fail2ban answers; time zone Africa/Tunis; 2 GB swap</li>
+				<li><code>$C ps</code>: three parts up, healthy</li>
+				<li><code>infra/.env</code> mode 600, nowhere else</li>
+			</ul>
+		</div>
+		<div>
+			<h3 style="margin-top:0">Web</h3>
+			<ul class="check">
+				<li>200, <code>/health</code> UP, <code>http</code> and <code>www</code> redirect <b>· blocker</b></li>
+				<li>Padlock: Let's Encrypt certificate</li>
+				<li>Smoke test passed: computer and phone, French and Arabic <b>· blocker</b></li>
+			</ul>
+			<h3>Safety net</h3>
+			<ul class="check">
+				<li>UptimeRobot on, a test alert received by both</li>
+				<li>OVHcloud backup seen in the panel</li>
+				<li>Nightly backup ran at least once</li>
+				<li>A backup copy on the owner's Mac</li>
+				<li>Restore drill passed <b>· blocker</b></li>
+				<li>Both read the rollback steps</li>
+			</ul>
+			<h3>Accounts and money</h3>
+			<ul class="check">
+				<li>VPS monthly renewal, card valid</li>
+				<li>Domain automatic renewal on</li>
+				<li>Owner's app password in a password manager</li>
+				<li>Test teacher disabled or kept for tests</li>
+			</ul>
+		</div>
+	</div>
+	<p style="margin-top:6mm">Go on ________________ &nbsp;·&nbsp; Owner ________________ &nbsp;·&nbsp; Teammate ________________</p>
+</section>
+
+<section class="part quick">
+	<div class="kicker">Command card</div>
+	<h2>Keep this page at hand</h2>
+	<h3 style="margin-top:0">From the Mac</h3>
+	<pre>ssh -i ~/.ssh/ngclass_ovh ubuntu@IP                     <span class="c"># enter the server</span>
+./infra/deploy.sh ubuntu@IP                             <span class="c"># deploy (clean main only)</span>
+curl -s https://ngclass.com/health                      <span class="c"># UP?</span>
+rsync -az -e "ssh -i $HOME/.ssh/ngclass_ovh" \
+  ubuntu@IP:/var/backups/ngclass/ ~/NGClass-backups/   <span class="c"># weekly backup copy</span></pre>
+	<h3>From Windows (PowerShell)</h3>
+	<pre>ssh -i $HOME\.ssh\ngclass_ovh ubuntu@IP                 <span class="c"># enter the server</span>
+Resolve-DnsName ngclass.com                             <span class="c"># where the domain points</span></pre>
+	<h3>On the server</h3>
+	<pre>C="sudo docker compose -f /opt/ngclass/infra/docker-compose.prod.yml"
+$C ps                                                   <span class="c"># state of the three parts</span>
+$C logs --tail 100 api                                  <span class="c"># the API's last lines</span>
+$C logs --tail 50 caddy                                 <span class="c"># HTTPS and requests</span>
+$C restart api                                          <span class="c"># restart the API (about a minute)</span>
+$C up -d --wait                                         <span class="c"># start everything again</span>
+sudo docker stats --no-stream                           <span class="c"># memory and CPU</span>
+df -h /                                                 <span class="c"># disk</span>
+sudo /opt/ngclass/infra/backup.sh                       <span class="c"># backup now</span>
+ls -lh /var/backups/ngclass | tail                      <span class="c"># newest backups</span></pre>
+	<div class="box info"><b>Where things are</b>
+	Plan and status: <code>docs/05-deployment/03-PLAN.md</code> · Every command: <code>04-RUNBOOK.md</code> · Incidents: <code>05-INCIDENTS.md</code> · Log: <code>LOG.md</code> · Buying with screens: <code>docs/04-delivery/05-DEPLOYMENT_GUIDE.pdf</code> · On the server: code in <code>/opt/ngclass</code>, settings in <code>/opt/ngclass/infra/.env</code>, backups in <code>/var/backups/ngclass</code>, backup log in <code>/var/log/ngclass-backup.log</code>.</div>
+</section>
+
+</body>
+</html>

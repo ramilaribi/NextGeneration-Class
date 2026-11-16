@@ -1,5 +1,7 @@
 # Delivery 05. Deployment strategy
 
+**Since 2026-11-16 the plan for going live and running production, with the teammate, is `docs/05-deployment/` (start with its README; PDF `DEPLOYMENT_PLAYBOOK.pdf`). This file stays as the decision record of 2026-11-12.**
+
 Decided with the user on 2026-11-12. The step-by-step guide for buying and setting up is `05-DEPLOYMENT_GUIDE.pdf` (same folder). Mohamed's deployment track (CI/CD with GitHub Actions, his rehearsals) is in `05-DEPLOYMENT_HANDOVER.md`; both use the same production files (combined on 2026-11-13, see "Two ways to deploy").
 
 ## Decision
