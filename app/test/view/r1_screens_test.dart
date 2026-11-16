@@ -159,6 +159,26 @@ void main() {
       expect(planning.attendanceSaves.last['b'], AttendanceStatus.absent);
     });
 
+    SessionDetail overdue(DateTime day) => SessionDetail(
+      session: session('s1', day, const ClockTime(10, 0), status: SessionStatus.inProgress),
+      roster: const [RosterEntry(studentId: 'a', firstName: 'Amine', lastName: 'Kefi')],
+    );
+
+    testWidgets('opened after its planned end the same day, the session says when it should have ended', (tester) async {
+      // 10:00 to 11:30, opened at 12:40.
+      planning.detailResult = overdue(tuesday);
+      await pumpSignedIn(tester, sessionMode());
+      expect(find.text(l10nOf(AppLanguage.fr).sessionOverdueToday('11:30')), findsOneWidget);
+    });
+
+    testWidgets('a session of an earlier day, never ended, names its day, never "999 min"', (tester) async {
+      final ar = l10nOf(AppLanguage.ar);
+      planning.detailResult = overdue(DateTime.utc(2026, 9, 29));
+      await pumpSignedIn(tester, sessionMode(), language: AppLanguage.ar);
+      expect(find.text(ar.sessionOverdueDay(dayInSentence(DateTime.utc(2026, 9, 29), AppLanguage.ar))), findsOneWidget);
+      expect(find.textContaining('999'), findsNothing);
+    });
+
     testWidgets('in Arabic on a phone the tiles stack and still cycle', (tester) async {
       final ar = l10nOf(AppLanguage.ar);
       planning.detailResult = detail();

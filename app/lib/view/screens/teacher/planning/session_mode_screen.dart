@@ -134,6 +134,20 @@ class _HeaderState extends State<_Header> {
     final now = sl.get<Now>()();
     final minutes = session == null ? 0 : now.difference(session.startsAt).inMinutes.clamp(0, 999);
     final done = state.ended || (session?.isDone ?? false);
+    // Opened after its planned end (a session never ended): say so, rather than counting minutes for days.
+    final overdue = !done && session != null && now.isAfter(session.endsAt);
+    final language = context.watch<LanguageCubit>().state;
+    final String status;
+    if (done) {
+      status = l10n.statusDone;
+    } else if (overdue) {
+      status = TunisTime.day(session.endsAt) == TunisTime.day(now)
+          ? l10n.sessionOverdueToday(hm(session.endsAt))
+          : l10n.sessionOverdueDay(dayInSentence(TunisTime.day(session.startsAt), language));
+    } else {
+      status = minutes > 0 ? l10n.inProgressFor(minutes) : l10n.statusInProgress;
+    }
+    final statusColor = overdue ? BrandColors.amber : BrandColors.onDarkTeal;
 
     final back = Material(
       color: Colors.white.withValues(alpha: 0.1),
@@ -163,12 +177,17 @@ class _HeaderState extends State<_Header> {
           Container(
             width: 8,
             height: 8,
-            decoration: const BoxDecoration(color: BrandColors.onDarkTeal, shape: BoxShape.circle),
+            decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle),
           ),
           const SizedBox(width: 8),
-          Text(
-            done ? l10n.statusDone : (minutes > 0 ? l10n.inProgressFor(minutes) : l10n.statusInProgress),
-            style: text.style(13, FontWeight.w700, color: BrandColors.onDarkTeal),
+          Flexible(
+            child: Text(
+              status,
+              key: const Key('session-status'),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: text.style(13, FontWeight.w700, color: statusColor),
+            ),
           ),
         ],
       ),
@@ -238,7 +257,7 @@ class _HeaderState extends State<_Header> {
                         ],
                       ),
               ),
-              if (session != null && !compact) ...[live, const SizedBox(width: 12)],
+              if (session != null && !compact) ...[Flexible(child: live), const SizedBox(width: 12)],
               if (session != null && session.mode == SessionMode.online && session.meetUrl != null && !done) ...[
                 IconButton(
                   tooltip: l10n.openMeet,
