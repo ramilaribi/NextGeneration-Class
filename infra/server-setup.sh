@@ -13,7 +13,10 @@ apt-get update -q
 apt-get upgrade -yq
 apt-get install -yq docker.io docker-compose-v2 ufw fail2ban unattended-upgrades rsync rclone
 systemctl enable --now docker
-usermod -aG docker "$APP_USER"
+# Hosts that give only root (Hostinger) have no "ubuntu" user: nothing to add then.
+if [ "$APP_USER" != root ] && id "$APP_USER" >/dev/null 2>&1; then
+	usermod -aG docker "$APP_USER"
+fi
 
 echo "Firewall: only SSH, HTTP and HTTPS are open"
 ufw allow OpenSSH
