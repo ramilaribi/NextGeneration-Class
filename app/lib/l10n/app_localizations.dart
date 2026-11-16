@@ -7584,6 +7584,18 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **' et '**
   String get andSeparator;
+
+  /// No description provided for @sessionOverdueToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'À terminer · fin prévue à {time}'**
+  String sessionOverdueToday(String time);
+
+  /// No description provided for @sessionOverdueDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'À terminer · séance du {day}'**
+  String sessionOverdueDay(String day);
 }
 
 class _AppLocalizationsDelegate

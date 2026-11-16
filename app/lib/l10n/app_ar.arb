@@ -1246,5 +1246,7 @@
   "consentPaper": "استُلمت الموافقة على الورق",
   "consentPaperSaved": "سُجّلت الموافقة.",
   "consentFilter": "موافقة في الانتظار",
-  "andSeparator": " و"
+  "andSeparator": " و",
+  "sessionOverdueToday": "يجب إنهاؤها · النهاية المبرمجة على {time}",
+  "sessionOverdueDay": "يجب إنهاؤها · حصة {day}"
 }

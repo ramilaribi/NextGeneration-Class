@@ -4894,4 +4894,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get andSeparator => ' و';
+
+  @override
+  String sessionOverdueToday(String time) {
+    return 'يجب إنهاؤها · النهاية المبرمجة على $time';
+  }
+
+  @override
+  String sessionOverdueDay(String day) {
+    return 'يجب إنهاؤها · حصة $day';
+  }
 }

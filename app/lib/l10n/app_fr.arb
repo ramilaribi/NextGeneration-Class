@@ -2765,5 +2765,21 @@
   "consentPaper": "Accord reçu sur papier",
   "consentPaperSaved": "Accord enregistré.",
   "consentFilter": "Accord en attente",
-  "andSeparator": " et "
+  "andSeparator": " et ",
+  "sessionOverdueToday": "À terminer · fin prévue à {time}",
+  "@sessionOverdueToday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionOverdueDay": "À terminer · séance du {day}",
+  "@sessionOverdueDay": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  }
 }

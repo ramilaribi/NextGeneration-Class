@@ -4782,4 +4782,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get andSeparator => ' et ';
+
+  @override
+  String sessionOverdueToday(String time) {
+    return 'À terminer · fin prévue à $time';
+  }
+
+  @override
+  String sessionOverdueDay(String day) {
+    return 'À terminer · séance du $day';
+  }
 }
