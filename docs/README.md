@@ -22,7 +22,8 @@ NextGeneration Class is a private app for primary school teachers in Tunisia (1Ã
 | `01-product/` | client, everyone | vision, scope, roles, glossary, open questions |
 | `02-specification/` | client, developer | one file per module: user stories, rules, acceptance criteria |
 | `03-conception/` | developer | architecture, data model, business rules, flows, screens, API |
-| `04-delivery/` | client, developer | release plan, cost, development rules, changes from v1 |
+| `04-delivery/` | client, developer | release plan, cost, development rules, changes from v1, deployment decision |
+| `05-deployment/` | owner, teammate, agents | going live and running production: strategy, roles, plan, runbook, incidents, checklist, log ([start](05-deployment/README.md), [PDF](05-deployment/DEPLOYMENT_PLAYBOOK.pdf)) |
 | `99-source/` | reference | the original client spec, unchanged (local only, git-ignored) |
 
 Start with `01-product/01-VISION.md`, then answer `01-product/05-OPEN_QUESTIONS.md` with the client. Developers and coding agents: start with [HANDOVER.md](HANDOVER.md).

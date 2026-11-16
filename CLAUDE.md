@@ -2,7 +2,7 @@
 
 Private platform for one **primary school** teacher in Tunisia (1ère to 6ème année, her own groups and private lessons), her pupils and their parents. She creates her subjects herself; a child's own login is optional (parents follow). Several teachers can use it, each in her own space: the platform owner (admin) adds them from the dashboard and only sees accounts and counts. Flutter app + Spring Boot API + PostgreSQL.
 
-**Start here**: `docs/HANDOVER.md` (status, how to run, decisions, next tasks). For any UI work: `docs/00-brand/UI_DESIGN_SPEC.md` and `docs/00-brand/ui/screens/`.
+**Start here**: `docs/HANDOVER.md` (status, how to run, decisions, next tasks). For any UI work: `docs/00-brand/UI_DESIGN_SPEC.md` and `docs/00-brand/ui/screens/`. For deployment and production: `docs/05-deployment/README.md`.
 
 ## Never
 - Payments, marketplace, custom video (Meet links only).
