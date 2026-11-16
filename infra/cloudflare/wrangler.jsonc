@@ -1,0 +1,27 @@
+// Cloudflare Worker for the front (docs/05-deployment/07-CLOUDFLARE.md).
+// Build the app first, from app/:  flutter build web --release --pwa-strategy=none
+// Then, from infra/cloudflare/:     npx wrangler@4 deploy
+{
+	"$schema": "https://unpkg.com/wrangler@4/config-schema.json",
+	"name": "ngclass-web",
+	"main": "worker.js",
+	"compatibility_date": "2025-10-01",
+	"assets": {
+		"directory": "../../app/build/web",
+		"binding": "ASSETS",
+		// Unknown paths fall back to index.html (Flutter's own routes).
+		"not_found_handling": "single-page-application",
+		// Only these go through worker.js; every other file is served straight from Cloudflare.
+		"run_worker_first": ["/api/*", "/health"]
+	},
+	"vars": {
+		// The backend server (API + database). No trailing slash. Its HTTPS address, never a secret.
+		"BACKEND_ORIGIN": "https://api.nextgenerationclass.online"
+	},
+	"routes": [
+		{ "pattern": "nextgenerationclass.online", "custom_domain": true },
+		// www shows the same app; a Redirect Rule (docs/05-deployment/07-CLOUDFLARE.md) sends it to the main address.
+		{ "pattern": "www.nextgenerationclass.online", "custom_domain": true }
+	],
+	"observability": { "enabled": true }
+}

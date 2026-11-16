@@ -11,7 +11,7 @@ timedatectl set-timezone Africa/Tunis
 echo "System updates and packages (Docker from Ubuntu, firewall, ban of password guessers)"
 apt-get update -q
 apt-get upgrade -yq
-apt-get install -yq docker.io docker-compose-v2 ufw fail2ban unattended-upgrades rsync
+apt-get install -yq docker.io docker-compose-v2 ufw fail2ban unattended-upgrades rsync rclone
 systemctl enable --now docker
 usermod -aG docker "$APP_USER"
 

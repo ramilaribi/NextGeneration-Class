@@ -17,6 +17,7 @@ Written 2026-11-16, when the product was finished (Releases 1 to 4, privacy noti
 3. `03-PLAN.md` · the phases P0 to P6 and the pre-flight and cleanup tasks T1 to T13, each with an owner and "done when". **The status column is the live status.**
 4. `04-RUNBOOK.md` · every command: first deploy, updates, checks, logs, backups, restore, rollback, server care.
 5. `05-INCIDENTS.md` · symptom → check → fix, and how to tell the teacher.
+   `07-CLOUDFLARE.md` · **since 2026-11-16**: the web app on a Cloudflare Worker (`nextgenerationclass.online`), the API and database stay on the server (`api.`).
 6. `06-GO_LIVE_CHECKLIST.md` · the go / no-go list before the teacher gets her account.
 7. `LOG.md` · what was done on production, dated (no secrets).
    `PREPROD_AUDIT.md` · the audit of 2026-11-16: bugs and crash risks found before going live, with evidence (fixes are T7 to T13).

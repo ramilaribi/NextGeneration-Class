@@ -9,7 +9,8 @@ if [ -f .env ]; then
 fi
 
 echo "Production settings (stored in /opt/ngclass/infra/.env on this server only)."
-read -rp "Domain, without https:// (example: ngclass.com): " DOMAIN
+read -rp "Domain of this server, without https:// (example: ngclass.com, or api.nextgenerationclass.online when the web app is on Cloudflare): " DOMAIN
+read -rp "Web app address if it is NOT this domain, else press Enter (example: https://nextgenerationclass.online,https://www.nextgenerationclass.online): " ALLOWED_ORIGINS
 read -rp "Owner username for the admin dashboard (example: rami): " ADMIN_USERNAME
 read -rp "Owner first name (example: Rami): " ADMIN_FIRST_NAME
 read -rp "Owner last name (example: Laribi): " ADMIN_LAST_NAME
@@ -38,5 +39,6 @@ TEACHER_PASSWORD=
 TEACHER_FIRST_NAME=
 TEACHER_LAST_NAME=
 BACKUP_REMOTE=
+ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
 EOF
 echo "Saved. Keep the owner password somewhere safe (a password manager)."

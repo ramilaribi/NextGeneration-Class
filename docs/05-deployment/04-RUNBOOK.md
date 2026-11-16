@@ -99,11 +99,9 @@ In the app (first deploy, full; later deploys, steps 1 and 2 only):
 3. On the Mac:
    ```bash
    git switch main && git pull && git status
-   ssh -i ~/.ssh/ngclass_ovh ubuntu@IP sudo /opt/ngclass/infra/backup.sh
    ./infra/deploy.sh ubuntu@IP
-   git rev-parse --short HEAD
    ```
-   (After T3 the backup is part of `deploy.sh`.)
+   `deploy.sh` refuses a branch other than `main` or uncommitted files, takes a backup on the server before the restart, and writes the deployed commit to `/opt/ngclass/DEPLOYED` (`ssh -i ~/.ssh/ngclass_ovh ubuntu@IP cat /opt/ngclass/DEPLOYED`).
 4. Smoke test, steps 1 and 2.
 5. `LOG.md`: date, who, the commit, result.
 
@@ -152,10 +150,9 @@ Backup now:
 sudo /opt/ngclass/infra/backup.sh
 ```
 
-Copy to the owner's Mac (weekly; `infra/pull-backups.sh` after T4):
+Copy to the owner's Mac (weekly, from the project folder; copies into `~/NGClass-backups`, keeps 8 weeks):
 ```bash
-mkdir -p ~/NGClass-backups
-rsync -az -e "ssh -i $HOME/.ssh/ngclass_ovh" ubuntu@IP:/var/backups/ngclass/ ~/NGClass-backups/
+./infra/pull-backups.sh ubuntu@IP
 ```
 
 **Restore** (on the server, replace `DATE` by the backup's date and time, for example `2026-11-20_0200`). Everything written after that backup is lost: the owner decides.
@@ -170,7 +167,11 @@ sudo docker compose -f docker-compose.prod.yml start api
 ### Restore drill
 
 - **P4, on production itself, before the teacher's data exists**: with only the test accounts in, run a backup, change something visible (rename the test group, upload one more file), restore that backup, check the change is gone and the files open. This proves the whole procedure at no risk.
-- **Every month after go-live, without touching production**: check the latest dump restores into a throwaway database on the server, then remove it:
+- **Every month after go-live, without touching production**: check the latest dump restores into a throwaway database on the server, then remove it. `infra/restore-drill.sh` does all of it (no network for the throwaway container, removed even on failure):
+  ```bash
+  sudo /opt/ngclass/infra/restore-drill.sh
+  ```
+  The same by hand:
   ```bash
   F=$(ls -t /var/backups/ngclass/db_*.dump | head -1)
   sudo docker run -d --name restore-test -e POSTGRES_PASSWORD=drill postgres:16-alpine
@@ -187,10 +188,10 @@ sudo docker compose -f docker-compose.prod.yml start api
 Code only:
 ```bash
 git switch --detach <last good commit from LOG.md>
-./infra/deploy.sh ubuntu@IP
+./infra/deploy.sh ubuntu@IP --force
 git switch main
 ```
-(After T2 the script needs `--force` off `main`.) Code and data: restore the backup taken before the bad deploy (section 7), then deploy the old commit. See `01-STRATEGY.md`, "Rollback".
+(`--force` because the script otherwise refuses anything but a clean `main`.) Code and data: restore the backup taken before the bad deploy (section 7), then deploy the old commit. See `01-STRATEGY.md`, "Rollback".
 
 ## 9. Server care
 
