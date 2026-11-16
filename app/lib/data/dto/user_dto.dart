@@ -14,6 +14,7 @@ class UserDto {
     firstName: json['firstName'] as String? ?? '',
     lastName: json['lastName'] as String? ?? '',
     mustChangePassword: json['mustChangePassword'] as bool? ?? false,
+    privacyRequired: json['privacyRequired'] as bool? ?? false,
     children: [
       for (final child in (json['children'] as List<dynamic>? ?? const []).cast<Map<String, dynamic>>())
         ChildSummary(

@@ -31,6 +31,12 @@ class AuthCubit extends Cubit<AuthState> {
     if (current != null) emit(AuthSignedIn(current.copyWith(mustChangePassword: false)));
   }
 
+  /// The parent accepted the privacy notice: their space opens.
+  void privacyAccepted() {
+    final current = user;
+    if (current != null) emit(AuthSignedIn(current.copyWith(privacyRequired: false)));
+  }
+
   Future<void> logout() async {
     await _repository.logout();
     emit(const AuthSignedOut());

@@ -4744,4 +4744,154 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get monthNoData => 'لا توجد أرقام بعد هذا الشهر.';
+
+  @override
+  String get privacyLink => 'الخصوصية';
+
+  @override
+  String get privacyOverline => 'قبل البدء';
+
+  @override
+  String privacyAgreementTitle(String names) {
+    return 'معلومات $names';
+  }
+
+  @override
+  String get privacyAgreementTitleNone => 'معلوماتك';
+
+  @override
+  String privacyAgreementMessage(String teacher, String names) {
+    return '$teacher تحتفظ ببعض المعلومات لمتابعة $names. إليك الأهم في أربع نقاط.';
+  }
+
+  @override
+  String get privacyTeacherFallback => 'المعلمة';
+
+  @override
+  String get privacyKeptTitle => 'ما يُحفظ';
+
+  @override
+  String get privacyKeptShort =>
+      'اسم طفلك ومستواه وحضوره وفروضه وأعداده وملاحظات المعلمة؛ اسمك ورقم هاتفك.';
+
+  @override
+  String get privacySeenTitle => 'من يراه';
+
+  @override
+  String get privacySeenShort =>
+      'المعلمة وطفلك وأنت. لا تراه العائلات الأخرى أبدًا. لا إشهار ولا بيع.';
+
+  @override
+  String get privacyHowLongTitle => 'إلى متى';
+
+  @override
+  String get privacyHowLongShort =>
+      'هذه السنة الدراسية والسنة الموالية، ثم يُحذف كل شيء.';
+
+  @override
+  String get privacyRightsTitle => 'حقوقك';
+
+  @override
+  String get privacyRightsShort =>
+      'الاطلاع على هذه المعلومات أو تصحيحها أو طلب حذفها: اطلبه من المعلمة.';
+
+  @override
+  String get privacyReadAll => 'قراءة النص كاملًا';
+
+  @override
+  String privacyAccept(String names) {
+    return 'أوافق على أن تحتفظ المعلمة بهذه المعلومات لمتابعة $names.';
+  }
+
+  @override
+  String get privacyAcceptNone => 'أوافق على أن تحتفظ المعلمة بهذه المعلومات.';
+
+  @override
+  String get privacyContinue => 'متابعة';
+
+  @override
+  String get privacyDisagree => 'غير موافق؟ تحدّث مع المعلمة.';
+
+  @override
+  String get privacyPageTitle => 'معلوماتك ومعلومات طفلك';
+
+  @override
+  String get privacyPageSubtitle =>
+      'ما تحتفظ به المعلمة، ولماذا، ومن يراه، وإلى متى. بكلمات بسيطة.';
+
+  @override
+  String get privacyWhoTitle => 'من المسؤول';
+
+  @override
+  String get privacyWho =>
+      'معلمة طفلك. NextGeneration Class هي الأداة التي تستعملها لحصصها وفروضها ومتابعة تلاميذها.';
+
+  @override
+  String get privacyKept =>
+      'للطفل: الاسم واللقب والمستوى والمجموعات؛ الحضور؛ الفروض المسلّمة (صور وملفات)؛ الأعداد والنتائج؛ ملاحظات المعلمة. لك: الاسم واللقب ورقم الهاتف وصلتك بطفلك. للدخول: معرّف وكلمة مرور مشفّرة.';
+
+  @override
+  String get privacyWhyTitle => 'لماذا';
+
+  @override
+  String get privacyWhy =>
+      'تنظيم الحصص، وإعطاء الفروض وإصلاحها، ومتابعة التقدّم وإعلامك. لا شيء غير ذلك: لا إشهار، لا بيع، لا إرسال إلى خدمات أخرى.';
+
+  @override
+  String get privacySeen =>
+      'ترى المعلمة تلاميذها. ترى أنت وطفلك معلومات طفلك. لا ترى العائلات الأخرى أي شيء عنك أبدًا. الشخص الذي يدير المنصة يرى حسابات المعلمات فقط، ولا يرى أبدًا محتوى فضائهن.';
+
+  @override
+  String get privacyWhereTitle => 'أين';
+
+  @override
+  String get privacyWhere =>
+      'على خادم مستأجر في فرنسا (OVHcloud)، مع نسخة احتياطية كل ليلة. المبادلات مع التطبيق مشفّرة.';
+
+  @override
+  String get privacyHowLong =>
+      'طوال السنة الدراسية والسنة الموالية. بعد ذلك تُحذف معلومات التلميذ الذي غادر المعلمة. يمكنك طلب الحذف قبل ذلك.';
+
+  @override
+  String get privacyRights =>
+      'يمكنك الاطلاع على المعلومات المحفوظة أو طلب تصحيحها أو حذفها: يكفي أن تطلب ذلك من المعلمة. هذه الحقوق مستمدة من القانون الأساسي عدد 63 لسنة 2004 المؤرخ في 27 جويلية 2004 المتعلق بحماية المعطيات الشخصية.';
+
+  @override
+  String get privacyUpdated =>
+      'آخر تحديث: 14 نوفمبر 2026 · لأي سؤال: اسأل معلمة طفلك.';
+
+  @override
+  String get consentTitle => 'موافقة الأولياء';
+
+  @override
+  String get consentGiven => 'مُعطاة';
+
+  @override
+  String get consentPending => 'في الانتظار';
+
+  @override
+  String consentByApp(String name, String day) {
+    return '$name، في التطبيق، يوم $day.';
+  }
+
+  @override
+  String consentByPaper(String day) {
+    return 'على الورق، سُجّلت يوم $day.';
+  }
+
+  @override
+  String get consentPendingText =>
+      'لم يُجب الأولياء بعد. إذا وقّعوا الاستمارة الورقية:';
+
+  @override
+  String get consentPaper => 'استُلمت الموافقة على الورق';
+
+  @override
+  String get consentPaperSaved => 'سُجّلت الموافقة.';
+
+  @override
+  String get consentFilter => 'موافقة في الانتظار';
+
+  @override
+  String get andSeparator => ' و';
 }

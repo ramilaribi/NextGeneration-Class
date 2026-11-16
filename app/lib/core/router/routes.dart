@@ -8,6 +8,12 @@ abstract final class Routes {
   static const login = '/connexion';
   static const choosePassword = '/mot-de-passe';
 
+  /// A parent's first login: the privacy notice to accept (design `r4/AccordParents.png`).
+  static const privacyAgreement = '/accord';
+
+  /// The privacy notice in full, signed in or not (design `r4/Confidentialite.png`).
+  static const privacy = '/confidentialite';
+
   static const teacherArea = '/enseignante';
   static const teacherHome = '$teacherArea/journee';
   static const teacherPlanning = '$teacherArea/planning';
@@ -117,10 +123,15 @@ String? authRedirect(AuthState auth, String location) {
     case AuthUnknown():
       return location == Routes.splash ? null : Routes.splash;
     case AuthSignedOut():
-      return location == Routes.login ? null : Routes.login;
+      return location == Routes.login || location == Routes.privacy ? null : Routes.login;
     case AuthSignedIn(:final user):
       if (user.mustChangePassword) {
         return location == Routes.choosePassword ? null : Routes.choosePassword;
+      }
+      if (location == Routes.privacy) return null;
+      // A parent's space stays closed until the privacy notice is accepted.
+      if (user.privacyRequired) {
+        return location == Routes.privacyAgreement ? null : Routes.privacyAgreement;
       }
       return location.startsWith('${Routes.areaOf(user.role)}/') ? null : Routes.homeOf(user.role);
   }

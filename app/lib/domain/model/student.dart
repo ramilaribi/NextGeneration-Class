@@ -53,6 +53,7 @@ class StudentSummary extends Equatable {
     this.archived = false,
     this.attendanceRate,
     this.absences = 0,
+    this.consent,
   });
 
   final String id;
@@ -74,12 +75,34 @@ class StudentSummary extends Equatable {
   final int? attendanceRate;
   final int absences;
 
+  /// The parents' agreement to the privacy notice; null while pending.
+  final StudentConsent? consent;
+
   String get fullName => '$firstName $lastName'.trim();
 
   String get initials {
     final value = '${firstName.isEmpty ? '' : firstName[0]}${lastName.isEmpty ? '' : lastName[0]}'.toUpperCase();
     return value.isEmpty ? '?' : value;
   }
+
+  /// The same pupil with the parents' agreement recorded.
+  StudentSummary withConsent(StudentConsent value) => StudentSummary(
+    id: id,
+    userId: userId,
+    firstName: firstName,
+    lastName: lastName,
+    username: username,
+    levelId: levelId,
+    level: level,
+    phone: phone,
+    groups: groups,
+    parents: parents,
+    loginEnabled: loginEnabled,
+    archived: archived,
+    attendanceRate: attendanceRate,
+    absences: absences,
+    consent: value,
+  );
 
   /// Matches the search box: name, username or phone, without accents or case.
   bool matches(String query) {
@@ -105,6 +128,7 @@ class StudentSummary extends Equatable {
     archived,
     attendanceRate,
     absences,
+    consent,
   ];
 }
 
@@ -181,6 +205,9 @@ class StudentProfile extends Equatable {
   final DateTime? lastLoginAt;
   final AttendanceSummary attendance;
   final List<UpcomingSession> nextSessions;
+
+  StudentProfile withStudent(StudentSummary value) =>
+      StudentProfile(student: value, attendance: attendance, lastLoginAt: lastLoginAt, nextSessions: nextSessions);
 
   @override
   List<Object?> get props => [student, lastLoginAt, attendance, nextSessions];
@@ -319,4 +346,16 @@ class ParentAccount extends Equatable {
 
   @override
   List<Object?> get props => [id, userId, firstName, lastName, phone, children];
+}
+
+/// The parents' agreement to the privacy notice: in the app by a parent ([givenBy]), or on paper.
+class StudentConsent extends Equatable {
+  const StudentConsent({required this.paper, required this.givenAt, this.givenBy});
+
+  final bool paper;
+  final String? givenBy;
+  final DateTime givenAt;
+
+  @override
+  List<Object?> get props => [paper, givenBy, givenAt];
 }

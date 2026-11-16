@@ -6,6 +6,7 @@ import '../../../domain/model/app_user.dart';
 import '../../../domain/model/group.dart';
 import '../../../domain/model/student.dart';
 import '../../../domain/repositories/group_repository.dart';
+import '../../../domain/repositories/privacy_repository.dart';
 import '../../../domain/repositories/student_repository.dart';
 import '../common/load_status.dart';
 
@@ -44,10 +45,13 @@ class StudentProfileState extends Equatable {
 
 /// "Fiche élève". Actions return their failure (or null) so the screen can say what happened.
 class StudentProfileCubit extends Cubit<StudentProfileState> {
-  StudentProfileCubit(this._students, this._groups, this.studentId) : super(const StudentProfileState());
+  StudentProfileCubit(this._students, this._groups, this.studentId, {PrivacyRepository? privacy})
+    : _privacy = privacy,
+      super(const StudentProfileState());
 
   final StudentRepository _students;
   final GroupRepository _groups;
+  final PrivacyRepository? _privacy;
   final String studentId;
 
   Future<void> load() async {
@@ -97,6 +101,20 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
     final comment = await _students.addComment(studentId, body.trim());
     emit(state.copyWith(comments: [comment, ...state.comments]));
   });
+
+  /// "Accord reçu sur papier": the parents signed the paper form.
+  Future<ApiFailure?> recordPaperConsent() async {
+    final profile = state.profile;
+    final privacy = _privacy;
+    if (profile == null || privacy == null) return null;
+    try {
+      final consent = await privacy.paper(studentId);
+      if (!isClosed) emit(state.copyWith(profile: profile.withStudent(profile.student.withConsent(consent))));
+      return null;
+    } on Object catch (error) {
+      return ApiFailure.from(error);
+    }
+  }
 
   Future<ApiFailure?> archive() => _run(() => _students.archive(studentId));
 

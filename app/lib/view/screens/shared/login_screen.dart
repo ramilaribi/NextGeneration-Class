@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/brand_colors.dart';
+import '../../../core/theme/app_text.dart';
+import '../../../core/router/routes.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -95,6 +99,15 @@ class _LoginFormState extends State<_LoginForm> {
             PrimaryButton(label: l10n.loginSubmit, arrow: true, shadow: true, loading: state.submitting, onPressed: _submit),
             const SizedBox(height: 20),
             InfoNote(text: l10n.loginForgotHint),
+            const SizedBox(height: 8),
+            Center(
+              child: TextButton.icon(
+                key: const Key('login-privacy'),
+                onPressed: () => context.push(Routes.privacy),
+                icon: const Icon(LucideIcons.shieldCheck, size: 16, color: BrandColors.slate),
+                label: Text(l10n.privacyLink, style: AppText.of(context).style(13, FontWeight.w700, color: BrandColors.body)),
+              ),
+            ),
           ],
         ),
       ),

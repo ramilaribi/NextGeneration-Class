@@ -40,7 +40,7 @@ class StudentProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
     providers: [
-      BlocProvider(create: (_) => StudentProfileCubit(sl.get(), sl.get(), studentId)..load()),
+      BlocProvider(create: (_) => StudentProfileCubit(sl.get(), sl.get(), studentId, privacy: sl.get())..load()),
       // The Moyenne tile and the results panel: the numbers the pupil and the parents see.
       BlocProvider(create: (_) => ResultsCubit.forTeacher(sl.get())..load(studentId: studentId)),
     ],
@@ -127,7 +127,16 @@ class _Profile extends StatelessWidget {
               _Attendance(summary: attendance),
             ],
           ),
-          end: const Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [_Comments(), SizedBox(height: 24), _PrivateNotes()]),
+          end: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _Consent(profile: profile),
+              SizedBox(height: phone ? 16 : 24),
+              const _Comments(),
+              const SizedBox(height: 24),
+              const _PrivateNotes(),
+            ],
+          ),
         ),
       ],
     );
@@ -348,6 +357,56 @@ class _Header extends StatelessWidget {
     if (!context.mounted) return;
     showNotice(context, group != null ? l10n.privateLessonCreated : failureText(l10n, failure!));
     if (group != null) context.go(Routes.teacherGroup(group.id));
+  }
+}
+
+/// "Accord des parents" (design `r4/ConfidentialitePhone.png`): given (by whom, how, when) or pending, with
+/// "Accord reçu sur papier" for a family that does not sign in.
+class _Consent extends StatelessWidget {
+  const _Consent({required this.profile});
+
+  final StudentProfile profile;
+
+  Future<void> _paper(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final failure = await context.read<StudentProfileCubit>().recordPaperConsent();
+    if (context.mounted) showNotice(context, failure == null ? l10n.consentPaperSaved : failureText(l10n, failure));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final text = AppText.of(context);
+    final language = context.watch<LanguageCubit>().state;
+    final consent = profile.student.consent;
+    final day = consent == null ? '' : dayInSentence(TunisTime.day(consent.givenAt), language);
+    return SectionCard(
+      key: const Key('consent-card'),
+      title: l10n.consentTitle,
+      trailing: StatusChip(label: consent == null ? l10n.consentPending : l10n.consentGiven, accent: consent == null ? Accent.orange : Accent.green),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            consent == null
+                ? l10n.consentPendingText
+                : consent.paper
+                ? l10n.consentByPaper(day)
+                : l10n.consentByApp(isolated(consent.givenBy ?? ''), day),
+            style: text.style(14, FontWeight.w500, color: BrandColors.body, height: 1.5),
+          ),
+          if (consent == null) ...[
+            const SizedBox(height: 12),
+            SecondaryButton(
+              key: const Key('consent-paper'),
+              label: l10n.consentPaper,
+              icon: LucideIcons.fileCheck,
+              onPressed: () => _paper(context),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }
 

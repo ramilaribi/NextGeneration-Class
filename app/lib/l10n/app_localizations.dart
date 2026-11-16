@@ -7332,6 +7332,258 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Pas encore de chiffres ce mois-ci.'**
   String get monthNoData;
+
+  /// No description provided for @privacyLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confidentialité'**
+  String get privacyLink;
+
+  /// No description provided for @privacyOverline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avant de commencer'**
+  String get privacyOverline;
+
+  /// No description provided for @privacyAgreementTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les informations de {names}'**
+  String privacyAgreementTitle(String names);
+
+  /// No description provided for @privacyAgreementTitleNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vos informations'**
+  String get privacyAgreementTitleNone;
+
+  /// No description provided for @privacyAgreementMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'{teacher} garde quelques informations pour suivre {names}. Voici l\'essentiel, en quatre points.'**
+  String privacyAgreementMessage(String teacher, String names);
+
+  /// No description provided for @privacyTeacherFallback.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'enseignante'**
+  String get privacyTeacherFallback;
+
+  /// No description provided for @privacyKeptTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce qui est gardé'**
+  String get privacyKeptTitle;
+
+  /// No description provided for @privacyKeptShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le nom de votre enfant, son niveau, ses présences, ses devoirs et ses notes, les mots de l\'enseignante ; votre nom et votre téléphone.'**
+  String get privacyKeptShort;
+
+  /// No description provided for @privacySeenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Qui le voit'**
+  String get privacySeenTitle;
+
+  /// No description provided for @privacySeenShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'enseignante, votre enfant et vous. Jamais les autres familles. Jamais de publicité, rien n\'est vendu.'**
+  String get privacySeenShort;
+
+  /// No description provided for @privacyHowLongTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Combien de temps'**
+  String get privacyHowLongTitle;
+
+  /// No description provided for @privacyHowLongShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette année scolaire et la suivante, puis tout est effacé.'**
+  String get privacyHowLongShort;
+
+  /// No description provided for @privacyRightsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vos droits'**
+  String get privacyRightsTitle;
+
+  /// No description provided for @privacyRightsShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir, corriger ou faire effacer ces informations : demandez-le à l\'enseignante.'**
+  String get privacyRightsShort;
+
+  /// No description provided for @privacyReadAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lire tout le texte'**
+  String get privacyReadAll;
+
+  /// No description provided for @privacyAccept.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'accepte que l\'enseignante garde ces informations pour suivre {names}.'**
+  String privacyAccept(String names);
+
+  /// No description provided for @privacyAcceptNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'accepte que l\'enseignante garde ces informations.'**
+  String get privacyAcceptNone;
+
+  /// No description provided for @privacyContinue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get privacyContinue;
+
+  /// No description provided for @privacyDisagree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas d\'accord ? Parlez-en à l\'enseignante.'**
+  String get privacyDisagree;
+
+  /// No description provided for @privacyPageTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vos informations et celles de votre enfant'**
+  String get privacyPageTitle;
+
+  /// No description provided for @privacyPageSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que l\'enseignante garde, pourquoi, qui le voit et combien de temps. En mots simples.'**
+  String get privacyPageSubtitle;
+
+  /// No description provided for @privacyWhoTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Qui est responsable'**
+  String get privacyWhoTitle;
+
+  /// No description provided for @privacyWho.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'enseignante de votre enfant. NextGeneration Class est l\'outil qu\'elle utilise pour ses séances, ses devoirs et le suivi de ses élèves.'**
+  String get privacyWho;
+
+  /// No description provided for @privacyKept.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour l\'enfant : nom, prénom, niveau et groupes ; présences ; devoirs rendus (photos et fichiers) ; notes et résultats ; les commentaires de l\'enseignante. Pour vous : nom, prénom, téléphone, et le lien avec votre enfant. Pour se connecter : un identifiant et un mot de passe chiffré.'**
+  String get privacyKept;
+
+  /// No description provided for @privacyWhyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pourquoi'**
+  String get privacyWhyTitle;
+
+  /// No description provided for @privacyWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Organiser les séances, donner et corriger les devoirs, suivre les progrès et vous tenir informé. Rien d\'autre : pas de publicité, pas de revente, pas d\'envoi à d\'autres services.'**
+  String get privacyWhy;
+
+  /// No description provided for @privacySeen.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'enseignante voit ses élèves. Votre enfant et vous voyez les informations de votre enfant. Les autres familles ne voient jamais rien de vous. La personne qui gère la plateforme voit seulement les comptes des enseignantes, jamais le contenu de leur espace.'**
+  String get privacySeen;
+
+  /// No description provided for @privacyWhereTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Où'**
+  String get privacyWhereTitle;
+
+  /// No description provided for @privacyWhere.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur un serveur loué en France (OVHcloud), avec une sauvegarde chaque nuit. Les échanges avec l\'application sont chiffrés.'**
+  String get privacyWhere;
+
+  /// No description provided for @privacyHowLong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pendant l\'année scolaire et l\'année suivante. Ensuite, les informations d\'un élève qui a quitté l\'enseignante sont effacées. Vous pouvez demander l\'effacement plus tôt.'**
+  String get privacyHowLong;
+
+  /// No description provided for @privacyRights.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous pouvez voir les informations gardées, les faire corriger, ou demander qu\'elles soient effacées : il suffit de le demander à l\'enseignante. Ces droits viennent de la loi organique n° 2004-63 du 27 juillet 2004 sur la protection des données personnelles.'**
+  String get privacyRights;
+
+  /// No description provided for @privacyUpdated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière mise à jour : 14 novembre 2026 · Une question : demandez à l\'enseignante de votre enfant.'**
+  String get privacyUpdated;
+
+  /// No description provided for @consentTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accord des parents'**
+  String get consentTitle;
+
+  /// No description provided for @consentGiven.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donné'**
+  String get consentGiven;
+
+  /// No description provided for @consentPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente'**
+  String get consentPending;
+
+  /// No description provided for @consentByApp.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name}, dans l\'application, le {day}.'**
+  String consentByApp(String name, String day);
+
+  /// No description provided for @consentByPaper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur papier, enregistré le {day}.'**
+  String consentByPaper(String day);
+
+  /// No description provided for @consentPendingText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les parents n\'ont pas encore répondu. S\'ils ont signé la fiche papier :'**
+  String get consentPendingText;
+
+  /// No description provided for @consentPaper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accord reçu sur papier'**
+  String get consentPaper;
+
+  /// No description provided for @consentPaperSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accord enregistré.'**
+  String get consentPaperSaved;
+
+  /// No description provided for @consentFilter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accord en attente'**
+  String get consentFilter;
+
+  /// No description provided for @andSeparator.
+  ///
+  /// In fr, this message translates to:
+  /// **' et '**
+  String get andSeparator;
 }
 
 class _AppLocalizationsDelegate

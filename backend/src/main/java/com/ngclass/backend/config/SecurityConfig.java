@@ -2,6 +2,7 @@ package com.ngclass.backend.config;
 
 import com.ngclass.backend.auth.filter.JwtAuthenticationFilter;
 import com.ngclass.backend.auth.filter.PasswordChangeFilter;
+import com.ngclass.backend.auth.filter.PrivacyConsentFilter;
 import com.ngclass.backend.common.JsonErrorWriter;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +44,7 @@ public class SecurityConfig {
 			HttpSecurity http,
 			JwtAuthenticationFilter jwtAuthenticationFilter,
 			PasswordChangeFilter passwordChangeFilter,
+			PrivacyConsentFilter privacyConsentFilter,
 			CorsConfigurationSource corsConfigurationSource,
 			JsonErrorWriter errorWriter) throws Exception {
 		http.csrf(csrf -> csrf.disable())
@@ -65,7 +67,8 @@ public class SecurityConfig {
 						.accessDeniedHandler((request, response, ex) ->
 								errorWriter.write(request, response, HttpStatus.FORBIDDEN, "forbidden")))
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-				.addFilterAfter(passwordChangeFilter, JwtAuthenticationFilter.class);
+				.addFilterAfter(passwordChangeFilter, JwtAuthenticationFilter.class)
+				.addFilterAfter(privacyConsentFilter, PasswordChangeFilter.class);
 		return http.build();
 	}
 }

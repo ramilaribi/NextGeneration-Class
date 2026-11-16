@@ -17,6 +17,9 @@ import com.ngclass.backend.people.domain.Comment;
 import com.ngclass.backend.people.domain.Parent;
 import com.ngclass.backend.people.domain.PrivateNote;
 import com.ngclass.backend.people.domain.Student;
+import com.ngclass.backend.people.domain.StudentConsent;
+import com.ngclass.backend.auth.service.Privacy;
+import com.ngclass.backend.people.dto.StudentDtos.Consent;
 import com.ngclass.backend.people.dto.StudentDtos.AttendanceMark;
 import com.ngclass.backend.people.dto.StudentDtos.AttendanceSummary;
 import com.ngclass.backend.people.dto.StudentDtos.CreatedStudent;
@@ -33,6 +36,7 @@ import com.ngclass.backend.people.dto.StudentDtos.UpcomingSession;
 import com.ngclass.backend.people.dto.StudentDtos.UsernameSuggestion;
 import com.ngclass.backend.people.repository.CommentRepository;
 import com.ngclass.backend.people.repository.ParentRepository;
+import com.ngclass.backend.people.repository.StudentConsentRepository;
 import com.ngclass.backend.people.repository.PrivateNoteRepository;
 import com.ngclass.backend.people.repository.StudentRepository;
 import com.ngclass.backend.planning.domain.AttendanceStatus;
@@ -86,6 +90,7 @@ public class StudentService {
 	private final ClassSessionRepository sessions;
 	private final AttendanceRepository attendance;
 	private final AttendanceStats attendanceStats;
+	private final StudentConsentRepository consents;
 	private final PasswordEncoder passwordEncoder;
 	private final Clock clock;
 	private final CurrentTeacher teacher;
@@ -404,6 +409,12 @@ public class StudentService {
 			}
 		}
 		Map<UUID, AttendanceStats.Summary> stats = attendanceStats.of(ids);
+		Map<UUID, Consent> agreed = new HashMap<>();
+		for (StudentConsent c : consents.findByStudentIdIn(ids)) {
+			if (c.getVersion() >= Privacy.VERSION) {
+				agreed.put(c.getStudentId(), new Consent(c.getMethod().name(), c.getGivenBy(), c.getGivenAt()));
+			}
+		}
 		return list.stream()
 				.map(s -> {
 					User u = s.getUser();
@@ -428,7 +439,8 @@ public class StudentService {
 							u.isLoginEnabled(),
 							s.getArchivedAt() != null,
 							summary.rate(),
-							summary.absent());
+							summary.absent(),
+							agreed.get(s.getId()));
 				})
 				.toList();
 	}

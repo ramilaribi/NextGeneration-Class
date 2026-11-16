@@ -13,6 +13,7 @@ class StudentsState extends Equatable {
     this.archived = false,
     this.query = '',
     this.levelId,
+    this.consentPending = false,
     this.failure,
   });
 
@@ -23,10 +24,15 @@ class StudentsState extends Equatable {
   final bool archived;
   final String query;
   final String? levelId;
+
+  /// "Accord en attente": only the pupils whose parents have not agreed yet.
+  final bool consentPending;
   final ApiFailure? failure;
 
   /// What the list shows after the search box and the level filter.
-  List<StudentSummary> get visible => students.where((s) => s.matches(query) && (levelId == null || s.levelId == levelId)).toList();
+  List<StudentSummary> get visible => students
+      .where((s) => s.matches(query) && (levelId == null || s.levelId == levelId) && (!consentPending || s.consent == null))
+      .toList();
 
   StudentsState copyWith({
     LoadStatus? status,
@@ -34,6 +40,7 @@ class StudentsState extends Equatable {
     bool? archived,
     String? query,
     String? Function()? levelId,
+    bool? consentPending,
     ApiFailure? Function()? failure,
   }) => StudentsState(
     status: status ?? this.status,
@@ -41,11 +48,12 @@ class StudentsState extends Equatable {
     archived: archived ?? this.archived,
     query: query ?? this.query,
     levelId: levelId != null ? levelId() : this.levelId,
+    consentPending: consentPending ?? this.consentPending,
     failure: failure != null ? failure() : this.failure,
   );
 
   @override
-  List<Object?> get props => [status, students, archived, query, levelId, failure?.code];
+  List<Object?> get props => [status, students, archived, query, levelId, consentPending, failure?.code];
 }
 
 class StudentsCubit extends Cubit<StudentsState> {
@@ -70,6 +78,8 @@ class StudentsCubit extends Cubit<StudentsState> {
   void search(String query) => emit(state.copyWith(query: query));
 
   void filterLevel(String? levelId) => emit(state.copyWith(levelId: () => levelId));
+
+  void filterConsentPending(bool value) => emit(state.copyWith(consentPending: value));
 
   /// "Restaurer" from the Archivés tab. Returns the failure, or null.
   Future<ApiFailure?> restore(String studentId) async {

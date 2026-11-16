@@ -150,6 +150,7 @@ class _StudentsViewState extends State<StudentsView> {
             onChanged: context.read<StudentsCubit>().search,
           ),
           const _LevelFilter(),
+          if (_tab == StudentsTab.students) const _ConsentFilter(),
         ],
       ],
     );
@@ -169,6 +170,31 @@ class _StudentsViewState extends State<StudentsView> {
           child: KeyedSubtree(key: ValueKey(_tab), child: content),
         ),
       ],
+    );
+  }
+}
+
+/// "Accord en attente": the families who have not agreed to the privacy notice yet.
+class _ConsentFilter extends StatelessWidget {
+  const _ConsentFilter();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final text = AppText.of(context);
+    final on = context.select((StudentsCubit c) => c.state.consentPending);
+    return FilterChip(
+      key: const Key('consent-filter'),
+      label: Text(l10n.consentFilter),
+      selected: on,
+      showCheckmark: true,
+      checkmarkColor: BrandColors.indigo,
+      selectedColor: Accent.indigo.soft,
+      backgroundColor: Colors.white,
+      side: BorderSide(color: on ? Accent.indigo.soft : BrandColors.line),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.md)),
+      labelStyle: text.style(14, FontWeight.w600, color: on ? BrandColors.indigo : BrandColors.ink),
+      onSelected: context.read<StudentsCubit>().filterConsentPending,
     );
   }
 }

@@ -3,8 +3,15 @@ import 'package:ngclass/core/router/routes.dart';
 import 'package:ngclass/domain/model/app_user.dart';
 import 'package:ngclass/view/stateManager/auth/auth_state.dart';
 
-AppUser _user(UserRole role, {bool mustChangePassword = false}) =>
-    AppUser(id: '1', role: role, username: 'u', firstName: 'F', lastName: 'L', mustChangePassword: mustChangePassword);
+AppUser _user(UserRole role, {bool mustChangePassword = false, bool privacyRequired = false}) => AppUser(
+  id: '1',
+  role: role,
+  username: 'u',
+  firstName: 'F',
+  lastName: 'L',
+  mustChangePassword: mustChangePassword,
+  privacyRequired: privacyRequired,
+);
 
 void main() {
   test('while the session is restored, everything waits on the splash screen', () {
@@ -40,5 +47,21 @@ void main() {
     final user = _user(UserRole.student, mustChangePassword: true);
     expect(authRedirect(AuthSignedIn(user), Routes.studentHome), Routes.choosePassword);
     expect(authRedirect(AuthSignedIn(user), Routes.choosePassword), isNull);
+  });
+
+  test('a parent accepts the privacy notice after the password, before the space opens', () {
+    final first = _user(UserRole.parent, mustChangePassword: true, privacyRequired: true);
+    expect(authRedirect(AuthSignedIn(first), Routes.parentOverview), Routes.choosePassword);
+    final parent = _user(UserRole.parent, privacyRequired: true);
+    expect(authRedirect(AuthSignedIn(parent), Routes.parentOverview), Routes.privacyAgreement);
+    expect(authRedirect(AuthSignedIn(parent), Routes.privacyAgreement), isNull);
+    expect(authRedirect(AuthSignedIn(parent), Routes.privacy), isNull, reason: '"Lire tout le texte"');
+    expect(authRedirect(AuthSignedIn(_user(UserRole.parent)), Routes.privacyAgreement), Routes.parentOverview);
+  });
+
+  test('the privacy notice opens from the login page and from every account', () {
+    expect(authRedirect(const AuthSignedOut(), Routes.privacy), isNull);
+    expect(authRedirect(AuthSignedIn(_user(UserRole.teacher)), Routes.privacy), isNull);
+    expect(authRedirect(AuthSignedIn(_user(UserRole.student)), Routes.privacy), isNull);
   });
 }

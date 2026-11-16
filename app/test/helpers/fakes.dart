@@ -5,6 +5,7 @@ import 'package:ngclass/domain/model/app_user.dart';
 import 'package:ngclass/domain/model/clock_time.dart';
 import 'package:ngclass/domain/model/group.dart';
 import 'package:ngclass/domain/model/localized_text.dart';
+import 'package:ngclass/domain/model/privacy.dart';
 import 'package:ngclass/domain/model/reference.dart';
 import 'package:ngclass/domain/model/session.dart';
 import 'package:ngclass/domain/model/student.dart';
@@ -13,6 +14,7 @@ import 'package:ngclass/domain/repositories/admin_repository.dart';
 import 'package:ngclass/domain/repositories/group_repository.dart';
 import 'package:ngclass/domain/repositories/notification_repository.dart';
 import 'package:ngclass/domain/repositories/planning_repository.dart';
+import 'package:ngclass/domain/repositories/privacy_repository.dart';
 import 'package:ngclass/domain/repositories/reference_repository.dart';
 import 'package:ngclass/domain/repositories/student_repository.dart';
 
@@ -446,4 +448,23 @@ class FakeAdminRepository implements AdminRepository {
 
   @override
   Future<void> setActive(String teacherId, {required bool active}) async => activations.add((teacherId, active));
+}
+
+/// The privacy notice: a parent with two children; records what was accepted and the paper agreements.
+class FakePrivacyRepository implements PrivacyRepository {
+  PrivacyInfo result = const PrivacyInfo(required: true, teacherName: 'Ines Haddad', children: ['Adam', 'Lina']);
+  int accepted = 0;
+  final List<String> papers = [];
+
+  @override
+  Future<PrivacyInfo> info() async => result;
+
+  @override
+  Future<void> accept() async => accepted++;
+
+  @override
+  Future<StudentConsent> paper(String studentId) async {
+    papers.add(studentId);
+    return StudentConsent(paper: true, givenAt: DateTime.utc(2026, 10, 6, 9));
+  }
 }

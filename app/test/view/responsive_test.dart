@@ -41,6 +41,7 @@ import 'package:ngclass/view/screens/student/student_destinations.dart';
 import 'package:ngclass/view/screens/student/student_home_screen.dart';
 import 'package:ngclass/view/screens/teacher/contents/contents_screen.dart';
 import 'package:ngclass/view/screens/teacher/contents/page/page_editor_screen.dart';
+import 'package:ngclass/view/screens/shared/privacy_screens.dart';
 import 'package:ngclass/view/widgets/worksheet_preview.dart';
 import 'package:ngclass/view/widgets/progress_charts.dart';
 import 'package:ngclass/view/screens/teacher/planning/end_session_panel.dart';
@@ -677,6 +678,16 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(EndSessionPanel), findsOneWidget);
         expect(tester.takeException(), isNull, reason: 'Fin de séance');
+      });
+
+      testWidgets('the parents\' agreement and the privacy notice fit, $label', (tester) async {
+        await pumpSignedIn(tester, const PrivacyAgreementScreen(), user: parent, language: language, size: size);
+        await tester.pumpAndSettle();
+        expect(find.byType(PrivacyAgreementView), findsOneWidget);
+        expect(tester.takeException(), isNull, reason: 'agreement');
+        await pumpSignedIn(tester, const PrivacyScreen(), language: language, size: size);
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull, reason: 'notice');
       });
 
       testWidgets('the search fits, its results typed in, $label', (tester) async {

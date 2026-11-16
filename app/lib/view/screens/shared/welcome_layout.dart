@@ -60,7 +60,11 @@ class _BrandPane extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const BrandWordmark(),
+                  // The full name shrinks a little on a narrow computer screen rather than running out.
+                  const Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: FittedBox(fit: BoxFit.scaleDown, alignment: AlignmentDirectional.centerStart, child: BrandWordmark()),
+                  ),
                   const SizedBox(height: 40),
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 540),
@@ -172,7 +176,10 @@ class _Narrow extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 12),
-                    LanguageToggle(),
+                    // On a 320 px phone the switch shrinks rather than running out of the screen.
+                    Flexible(
+                      child: FittedBox(fit: BoxFit.scaleDown, alignment: AlignmentDirectional.centerEnd, child: LanguageToggle()),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 36),

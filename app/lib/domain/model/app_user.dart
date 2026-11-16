@@ -15,6 +15,7 @@ class AppUser extends Equatable {
     required this.lastName,
     required this.mustChangePassword,
     this.children = const [],
+    this.privacyRequired = false,
   });
 
   final String id;
@@ -29,6 +30,9 @@ class AppUser extends Equatable {
   /// Parents only: the children they follow.
   final List<ChildSummary> children;
 
+  /// A parent who must accept the privacy notice before anything else (screen "Accord des parents").
+  final bool privacyRequired;
+
   String get fullName => '$firstName $lastName'.trim();
 
   String get initials {
@@ -38,7 +42,7 @@ class AppUser extends Equatable {
     return value.isEmpty ? username.substring(0, 1).toUpperCase() : value;
   }
 
-  AppUser copyWith({bool? mustChangePassword}) => AppUser(
+  AppUser copyWith({bool? mustChangePassword, bool? privacyRequired}) => AppUser(
     id: id,
     role: role,
     username: username,
@@ -46,10 +50,11 @@ class AppUser extends Equatable {
     lastName: lastName,
     mustChangePassword: mustChangePassword ?? this.mustChangePassword,
     children: children,
+    privacyRequired: privacyRequired ?? this.privacyRequired,
   );
 
   @override
-  List<Object?> get props => [id, role, username, firstName, lastName, mustChangePassword, children];
+  List<Object?> get props => [id, role, username, firstName, lastName, mustChangePassword, children, privacyRequired];
 }
 
 class ChildSummary extends Equatable {

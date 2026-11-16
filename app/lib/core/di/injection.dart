@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/remote/auth_api.dart';
 import '../../data/remote/content_api.dart';
 import '../../data/remote/announcement_api.dart';
+import '../../data/remote/privacy_api.dart';
 import '../../data/remote/page_api.dart';
 import '../../data/remote/quiz_api.dart';
 import '../../data/remote/homework_api.dart';
@@ -25,6 +26,7 @@ import '../../data/remote/search_api.dart';
 import '../../data/remote/student_import_api.dart';
 import '../../data/repository/content_repository_impl.dart';
 import '../../data/repository/announcement_repository_impl.dart';
+import '../../data/repository/privacy_repository_impl.dart';
 import '../../data/repository/page_repository_impl.dart';
 import '../../data/repository/quiz_repository_impl.dart';
 import '../../data/repository/homework_repository_impl.dart';
@@ -34,6 +36,7 @@ import '../../data/repository/search_repository_impl.dart';
 import '../../data/repository/student_import_repository_impl.dart';
 import '../../domain/repositories/content_repository.dart';
 import '../../domain/repositories/announcement_repository.dart';
+import '../../domain/repositories/privacy_repository.dart';
 import '../../domain/repositories/page_repository.dart';
 import '../../domain/repositories/quiz_repository.dart';
 import '../../domain/repositories/homework_repository.dart';
@@ -145,6 +148,8 @@ void configureDependencies(AppConfig config) {
   // ── Announcements (release 4) ──
   sl.registerLazySingleton<AnnouncementApi>(() => AnnouncementApi(sl.get<DioClient>().dio));
   sl.registerLazySingleton<AnnouncementRepository>(() => AnnouncementRepositoryImpl(sl.get()));
+  sl.registerLazySingleton<PrivacyApi>(() => PrivacyApi(sl.get<DioClient>().dio));
+  sl.registerLazySingleton<PrivacyRepository>(() => PrivacyRepositoryImpl(sl.get(), sl.get()));
   sl.registerFactory<LibraryCubit>(() => LibraryCubit(sl.get()));
 
   // ── Homework: given by the teacher, sent by the pupil or the parent ──
