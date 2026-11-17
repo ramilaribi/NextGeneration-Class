@@ -4,24 +4,32 @@
 # Emergencies only (a commit off main, or uncommitted work):  ./infra/deploy.sh ubuntu@SERVER_IP --force
 # Checks the working copy, builds the web app here, sends the code, prepares the server once,
 # backs up the running platform, then rebuilds and restarts it.
+# The GitHub pipeline runs it too (.github/workflows/ci.yml, job "Deploy the server"), with:
+#   SSH_KEY        the deploy key written from the repository secret
+#   SSH_STRICT=yes only the server key pinned in DEPLOY_KNOWN_HOSTS is accepted
+#   DEPLOY_BRANCH  the branch GitHub checked out (its checkout has no branch name)
+#   SKIP_WEB_BUILD=1 the web build tested by the "App" job is already in app/build/web
 set -euo pipefail
 SERVER="${1:?Usage: ./infra/deploy.sh ubuntu@SERVER_IP [--force]}"
 FORCE="${2:-}"
 KEY="${SSH_KEY:-$HOME/.ssh/ngclass_ovh}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 REMOTE=/opt/ngclass
-SSH_OPTS=(-i "$KEY" -o StrictHostKeyChecking=accept-new)
+SSH_OPTS=(-i "$KEY" -o StrictHostKeyChecking="${SSH_STRICT:-accept-new}")
+# Without a terminal (the pipeline), ssh must fail at once instead of waiting for a password.
+[ -t 0 ] || SSH_OPTS+=(-o BatchMode=yes)
 COMPOSE="cd $REMOTE/infra && sudo docker compose -f docker-compose.prod.yml"
 
 remote() { ssh "${SSH_OPTS[@]}" "$SERVER" "$@"; }
-remote_tty() { ssh -t "${SSH_OPTS[@]}" "$SERVER" "$@"; }
+# A terminal on the server only when there is one here (the pipeline has none; its steps never ask anything).
+remote_tty() { if [ -t 0 ]; then ssh -t "${SSH_OPTS[@]}" "$SERVER" "$@"; else ssh "${SSH_OPTS[@]}" "$SERVER" "$@"; fi; }
 send() { rsync -az --delete -e "ssh ${SSH_OPTS[*]}" "$@"; }
 
 command -v rsync >/dev/null || { echo "rsync is needed on this machine (Mac: built in; Windows: use WSL)."; exit 1; }
 
 echo "1/6 Checking the working copy"
 # The script sends this folder as it is, so only a clean main (what CI tested) goes online.
-BRANCH="$(git -C "$ROOT" rev-parse --abbrev-ref HEAD)"
+BRANCH="${DEPLOY_BRANCH:-$(git -C "$ROOT" rev-parse --abbrev-ref HEAD)}"
 COMMIT="$(git -C "$ROOT" rev-parse --short HEAD)"
 DIRTY="$(git -C "$ROOT" status --porcelain)"
 if [ "$BRANCH" != main ] || [ -n "$DIRTY" ]; then
@@ -36,7 +44,11 @@ fi
 [ -n "$DIRTY" ] && COMMIT="$COMMIT-dirty"
 
 echo "2/6 Building the web app (same flags as the CI job)"
-(cd "$ROOT/app" && flutter build web --release --pwa-strategy=none)
+if [ "${SKIP_WEB_BUILD:-}" = 1 ] && [ -f "$ROOT/app/build/web/index.html" ]; then
+	echo "  Using the web build of the pipeline's App job."
+else
+	(cd "$ROOT/app" && flutter build web --release --pwa-strategy=none)
+fi
 
 echo "3/6 Preparing the server folder"
 remote_tty "sudo mkdir -p $REMOTE && sudo chown \$(id -un) $REMOTE"
@@ -50,6 +62,10 @@ send "$ROOT/app/build/web/" "$SERVER:$REMOTE/app/build/web/"
 rsync -az -e "ssh ${SSH_OPTS[*]}" "$ROOT/app/web.Dockerfile" "$ROOT/app/.dockerignore" "$SERVER:$REMOTE/app/"
 
 echo "5/6 First time only: server setup and settings. Otherwise: a backup of the running platform"
+if ! remote "command -v docker >/dev/null && test -f /etc/cron.d/ngclass-backup && test -f $REMOTE/infra/.env"; then
+	# Both ask questions: the first time is always done by hand, from a terminal.
+	[ -t 0 ] || { echo "Refused: the server is not set up yet. Run ./infra/deploy.sh once by hand first."; exit 1; }
+fi
 if ! remote "command -v docker >/dev/null && test -f /etc/cron.d/ngclass-backup"; then
 	remote_tty "sudo bash $REMOTE/infra/server-setup.sh"
 fi

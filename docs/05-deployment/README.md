@@ -18,6 +18,7 @@ Written 2026-11-16, when the product was finished (Releases 1 to 4, privacy noti
 4. `04-RUNBOOK.md` · every command: first deploy, updates, checks, logs, backups, restore, rollback, server care.
 5. `05-INCIDENTS.md` · symptom → check → fix, and how to tell the teacher.
    `07-CLOUDFLARE.md` · **since 2026-11-16**: the web app on a Cloudflare Worker (`nextgenerationclass.online`), the API and database stay on the server (`api.`).
+   `08-CI_DEPLOY.md` · **since 2026-11-17**: every green push to `main` deploys itself from GitHub (server over SSH, then the web app on Cloudflare); the settings and the two steps left.
 6. `06-GO_LIVE_CHECKLIST.md` · the go / no-go list before the teacher gets her account.
 7. `LOG.md` · what was done on production, dated (no secrets).
    `PREPROD_AUDIT.md` · the audit of 2026-11-16: bugs and crash risks found before going live, with evidence (fixes are T7 to T13).
