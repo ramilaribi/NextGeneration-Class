@@ -20,6 +20,7 @@ import '../../widgets/feedback.dart';
 import '../../widgets/labels.dart';
 import '../../widgets/page_frame.dart';
 import '../../widgets/panels.dart';
+import '../../widgets/school_widgets.dart';
 import '../teacher/students/credentials_dialog.dart';
 import 'new_teacher_panel.dart';
 
@@ -400,7 +401,7 @@ class _Identity extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(teacher.fullName, maxLines: 1, overflow: TextOverflow.ellipsis, style: text.rowTitle),
+        WrittenName(teacher.fullName, style: text.rowTitle),
         const SizedBox(height: 2),
         Text(
           login,

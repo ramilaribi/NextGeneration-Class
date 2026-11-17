@@ -70,6 +70,11 @@ import 'package:ngclass/view/screens/teacher/students/student_import_screen.dart
 import 'package:ngclass/view/screens/teacher/students/student_profile_screen.dart';
 import 'package:ngclass/view/screens/teacher/teacher_destinations.dart';
 import 'package:ngclass/view/screens/teacher/teacher_home_screen.dart';
+import 'package:ngclass/view/screens/teacher/planning/planning_screen.dart';
+import 'package:ngclass/view/screens/teacher/students/students_screen.dart';
+import 'package:ngclass/view/widgets/page_frame.dart';
+import 'package:ngclass/view/widgets/school_widgets.dart';
+import 'package:ngclass/core/theme/brand_colors.dart';
 import 'package:ngclass/view/screens/teacher/teacher_notifications_panel.dart';
 import 'package:ngclass/view/stateManager/admin/teachers_cubit.dart';
 import 'package:ngclass/view/stateManager/homework/correction_cubit.dart';
@@ -168,7 +173,12 @@ void main() {
       ..views['page1'] = samplePageView()
       // Release 4: "Vu en classe" in Cours.
       ..coveredChapters = [
-        CoveredChapter(chapterId: 'ch-fr', coveredOn: at(5, 10), details: 'Exercices 1 à 4, la comparaison au même dénominateur.', contentIds: const {'serie3'}),
+        CoveredChapter(
+          chapterId: 'ch-fr',
+          coveredOn: at(5, 10),
+          details: 'Exercices 1 à 4, la comparaison au même dénominateur.',
+          contentIds: const {'serie3'},
+        ),
       ];
     sl.registerSingleton<PageRepository>(FakePageRepository());
     sl.registerSingleton<QuizRepository>(FakeQuizRepository(timeLimitMin: 15));
@@ -398,7 +408,11 @@ void main() {
         final repo = sl.get<QuizRepository>() as FakeQuizRepository;
         await pumpSignedIn(
           tester,
-          QuizPlayerScreen(session: HomeworkQuizSession(repo, 'hw1'), title: 'Quiz : les fractions, une révision avant le contrôle', name: 'Yasmine'),
+          QuizPlayerScreen(
+            session: HomeworkQuizSession(repo, 'hw1'),
+            title: 'Quiz : les fractions, une révision avant le contrôle',
+            name: 'Yasmine',
+          ),
           user: pupil,
           language: language,
           size: size,
@@ -802,4 +816,139 @@ void main() {
       });
     }
   }
+
+  // Layout and direction fixes of 2026-11-17 (screenshots `docs/00-brand/ui/flutter/r5/`).
+  group('layout and direction', () {
+    for (final language in AppLanguage.values) {
+      testWidgets('a page wider than its content keeps it in the middle, not against one side, ${language.name}', (tester) async {
+        const key = Key('content');
+        await pumpSignedIn(
+          tester,
+          const Scaffold(
+            body: PageScroll(children: [SizedBox(key: key, height: 40)]),
+          ),
+          language: language,
+          size: const Size(1920, 1080),
+        );
+        final rect = tester.getRect(find.byKey(key));
+        expect(rect.width, Breakpoints.contentMaxWidth);
+        expect(rect.left, moreOrLessEquals(1920 - rect.right), reason: 'the same space on both sides');
+      });
+
+      testWidgets('the owner dashboard is centered on a wide screen, ${language.name}', (tester) async {
+        await pumpShell(
+          tester,
+          AdaptiveShell(destinations: adminDestinations(), location: Routes.adminTeachers, child: const TeachersScreen()),
+          owner,
+          language,
+          const Size(1920, 1080),
+        );
+        expect(tester.takeException(), isNull);
+        final page = tester.getRect(find.byType(PageScroll));
+        final content = tester.getRect(
+          find.byWidgetPredicate((w) => w is ConstrainedBox && w.constraints.maxWidth == Breakpoints.contentMaxWidth).first,
+        );
+        expect(content.width, Breakpoints.contentMaxWidth);
+        expect(content.left - page.left, moreOrLessEquals(page.right - content.right));
+      });
+    }
+
+    testWidgets('a Latin name in the Arabic app is cut at its own end and stays on the reading side', (tester) async {
+      const long = Key('long');
+      const short = Key('short');
+      await pumpSignedIn(
+        tester,
+        Scaffold(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                width: 400,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: WrittenName('Adam Gharbi · Mathématiques et lecture', key: long, style: const TextStyle(fontSize: 14)),
+                    ),
+                    const SizedBox(width: 280),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 400,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: WrittenName('Adam', key: short, style: const TextStyle(fontSize: 14)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        language: AppLanguage.ar,
+        size: const Size(400, 300),
+      );
+      final longText = tester.widget<Text>(find.descendant(of: find.byKey(long), matching: find.byType(Text)));
+      expect(longText.textDirection, TextDirection.ltr, reason: 'the ellipsis goes after "Mathé", not before "Adam"');
+      expect(longText.maxLines, 1);
+      // Both sit against the start of the line: the right in Arabic.
+      final shortRect = tester.getRect(find.descendant(of: find.byKey(short), matching: find.byType(Text)));
+      expect(shortRect.right, moreOrLessEquals(400));
+      final longRect = tester.getRect(find.descendant(of: find.byKey(long), matching: find.byType(Text)));
+      expect(longRect.right, moreOrLessEquals(400));
+      expect(longRect.left, greaterThanOrEqualTo(280), reason: 'cut inside its own column');
+    });
+
+    testWidgets('an Arabic name in the French app keeps its own direction', (tester) async {
+      await pumpSignedIn(
+        tester,
+        const Scaffold(body: WrittenName('الرياضيات', style: TextStyle(fontSize: 14))),
+        size: const Size(400, 300),
+      );
+      expect(tester.widget<Text>(find.byType(Text).last).textDirection, TextDirection.rtl);
+    });
+
+    for (final language in AppLanguage.values) {
+      testWidgets('on a phone, Planning puts its title first and its buttons under it, ${language.name}', (tester) async {
+        final l10n = l10nOf(language);
+        await pumpSignedIn(
+          tester,
+          const Scaffold(body: PlanningScreen()),
+          language: language,
+          size: const Size(375, 812),
+        );
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        final title = tester.getRect(find.text(l10n.navPlanning));
+        final create = tester.getRect(find.text(l10n.newSession).first);
+        final tabs = tester.getRect(find.text(l10n.viewDay));
+        expect(title.bottom, lessThanOrEqualTo(tabs.top), reason: 'the buttons are not squeezed beside the title');
+        expect(tabs.bottom, lessThanOrEqualTo(create.top));
+      });
+
+      for (final size in const [Size(375, 812), Size(1024, 768), Size(1440, 900)]) {
+        testWidgets('the pupils table keeps a gap before the attendance, ${language.name} ${size.width.toInt()}', (tester) async {
+          final l10n = l10nOf(language);
+          sl.registerSingleton<StudentRepository>(
+            FakeStudentRepository()..students = [student('1', 'Yasmine', 'Ben Abdallah Trabelsi Mansour', rate: 94)],
+          );
+          await pumpSignedIn(
+            tester,
+            const Scaffold(body: StudentsScreen()),
+            language: language,
+            size: size,
+          );
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull);
+          final percent = tester.getRect(find.text(l10n.percentValue(94)));
+          final name = tester.getRect(find.text('Yasmine Ben Abdallah Trabelsi Mansour'));
+          final rtl = language == AppLanguage.ar;
+          // The name column ends at least 12 px before the attendance column starts, on either side.
+          final gap = rtl ? name.left - percent.right : percent.left - name.right;
+          expect(gap, greaterThanOrEqualTo(12));
+        });
+      }
+    }
+  });
 }

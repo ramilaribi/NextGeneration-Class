@@ -12,6 +12,9 @@ import '../helpers/pump_app.dart';
 import 'notifications_test.dart' show now, parentOfTwo, sample;
 
 /// The pupil's and parent's pages use a computer screen: their cards go two by two, phones keep one column.
+/// The space beside a family page in a 1440 window: 32 of padding, then half of what the page leaves.
+const _side = 32 + (1440 - 64 - familyPageWidth) / 2;
+
 void main() {
   setUpAll(initializeAppDates);
   setUp(() => registerTestServices(now));
@@ -73,9 +76,10 @@ void main() {
       // Today's two side by side, then the earlier two.
       expect(tester.getTopLeft(tiles.at(1)).dy, tester.getTopLeft(tiles.at(0)).dy);
       expect(tester.getTopLeft(tiles.at(1)).dx, greaterThan(tester.getTopLeft(tiles.at(0)).dx));
-      expect(tester.getTopRight(tiles.at(1)).dx, closeTo(32 + familyPageWidth, 1));
+      // The page is centered in the window (1440 wide, 32 of padding each side).
+      expect(tester.getTopRight(tiles.at(1)).dx, closeTo(1440 - _side, 1));
       final link = find.ancestor(of: find.text(fr.markAllRead), matching: find.byType(CardLink));
-      expect(tester.getTopRight(link).dx, closeTo(32 + familyPageWidth, 1));
+      expect(tester.getTopRight(link).dx, closeTo(1440 - _side, 1));
       expect(tester.takeException(), isNull);
     });
 
@@ -87,7 +91,7 @@ void main() {
       expect(tester.getTopLeft(tiles.at(1)).dy, tester.getTopLeft(tiles.at(0)).dy);
       expect(tester.getTopLeft(tiles.at(1)).dx, lessThan(tester.getTopLeft(tiles.at(0)).dx));
       final link = find.ancestor(of: find.text(ar.markAllRead), matching: find.byType(CardLink));
-      expect(tester.getTopLeft(link).dx, closeTo(1440 - 32 - familyPageWidth, 1));
+      expect(tester.getTopLeft(link).dx, closeTo(_side, 1));
     });
 
     testWidgets('on a phone: one column', (tester) async {

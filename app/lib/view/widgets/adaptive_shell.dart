@@ -11,6 +11,7 @@ import 'brand_wordmark.dart';
 import 'cards.dart';
 import 'language_toggle.dart';
 import 'notification_bell.dart';
+import 'school_widgets.dart';
 
 /// The frame of a role space. Tablet and desktop: sidebar (labels from 1024 px, icons only below) and
 /// a top bar. Phone: a header and a bottom bar. Mirrors itself in Arabic like the rest of the app.
@@ -257,7 +258,7 @@ class SidebarUserCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, overflow: TextOverflow.ellipsis, style: text.style(14, FontWeight.w700)),
+                WrittenName(name, style: text.style(14, FontWeight.w700)),
                 Text(role, style: text.style(12, FontWeight.w500, color: BrandColors.slate)),
               ],
             ),

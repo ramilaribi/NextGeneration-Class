@@ -284,7 +284,7 @@ class _Body extends StatelessWidget {
     return SingleChildScrollView(
       padding: EdgeInsets.all(phone ? 14 : 32),
       child: Align(
-        alignment: AlignmentDirectional.topStart,
+        alignment: AlignmentDirectional.topCenter,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1300),
           child: const PairedBlocks(
