@@ -41,6 +41,7 @@ The app keeps calling its own address + `/api/v1` (`app/lib/core/config/app_conf
 3. Owner runs `./infra/deploy.sh ubuntu@IP`. In `make-env.sh`:
    - Domain: `api.nextgenerationclass.online`
    - Web app address: `https://nextgenerationclass.online,https://www.nextgenerationclass.online`
+   - Because a web app address is given, `make-env.sh` also writes `WWW_REDIRECT=off`: Caddy then does not ask for a `www.api.` certificate, which would fail.
 4. Check: `curl -s https://api.nextgenerationclass.online/health` gives `{"status":"UP"}`.
 
 Already deployed with another domain? On the server, add `ALLOWED_ORIGINS=https://nextgenerationclass.online,https://www.nextgenerationclass.online` to `/opt/ngclass/infra/.env` and run `$C up -d` (the API restarts, about a minute). Never touch `DB_PASSWORD`.
