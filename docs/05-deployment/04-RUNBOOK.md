@@ -120,7 +120,7 @@ sudo docker stats --no-stream          # memory and CPU per part
 df -h /                                # disk
 free -h                                # memory and swap
 uptime                                 # load
-tail -5 /var/log/ngclass-backup.log    # last nightly backups
+tail -5 /var/log/ngclass-backup.log    # last nightly backups: "done (size)" each night; "FAILED: reason" means no backup that night
 ls -lh /var/backups/ngclass | tail -6  # the newest backup files
 cat /var/run/reboot-required 2>/dev/null   # a reboot is waiting for a system update
 ```
