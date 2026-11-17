@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/l10n/formatting.dart';
 import '../../core/theme/app_text.dart';
 import '../../core/theme/brand_colors.dart';
 import '../../domain/model/session.dart';
@@ -7,6 +8,24 @@ import '../../l10n/app_localizations.dart';
 import 'cards.dart';
 
 Duration _motion(BuildContext context, int ms) => MediaQuery.disableAnimationsOf(context) ? Duration.zero : Duration(milliseconds: ms);
+
+/// A name someone typed (a pupil, a group, a teacher), on one line. A Latin name in the Arabic app, or an
+/// Arabic one in the French app, keeps its own direction, so a long one is cut at its own end
+/// ("Adam Gharbi · Mathé…", not "…Adam Gharbi · Mathé"); it still sits on the reading side of the line.
+class WrittenName extends StatelessWidget {
+  const WrittenName(this.text, {super.key, required this.style});
+
+  final String text;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) => Align(
+    alignment: AlignmentDirectional.centerStart,
+    widthFactor: 1,
+    heightFactor: 1,
+    child: Text(text, maxLines: 1, overflow: TextOverflow.ellipsis, textDirection: writtenDirection(text), style: style),
+  );
+}
 
 /// The colored square of a group with its two-letter code ("7A").
 class GroupSquare extends StatelessWidget {
@@ -48,9 +67,7 @@ class GroupLabel extends StatelessWidget {
     children: [
       GroupSquare(code: code, color: color, size: size),
       const SizedBox(width: 8),
-      Flexible(
-        child: Text(name, overflow: TextOverflow.ellipsis, style: AppText.of(context).style(13, FontWeight.w600)),
-      ),
+      Flexible(child: WrittenName(name, style: AppText.of(context).style(13, FontWeight.w600))),
     ],
   );
 }

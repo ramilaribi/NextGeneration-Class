@@ -89,65 +89,68 @@ class _PlanningBoardState extends State<PlanningBoard> {
     final phone = isPhone(context);
     final selectedGroup = state.groupId == null ? null : groups.where((g) => g.id == state.groupId).firstOrNull;
 
-    final header = Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      crossAxisAlignment: WrapCrossAlignment.end,
-      spacing: 16,
-      runSpacing: 14,
+    final title = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Text(monthYear(state.day, language), style: text.style(13, FontWeight.w700, color: BrandColors.slate)),
+        const SizedBox(height: 6),
+        Text(l10n.navPlanning, style: text.pageTitle(phone: phone)),
+      ],
+    );
+    final controls = Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        PillTabs<PlanningView>(
+          value: state.view,
+          onChanged: cubit.setView,
+          items: [TabItem(PlanningView.day, l10n.viewDay), TabItem(PlanningView.week, l10n.viewWeek)],
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(monthYear(state.day, language), style: text.style(13, FontWeight.w700, color: BrandColors.slate)),
-            const SizedBox(height: 6),
-            Text(l10n.navPlanning, style: text.pageTitle(phone: phone)),
+            IconSquareButton(icon: LucideIcons.chevronLeftDir, tooltip: l10n.previous, onPressed: cubit.previous),
+            const SizedBox(width: 6),
+            SecondaryButton(label: l10n.heroToday, onPressed: cubit.goToday),
+            const SizedBox(width: 6),
+            IconSquareButton(icon: LucideIcons.chevronRightDir, tooltip: l10n.next, onPressed: cubit.next),
           ],
         ),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            PillTabs<PlanningView>(
-              value: state.view,
-              onChanged: cubit.setView,
-              items: [TabItem(PlanningView.day, l10n.viewDay), TabItem(PlanningView.week, l10n.viewWeek)],
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconSquareButton(icon: LucideIcons.chevronLeftDir, tooltip: l10n.previous, onPressed: cubit.previous),
-                const SizedBox(width: 6),
-                SecondaryButton(label: l10n.heroToday, onPressed: cubit.goToday),
-                const SizedBox(width: 6),
-                IconSquareButton(icon: LucideIcons.chevronRightDir, tooltip: l10n.next, onPressed: cubit.next),
-              ],
-            ),
-            if (groups.isNotEmpty)
-              FilterMenuButton<String?>(
-                label: selectedGroup?.name ?? l10n.allGroups,
-                value: state.groupId,
-                onChanged: cubit.setGroup,
-                options: [
-                  SelectOption(null, l10n.allGroups),
-                  for (final g in groups)
-                    SelectOption(
-                      g.id,
-                      g.name,
-                      leading: GroupSquare(code: g.code, color: g.color, size: 20),
-                    ),
-                ],
-              ),
-            PrimaryButton(
-              label: l10n.newSession,
-              icon: LucideIcons.plus,
-              height: 44,
-              onPressed: () => _create(day: state.day),
-            ),
-          ],
+        if (groups.isNotEmpty)
+          FilterMenuButton<String?>(
+            label: selectedGroup?.name ?? l10n.allGroups,
+            value: state.groupId,
+            onChanged: cubit.setGroup,
+            options: [
+              SelectOption(null, l10n.allGroups),
+              for (final g in groups)
+                SelectOption(
+                  g.id,
+                  g.name,
+                  leading: GroupSquare(code: g.code, color: g.color, size: 20),
+                ),
+            ],
+          ),
+        PrimaryButton(
+          label: l10n.newSession,
+          icon: LucideIcons.plus,
+          height: 44,
+          onPressed: () => _create(day: state.day),
         ),
       ],
     );
+    // Phones: the title first, its controls under it on the whole width (beside it, they were squeezed
+    // into a narrow column above a title pushed down).
+    final header = phone
+        ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [title, const SizedBox(height: 14), controls])
+        : Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.end,
+            spacing: 16,
+            runSpacing: 14,
+            children: [title, controls],
+          );
 
     final Widget body;
     if (state.status == LoadStatus.failure && state.sessions.isEmpty) {
@@ -190,7 +193,7 @@ class _PlanningBoardState extends State<PlanningBoard> {
               child: KeyedSubtree(key: ValueKey('${state.view}-${state.from}-${state.groupId}'), child: body),
             ),
             if (state.status == LoadStatus.loading)
-              const Positioned(top: 0, left: 0, right: 0, child: LinearProgressIndicator(minHeight: 3)),
+              const PositionedDirectional(top: 0, start: 0, end: 0, child: LinearProgressIndicator(minHeight: 3)),
           ],
         ),
         if (!phone && state.view == PlanningView.week) _Legend(groups: groups.where((g) => !g.privateLesson).toList()),
