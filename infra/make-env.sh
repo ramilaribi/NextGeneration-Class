@@ -25,6 +25,10 @@ while true; do
 	echo "The two passwords differ or are shorter than 8 characters. Try again."
 done
 
+# Web app elsewhere (Cloudflare): this server is api.<domain> only, so no www.<domain> redirect or certificate here.
+WWW_REDIRECT=on
+[ -n "$ALLOWED_ORIGINS" ] && WWW_REDIRECT=off
+
 umask 077
 cat > .env <<EOF
 DOMAIN=${DOMAIN}
@@ -40,5 +44,6 @@ TEACHER_FIRST_NAME=
 TEACHER_LAST_NAME=
 BACKUP_REMOTE=
 ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+WWW_REDIRECT=${WWW_REDIRECT}
 EOF
 echo "Saved. Keep the owner password somewhere safe (a password manager)."
