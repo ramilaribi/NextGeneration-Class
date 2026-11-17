@@ -89,6 +89,8 @@ services:
       - "443:443/udp"
     environment:
       DOMAIN: ${DOMAIN:?DOMAIN is required}
+      # "off" when the web app is on Cloudflare and this server is api.<domain> only.
+      WWW_REDIRECT: ${WWW_REDIRECT:-on}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data

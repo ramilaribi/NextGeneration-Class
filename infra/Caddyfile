@@ -34,7 +34,13 @@
 	}
 }
 
-# www.<domain> sends visitors to the main address.
-www.{$DOMAIN} {
-	redir https://{$DOMAIN}{uri} permanent
+# www.<domain> sends visitors to the main address. WWW_REDIRECT=off in infra/.env when this server is only the API
+# (front on Cloudflare, docs/05-deployment/07-CLOUDFLARE.md): www.api.<domain> does not exist and would fail its certificate.
+(www-on) {
+	www.{$DOMAIN} {
+		redir https://{$DOMAIN}{uri} permanent
+	}
 }
+(www-off) {
+}
+import www-{$WWW_REDIRECT:on}
