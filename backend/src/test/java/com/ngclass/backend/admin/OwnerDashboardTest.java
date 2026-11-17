@@ -218,10 +218,17 @@ class OwnerDashboardTest {
 	void theOwnerClosesReopensAndResetsATeachersAccess() throws Exception {
 		String id = users.findByUsername("enseignante").orElseThrow().getId().toString();
 
+		String signedIn = token("enseignante", PASSWORD);
+		call(get("/api/v1/students"), signedIn).andExpect(status().isOk());
 		call(post("/api/v1/admin/teachers/" + id + "/disable"), admin).andExpect(status().isNoContent());
 		login("enseignante", PASSWORD)
 				.andExpect(status().isForbidden())
 				.andExpect(jsonPath("$.code").value("teacher_disabled"));
+		// Her session ends at once: the access token she holds is refused, not kept until it expires.
+		call(get("/api/v1/students"), signedIn)
+				.andExpect(status().isUnauthorized())
+				.andExpect(jsonPath("$.code").value("teacher_disabled"));
+		call(get("/api/v1/me"), signedIn).andExpect(status().isUnauthorized());
 		JsonNode page = body(call(get("/api/v1/admin/teachers"), admin));
 		assertThat(page.at("/teachers/0/active").asBoolean()).isFalse();
 		assertThat(page.at("/totals/activeTeachers").asLong()).isZero();
