@@ -24,7 +24,7 @@ The app keeps calling its own address + `/api/v1` (`app/lib/core/config/app_conf
 ## Files
 
 - `infra/cloudflare/wrangler.jsonc` · the Worker: assets from `app/build/web`, unknown paths fall back to `index.html`, only `/api/*` and `/health` run the script, `BACKEND_ORIGIN`, the two custom domains.
-- `infra/cloudflare/worker.js` · forwards `/api/*` to the API and `/health` to `/actuator/health`, adds `X-Forwarded-*`, answers 502 JSON if the server cannot be reached.
+- `infra/cloudflare/worker.js` · forwards `/api/*` and `/health` to the server on the same path (the server's Caddy turns `/health` into the API's health check), adds `X-Forwarded-*`, answers 502 JSON if the server cannot be reached.
 - `app/web/_headers` · the same security and no-cache headers as the Caddyfile, for Cloudflare (copied into the build by `flutter build web`).
 - `infra/docker-compose.prod.yml` · `ALLOWED_ORIGINS` can now be set in `infra/.env` (default: `https://${DOMAIN}`); `make-env.sh` asks for it.
 

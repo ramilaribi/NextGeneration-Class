@@ -7,9 +7,9 @@ Status values: **todo**, **doing**, **done (date)**, **skipped (why)**. Update t
 | # | Phase | Lead | Time | Done when | Status |
 |---|---|---|---|---|---|
 | P0 | Prepare (before buying) | Teammate | 2 to 4 days | Teammate runs the project locally; production rehearsal green on a laptop; T1 to T4 and T7 to T13 merged; CI green on `main`; privacy text sent to the teacher | doing (2026-11-16: tests and rehearsal green on the teammate PC; T1 to T4 waiting for merge) |
-| P1 | Buy | Owner | 30 min + up to a day of waiting | VPS-1 delivered (IP in the email), `.com` active | todo |
-| P2 | Server access and DNS | Owner, with teammate | 30 min + up to an hour of DNS waiting | Both people enter the server with their own key; `dig +short <domain>` and `www.<domain>` give the VPS IP only | todo |
-| P3 | First deploy | Owner (types), teammate (reads logs) | about 20 min | `deploy.sh` ends with "Done: https://<domain> is up." | todo |
+| P1 | Buy | Owner | 30 min + up to a day of waiting | VPS-1 delivered (IP in the email), `.com` active | done (2026-11-16: Hostinger KVM 2 instead, domain nextgenerationclass.online on Cloudflare) |
+| P2 | Server access and DNS | Owner, with teammate | 30 min + up to an hour of DNS waiting | Both people enter the server with their own key; `dig +short <domain>` and `www.<domain>` give the VPS IP only | done (2026-11-17: both keys in, `api.` A record DNS only; main and www come from the Worker) |
+| P3 | First deploy | Owner (types), teammate (reads logs) | about 20 min | `deploy.sh` ends with "Done: https://<domain> is up." | done (2026-11-17: backend at `api.` from `be6ce26`, front on the Cloudflare Worker; see `07-CLOUDFLARE.md`) |
 | P4 | Verify and harden | Both | 1 to 2 hours | Smoke test passed; UptimeRobot on; OVHcloud backup seen in the panel; one backup run by hand and copied to the Mac; restore drill passed on the server before any real data (`04-RUNBOOK.md` section 7) | todo |
 | P5 | Go live with the teacher | Owner | one week of watching | `06-GO_LIVE_CHECKLIST.md` all ticked; teacher account created; teacher signed in; first group and parents in | todo |
 | P6 | After the test month | Owner decides | | Keep or stop (`docs/04-delivery/05-DEPLOYMENT.md`, "After the test month"); if kept: T5 (automatic deploys) after two calm manual deploys | todo |

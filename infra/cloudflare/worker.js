@@ -9,8 +9,9 @@ export default {
 		// Cloudflare Redirect Rule, since page requests on www never come through here.
 		if (url.pathname.startsWith("/api/") || url.pathname === "/health") {
 			const target = new URL(env.BACKEND_ORIGIN);
-			// /health answers UP only when the API and the database both work (for the uptime alert).
-			target.pathname = url.pathname === "/health" ? "/actuator/health" : url.pathname;
+			// Same path on the server: its Caddy forwards /api/* and turns /health into the API's health check
+			// (UP only when the API and the database both work, for the uptime alert).
+			target.pathname = url.pathname;
 			target.search = url.search;
 			const headers = new Headers(request.headers);
 			headers.set("X-Forwarded-Host", url.host);
