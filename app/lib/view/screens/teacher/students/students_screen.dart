@@ -276,6 +276,9 @@ class _StudentsList extends StatelessWidget {
   }
 }
 
+/// Between two columns of the table, so a long group or parent name never touches the next column.
+const _columnGap = 12.0;
+
 class _HeaderRow extends StatelessWidget {
   const _HeaderRow({required this.wide});
 
@@ -292,8 +295,10 @@ class _HeaderRow extends StatelessWidget {
         children: [
           const SizedBox(width: 54),
           Expanded(flex: 3, child: Text(text.upper(l10n.columnStudent), style: style)),
-          Expanded(flex: 3, child: Text(text.upper(l10n.columnGroups), style: style)),
-          if (wide) Expanded(flex: 3, child: Text(text.upper(l10n.columnParent), style: style)),
+          const SizedBox(width: _columnGap),
+          Expanded(flex: 4, child: Text(text.upper(l10n.columnGroups), style: style)),
+          if (wide) ...[const SizedBox(width: _columnGap), Expanded(flex: 3, child: Text(text.upper(l10n.columnParent), style: style))],
+          const SizedBox(width: _columnGap),
           SizedBox(width: 120, child: Text(text.upper(l10n.columnAttendance), style: style)),
           const SizedBox(width: 150),
         ],
@@ -375,7 +380,7 @@ class _StudentRow extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(student.fullName, overflow: TextOverflow.ellipsis, style: text.rowTitle),
+                    WrittenName(student.fullName, style: text.rowTitle),
                     Text(
                       phone && student.groups.isNotEmpty
                           ? '${student.level.of(language)}${l10n.dotSeparator}${student.groups.map((g) => g.code).join(' ')}'
@@ -386,9 +391,10 @@ class _StudentRow extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(width: _columnGap),
               if (!phone)
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: student.groups.isEmpty
                       ? Text(l10n.noGroup, style: text.style(13, FontWeight.w500, color: BrandColors.slate))
                       : Wrap(
@@ -397,7 +403,8 @@ class _StudentRow extends StatelessWidget {
                           children: [for (final g in student.groups) GroupLabel(code: g.code, color: g.color, name: g.name)],
                         ),
                 ),
-              if (wide)
+              if (wide) ...[
+                const SizedBox(width: _columnGap),
                 Expanded(
                   flex: 3,
                   child: Row(
@@ -414,6 +421,8 @@ class _StudentRow extends StatelessWidget {
                     ],
                   ),
                 ),
+              ],
+              if (!phone) const SizedBox(width: _columnGap),
               attendance,
               SizedBox(
                 width: phone ? 32 : 150,

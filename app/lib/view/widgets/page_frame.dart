@@ -9,7 +9,7 @@ import 'feedback.dart';
 bool isPhone(BuildContext context) => MediaQuery.sizeOf(context).width < Breakpoints.tablet;
 
 /// The scrolling page of a shell screen: page padding (32, phone 18), content at most [maxWidth] wide,
-/// aligned to the start.
+/// centered when the screen is wider, so a large monitor never shows an empty band on one side only.
 class PageScroll extends StatelessWidget {
   const PageScroll({super.key, required this.children, this.maxWidth = Breakpoints.contentMaxWidth, this.gap = 24});
 
@@ -23,7 +23,7 @@ class PageScroll extends StatelessWidget {
     return SingleChildScrollView(
       padding: EdgeInsets.all(phone ? 18 : 32),
       child: Align(
-        alignment: AlignmentDirectional.topStart,
+        alignment: AlignmentDirectional.topCenter,
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxWidth),
           child: Column(
@@ -194,7 +194,7 @@ class AsyncView extends StatelessWidget {
       body = Stack(
         children: [
           Positioned.fill(child: builder(context)),
-          if (status == LoadStatus.loading) const Positioned(top: 0, left: 0, right: 0, child: LinearProgressIndicator(minHeight: 3)),
+          if (status == LoadStatus.loading) const PositionedDirectional(top: 0, start: 0, end: 0, child: LinearProgressIndicator(minHeight: 3)),
         ],
       );
     } else if (status == LoadStatus.failure && failure != null) {

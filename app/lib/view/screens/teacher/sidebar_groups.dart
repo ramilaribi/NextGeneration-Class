@@ -50,7 +50,7 @@ class SidebarGroups extends StatelessWidget {
                           GroupSquare(code: group.code, color: group.color),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: Text(group.name, overflow: TextOverflow.ellipsis, style: text.style(14, FontWeight.w600)),
+                            child: WrittenName(group.name, style: text.style(14, FontWeight.w600)),
                           ),
                           const SizedBox(width: 8),
                           Text('${group.memberCount}', style: text.style(12, FontWeight.w500, color: BrandColors.slate, tabular: true)),
