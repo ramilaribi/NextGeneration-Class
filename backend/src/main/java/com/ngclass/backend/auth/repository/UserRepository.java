@@ -30,8 +30,15 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	@Query("select u.username from User u where u.username = :base or u.username like concat(:base, '%')")
 	List<String> findUsernamesLike(@Param("base") String base);
 
-	@Query("select u.mustChangePassword from User u where u.id = :id")
-	Optional<Boolean> findMustChangePassword(@Param("id") UUID id);
+	/** What every signed-in request checks, in one read: the account is still open, and must it choose a password first. */
+	@Query("select u.active as active, u.mustChangePassword as mustChangePassword from User u where u.id = :id")
+	Optional<AccessState> findAccessState(@Param("id") UUID id);
+
+	interface AccessState {
+		Boolean getActive();
+
+		Boolean getMustChangePassword();
+	}
 
 	/** A parent who has not accepted [version] of the privacy notice yet. */
 	@Query("""
