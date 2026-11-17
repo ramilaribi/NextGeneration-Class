@@ -47,7 +47,9 @@ services:
       DB_USERNAME: ngclass
       DB_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
-      ALLOWED_ORIGINS: https://${DOMAIN}
+      # The web app's address. Its own domain by default; with the front on Cloudflare (docs/05-deployment/07-CLOUDFLARE.md)
+      # the API is on api.<domain> and ALLOWED_ORIGINS in .env names the main address.
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://${DOMAIN}}
       # Uploaded files live in the "files" volume, so they survive a rebuild and are in the backups.
       STORAGE_DIR: /data/files
       # The owner's account (admin dashboard), created on the first start only.
