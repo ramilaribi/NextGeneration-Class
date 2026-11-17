@@ -20,3 +20,4 @@ backend/data/
 # The client's original spec stays private (the refined docs are in docs/)
 docs/99-source/client_spec_v1.md
 infra/rehearsal-backups/
+.wrangler/
