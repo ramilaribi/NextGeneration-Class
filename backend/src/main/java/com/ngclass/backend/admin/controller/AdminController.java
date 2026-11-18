@@ -10,6 +10,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,13 @@ public class AdminController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void disable(@PathVariable UUID id) {
 		admin.setActive(id, false);
+	}
+
+	/** For good: the teacher, her pupils and parents with their accounts, everything in her space. Closed accounts only. */
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable UUID id) {
+		admin.delete(id);
 	}
 
 	@PostMapping("/{id}/enable")

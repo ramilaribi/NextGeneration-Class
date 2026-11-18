@@ -4828,4 +4828,26 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get deleteLevelText =>
       'Un niveau utilisé par un élève, un groupe ou un document ne peut pas être supprimé. Cette suppression est définitive.';
+
+  @override
+  String get deleteTeacher => 'Supprimer définitivement';
+
+  @override
+  String deleteTeacherTitle(String name) {
+    return 'Supprimer définitivement $name ?';
+  }
+
+  @override
+  String get deleteTeacherText =>
+      'Son compte et tout son espace seront effacés : ses élèves et leurs parents avec leurs comptes, ses groupes, séances, contenus, fichiers et devoirs. Cette suppression est définitive, rien ne pourra être récupéré.';
+
+  @override
+  String deleteTeacherConfirm(String username) {
+    return 'Pour confirmer, tapez son identifiant : $username';
+  }
+
+  @override
+  String teacherDeletedNotice(String name) {
+    return 'Compte de $name supprimé, avec tout son espace.';
+  }
 }

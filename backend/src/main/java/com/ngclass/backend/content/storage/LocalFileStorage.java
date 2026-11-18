@@ -3,6 +3,7 @@ package com.ngclass.backend.content.storage;
 import com.ngclass.backend.config.AppProperties;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -50,6 +51,21 @@ public class LocalFileStorage implements FileStorage {
 			return Optional.of(Files.readAllBytes(path(key)));
 		} catch (NoSuchFileException e) {
 			return Optional.empty();
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
+
+	@Override
+	public void delete(String key) {
+		Path path = path(key);
+		// The rendered pages of a PDF sit beside it: "<key>.p1.jpg", "<key>.p2.jpg"...
+		try (DirectoryStream<Path> files = Files.newDirectoryStream(path.getParent(), key + "*")) {
+			for (Path file : files) {
+				Files.deleteIfExists(file);
+			}
+		} catch (NoSuchFileException e) {
+			// Nothing was ever written there.
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}

@@ -22,6 +22,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +41,7 @@ public class AdminService {
 	private final ClassGroupRepository groups;
 	private final RefreshTokenRepository refreshTokens;
 	private final PasswordEncoder passwordEncoder;
+	private final TeacherSpaceEraser eraser;
 
 	@Transactional(readOnly = true)
 	public TeachersPage teachers() {
@@ -104,6 +106,19 @@ public class AdminService {
 		if (!active) {
 			refreshTokens.revokeAllForUser(user.getId());
 		}
+	}
+
+	/**
+	 * Deletes the teacher and everything in her space, for good. Only a closed account can be deleted: closing
+	 * first is the step that signs her out and lets the owner change her mind.
+	 */
+	@Transactional
+	public void delete(UUID teacherId) {
+		User user = teacher(teacherId);
+		if (user.isActive()) {
+			throw new ApiException(HttpStatus.CONFLICT, "teacher_must_be_closed");
+		}
+		eraser.erase(user.getId());
 	}
 
 	private User teacher(UUID id) {

@@ -429,6 +429,17 @@ class FakeAdminRepository implements AdminRepository {
   final List<TeacherDraft> created = [];
   final List<(String, bool)> activations = [];
   final List<String> resets = [];
+  final List<String> deleted = [];
+
+  /// Thrown by [deleteTeacher], e.g. `teacher_must_be_closed`.
+  ApiFailure? deleteFailure;
+
+  @override
+  Future<void> deleteTeacher(String teacherId) async {
+    if (deleteFailure != null) throw deleteFailure!;
+    deleted.add(teacherId);
+    accounts = accounts.where((t) => t.id != teacherId).toList();
+  }
 
   @override
   Future<TeachersOverview> teachers() async {

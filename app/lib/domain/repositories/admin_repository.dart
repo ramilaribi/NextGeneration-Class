@@ -11,4 +11,7 @@ abstract interface class AdminRepository {
   Future<NewAccount> resetPassword(TeacherAccount teacher);
 
   Future<void> setActive(String teacherId, {required bool active});
+
+  /// For good: the teacher and everything in her space. The server refuses an open account (`teacher_must_be_closed`).
+  Future<void> deleteTeacher(String teacherId);
 }

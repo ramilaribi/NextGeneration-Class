@@ -1,6 +1,7 @@
 package com.ngclass.backend.admin;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -245,6 +246,65 @@ class OwnerDashboardTest {
 		call(post("/api/v1/admin/teachers/" + adminId + "/reset-password"), admin)
 				.andExpect(status().isNotFound())
 				.andExpect(jsonPath("$.code").value("teacher_not_found"));
+	}
+
+	@Test
+	void theOwnerDeletesAClosedTeacherWithEverythingInHerSpace() throws Exception {
+		String id = users.findByUsername("enseignante").orElseThrow().getId().toString();
+		// Ines's space: a subject and a level of her own, a group, a pupil with a parent, a session, an evaluation, a page.
+		String lecture = createSubject(ines, "Lecture");
+		String ownLevel = body(call(post("/api/v1/levels").contentType(MediaType.APPLICATION_JSON)
+				.content(json.writeValueAsString(Map.of("nameFr", "Préparatoire"))), ines).andExpect(status().isCreated())).at("/id").asText();
+		String group = body(call(post("/api/v1/groups").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(
+				Map.of("name", "Prépa · Lecture", "subjectId", lecture, "levelId", ownLevel))), ines)
+				.andExpect(status().isCreated())).at("/id").asText();
+		Map<String, Object> pupil = new HashMap<>(Map.of("firstName", "Adam", "lastName", "Gharbi", "levelId", ownLevel,
+				"groupIds", List.of(group), "createLogin", true));
+		pupil.put("parents", List.of(Map.of("firstName", "Mouna", "lastName", "Gharbi", "phone", "20000001")));
+		call(post("/api/v1/students").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(pupil)), ines)
+				.andExpect(status().isCreated());
+		LocalDate day = LocalDate.now(ZoneId.of("Africa/Tunis")).plusDays(2);
+		call(post("/api/v1/sessions").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(
+				Map.of("groupId", group, "date", day.toString(), "startTime", "10:00", "endTime", "11:30", "mode", "IN_PERSON",
+						"repeatWeekly", true))), ines)
+				.andExpect(status().isCreated());
+		call(post("/api/v1/contents/pages").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(
+				Map.of("title", "Série 1", "subjectId", lecture, "levelId", ownLevel, "tag", "SERIE"))), ines)
+				.andExpect(status().isCreated());
+		long accountsBefore = jdbc.queryForObject("select count(*) from users where role in ('STUDENT', 'PARENT')", Long.class);
+		assertThat(accountsBefore).isEqualTo(2);
+
+		// Another teacher keeps everything.
+		account(Role.TEACHER, "sonia");
+		String sonia = token("sonia", PASSWORD);
+		String soniaSubject = createSubject(sonia, "Maths");
+		call(post("/api/v1/groups").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(
+				Map.of("name", "4ème année · Maths", "subjectId", soniaSubject, "levelId", levelId))), sonia)
+				.andExpect(status().isCreated());
+
+		// An open account is closed first.
+		call(delete("/api/v1/admin/teachers/" + id), admin)
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.code").value("teacher_must_be_closed"));
+		call(delete("/api/v1/admin/teachers/" + id), ines).andExpect(status().isForbidden());
+		call(post("/api/v1/admin/teachers/" + id + "/disable"), admin).andExpect(status().isNoContent());
+		call(delete("/api/v1/admin/teachers/" + id), admin).andExpect(status().isNoContent());
+
+		for (String table : List.of("assignments", "evaluations", "announcements", "class_groups", "content_items", "chapters",
+				"file_assets", "students", "parents", "subjects", "levels")) {
+			assertThat(jdbc.queryForObject("select count(*) from " + table + " where teacher_id = ?::uuid", Long.class, id))
+					.as(table).isZero();
+		}
+		assertThat(jdbc.queryForObject("select count(*) from users where id = ?::uuid", Long.class, id)).isZero();
+		assertThat(jdbc.queryForObject("select count(*) from users where role in ('STUDENT', 'PARENT')", Long.class))
+				.as("her pupils' and parents' accounts").isZero();
+		assertThat(jdbc.queryForObject("select count(*) from sessions", Long.class)).isZero();
+		assertThat(body(call(get("/api/v1/groups"), sonia))).hasSize(1);
+		login("enseignante", PASSWORD).andExpect(status().isUnauthorized());
+		login("20000001", PASSWORD).andExpect(status().isUnauthorized());
+		JsonNode page = body(call(get("/api/v1/admin/teachers"), admin));
+		assertThat(page.at("/totals/teachers").asLong()).isEqualTo(1);
+		call(delete("/api/v1/admin/teachers/" + id), admin).andExpect(status().isNotFound());
 	}
 
 	private void account(Role role, String username) {

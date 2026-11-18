@@ -1,3 +1,5 @@
+import 'package:ngclass/view/widgets/buttons.dart';
+import 'package:flutter/services.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -269,6 +271,64 @@ void main() {
       expect(repository.activations, [('t1', false)]);
       expect(find.text(fr.teacherDisabled), findsNWidgets(2));
       expect(find.text(fr.teacherDisabledNotice('Ines Haddad')), findsOneWidget);
+    });
+
+    testWidgets('only a closed account can be deleted, after typing its username', (tester) async {
+      final fr = l10nOf(AppLanguage.fr);
+      await pumpDashboard(tester);
+
+      // Ines's account is open: no delete in her menu.
+      await tester.tap(find.byIcon(LucideIcons.ellipsis).first);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('delete-teacher')), findsNothing);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      // Karim's is closed.
+      await tester.tap(find.byIcon(LucideIcons.ellipsis).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('delete-teacher')));
+      await tester.pumpAndSettle();
+      expect(find.text(fr.deleteTeacherTitle('Karim Jaziri')), findsOneWidget);
+      expect(find.text(fr.deleteTeacherText), findsOneWidget);
+
+      Finder deleteButton() => find.widgetWithText(DangerButton, fr.deleteTeacher);
+      expect(tester.widget<DangerButton>(deleteButton()).onPressed, isNull, reason: 'nothing typed yet');
+      await tester.enterText(
+        find.descendant(of: find.byKey(const Key('delete-teacher-confirm')), matching: find.byType(TextField)),
+        'karim',
+      );
+      await tester.pump();
+      expect(tester.widget<DangerButton>(deleteButton()).onPressed, isNull, reason: 'not the username');
+      await tester.enterText(
+        find.descendant(of: find.byKey(const Key('delete-teacher-confirm')), matching: find.byType(TextField)),
+        ' Karim.Jaziri ',
+      );
+      await tester.pump();
+      await tester.tap(deleteButton());
+      await tester.pumpAndSettle();
+
+      expect(repository.deleted, ['t3']);
+      expect(find.text('Karim Jaziri'), findsNothing);
+      expect(find.text(fr.teacherDeletedNotice('Karim Jaziri')), findsOneWidget);
+    });
+
+    testWidgets('a refused deletion keeps the dialog open with the server message', (tester) async {
+      repository.deleteFailure = const ApiFailure(code: 'teacher_must_be_closed', message: 'Fermez d\'abord l\'accès.', statusCode: 409);
+      await pumpDashboard(tester);
+      await tester.tap(find.byIcon(LucideIcons.ellipsis).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('delete-teacher')));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.descendant(of: find.byKey(const Key('delete-teacher-confirm')), matching: find.byType(TextField)),
+        'karim.jaziri',
+      );
+      await tester.pump();
+      await tester.tap(find.widgetWithText(DangerButton, l10nOf(AppLanguage.fr).deleteTeacher));
+      await tester.pumpAndSettle();
+      expect(find.text('Fermez d\'abord l\'accès.'), findsOneWidget);
+      expect(repository.deleted, isEmpty);
     });
 
     testWidgets('a password reset shows the new temporary password', (tester) async {
