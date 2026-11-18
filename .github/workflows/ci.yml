@@ -1,8 +1,12 @@
 # CI/CD for NextGeneration Class.
 # CI: builds and tests the API and the Flutter app on every push and pull request (GitHub's machines).
-# CD: after a push to main with both test jobs green, the "deploy" job starts the production stack
-#     (infra/docker-compose.prod.yml) on a self-hosted runner. Today that runner is Mohamed's PC (rehearsal);
-#     later it is the server. See docs/04-delivery/05-DEPLOYMENT_HANDOVER.md.
+# CD: every push to main with both test jobs green goes online, from GitHub's own machines (no runner of ours):
+#     1. "Deploy the server" runs infra/deploy.sh over SSH: backup, then the API, database and Caddy rebuilt
+#        with the server's own infra/.env (no app secret in GitHub).
+#     2. "Deploy the web app" uploads the same tested web build to the Cloudflare Worker (infra/cloudflare).
+#     Set up once in Settings (docs/05-deployment/08-CI_DEPLOY.md): environment "production" with the secrets
+#     DEPLOY_SSH_KEY and CLOUDFLARE_API_TOKEN, the variables DEPLOY_HOST, DEPLOY_KNOWN_HOSTS and
+#     CLOUDFLARE_ACCOUNT_ID. A job whose settings are missing is skipped, never half run.
 name: CI/CD
 
 on:
@@ -73,8 +77,9 @@ jobs:
       - name: Build the web app
         run: flutter build web --release --pwa-strategy=none
 
-      # Handed to the deploy job, which bakes it into the Caddy image (app/web.Dockerfile).
-      - name: Keep the web build for the deploy job
+      # Handed to both deploy jobs: the server bakes it into the Caddy image (app/web.Dockerfile),
+      # Cloudflare serves it on the main address.
+      - name: Keep the web build for the deploy jobs
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
@@ -82,52 +87,99 @@ jobs:
           path: app/build/web
           retention-days: 3
 
-  deploy:
-    name: Deploy (self-hosted)
+  deploy-server:
+    name: Deploy the server
     needs: [backend, app]
-    # Only main, only from a push or a manual start, and only once the repository variable DEPLOY_ENABLED is "true".
-    # Never on pull requests: this job runs on a machine we own, and the repository is public.
+    # Only main, only from a push or a manual start, never a pull request (the repository is public: a fork must
+    # never reach the server). Skipped until DEPLOY_HOST is set.
     if: >-
       github.ref == 'refs/heads/main'
       && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-      && vars.DEPLOY_ENABLED == 'true'
-    # The runner registered with the label "ngclass-deploy" (Mohamed's PC today, the server later).
-    runs-on: [self-hosted, ngclass-deploy]
-    # Shows each deployment in the repository's "Deployments" page; secrets can also be stored per environment.
+      && vars.DEPLOY_HOST != ''
+    runs-on: ubuntu-latest
+    # The secrets live in this environment only; it also lists every deployment in the repository's "Deployments".
     environment: production
-    # Two deploys never run at the same time on the same machine.
+    # One deploy at a time, and never cut in the middle by a newer push.
     concurrency:
       group: deploy-production
       cancel-in-progress: false
-    # Docker Compose reads these environment variables for the ${...} in the compose file, so no .env file
-    # is written on the machine. Every compose command needs them (the file refuses to load without DOMAIN).
-    env:
-      DOMAIN: ${{ vars.DEPLOY_DOMAIN }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      TEACHER_USERNAME: ${{ vars.TEACHER_USERNAME }}
-      TEACHER_PASSWORD: ${{ secrets.TEACHER_PASSWORD }}
-      TEACHER_FIRST_NAME: ${{ vars.TEACHER_FIRST_NAME }}
-      TEACHER_LAST_NAME: ${{ vars.TEACHER_LAST_NAME }}
-      ADMIN_USERNAME: ${{ vars.ADMIN_USERNAME }}
-      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-      ADMIN_FIRST_NAME: ${{ vars.ADMIN_FIRST_NAME }}
-      ADMIN_LAST_NAME: ${{ vars.ADMIN_LAST_NAME }}
+    timeout-minutes: 30
     steps:
       - name: Get the code
         uses: actions/checkout@v4
 
-      - name: Get the web build from the app job
+      - name: Get the web build tested by the App job
         uses: actions/download-artifact@v4
         with:
           name: web
           path: app/build/web
 
-      # --build rebuilds the API and web images from this commit; --wait fails the job if a service never gets healthy.
-      - name: Start the production stack
-        working-directory: infra
-        run: docker compose -f docker-compose.prod.yml up -d --build --wait --wait-timeout 300 --remove-orphans
+      # The private key only exists here, for this run; only the server's pinned key is accepted.
+      - name: Prepare the SSH access
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ vars.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/ngclass_deploy
+          chmod 600 ~/.ssh/ngclass_deploy
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
 
-      - name: Show what is running
-        working-directory: infra
-        run: docker compose -f docker-compose.prod.yml ps
+      # Backup of the running platform first, then the rebuild; fails if the API never answers UP.
+      - name: Deploy (infra/deploy.sh)
+        env:
+          SSH_STRICT: 'yes'
+          DEPLOY_BRANCH: ${{ github.ref_name }}
+          SKIP_WEB_BUILD: '1'
+        run: SSH_KEY="$HOME/.ssh/ngclass_deploy" ./infra/deploy.sh "${{ vars.DEPLOY_USER || 'ubuntu' }}@${{ vars.DEPLOY_HOST }}" < /dev/null
+
+      - name: Check the API answers from outside
+        run: curl -fsS --retry 5 --retry-delay 10 --retry-all-errors https://api.nextgenerationclass.online/health
+
+      - name: Remove the key
+        if: always()
+        run: rm -f ~/.ssh/ngclass_deploy
+
+  deploy-web:
+    name: Deploy the web app
+    needs: [backend, app, deploy-server]
+    # After the server (the new screens may need the new API). Runs when the server deploy passed, or was skipped
+    # because it is not set up; never after a failed one. Skipped until CLOUDFLARE_ACCOUNT_ID is set.
+    if: >-
+      !failure() && !cancelled()
+      && github.ref == 'refs/heads/main'
+      && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+      && vars.CLOUDFLARE_ACCOUNT_ID != ''
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: deploy-web
+      cancel-in-progress: false
+    timeout-minutes: 15
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Get the web build tested by the App job
+        uses: actions/download-artifact@v4
+        with:
+          name: web
+          path: app/build/web
+
+      - name: Install Node (for wrangler)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The token can only edit Workers on this account ("Edit Cloudflare Workers" template).
+      - name: Upload to the Cloudflare Worker
+        working-directory: infra/cloudflare
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx --yes wrangler@4 deploy
+
+      - name: Check the site answers
+        run: |
+          curl -fsS --retry 5 --retry-delay 10 --retry-all-errors -o /dev/null https://nextgenerationclass.online/
+          curl -fsS --retry 5 --retry-delay 10 --retry-all-errors https://nextgenerationclass.online/health
