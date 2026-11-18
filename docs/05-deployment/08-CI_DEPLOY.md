@@ -21,7 +21,7 @@ No application secret is in GitHub: `DB_PASSWORD`, `JWT_SECRET` and the accounts
 | `DEPLOY_SSH_KEY` | secret | Private half of the pipeline's own key (ed25519, made for GitHub only, never stored anywhere else) | 2026-11-17 |
 | `DEPLOY_HOST` | variable | `2.25.10.142` | 2026-11-17 |
 | `DEPLOY_KNOWN_HOSTS` | variable | The server's ed25519 host key (`ssh-keyscan -t ed25519 2.25.10.142`): any other key is refused | 2026-11-17 |
-| `DEPLOY_USER` | variable, optional | `ubuntu` when not set | |
+| `DEPLOY_USER` | variable | `root`: this server has no `ubuntu` user, the platform was set up and is deployed as root (`ubuntu` when not set) | 2026-11-18 |
 | `CLOUDFLARE_API_TOKEN` | secret | A Cloudflare API token from the template "Edit Cloudflare Workers", limited to this account | **to do (owner)** |
 | `CLOUDFLARE_ACCOUNT_ID` | variable | The account id (Cloudflare dashboard, Workers & Pages, right column) | **to do (owner)** |
 
@@ -29,11 +29,10 @@ A job whose settings are missing is skipped: without `DEPLOY_HOST` no server dep
 
 ## Still to do once
 
-1. **Server: allow the pipeline's key** (whoever has SSH access today, the teammate). Its public half is `infra/ci-deploy-key.pub`:
+1. ~~**Server: allow the pipeline's key**~~ **done 2026-11-18**: `infra/ci-deploy-key.pub` added to `/root/.ssh/authorized_keys` (previous file kept as `authorized_keys.bak-ci`). Deploys log in as `root`, as the manual ones did. To add it again on a new server:
    ```bash
-   ssh ubuntu@2.25.10.142 "cat >> ~/.ssh/authorized_keys" < infra/ci-deploy-key.pub
+   ssh root@SERVER_IP "cat >> ~/.ssh/authorized_keys" < infra/ci-deploy-key.pub
    ```
-   Until then "Deploy the server" fails at "Preparing the server folder" (key refused) and nothing on the server changes.
 2. **Cloudflare token** (owner): dashboard › My Profile › API Tokens › Create Token › "Edit Cloudflare Workers", limited to the account that holds `nextgenerationclass.online`, then `CLOUDFLARE_API_TOKEN` (secret) and `CLOUDFLARE_ACCOUNT_ID` (variable) in the `production` environment.
 3. **Remove the old self-hosted runner** (Settings › Actions › Runners, the teammate's PC): no job uses it any more.
 4. **Forks** (Settings › Actions › General): "Require approval for all external contributors", so a stranger's pull request does not even run the tests without the owner's click.
@@ -41,4 +40,4 @@ A job whose settings are missing is skipped: without `DEPLOY_HOST` no server dep
 
 ## Changing or revoking the key
 
-Make a new key (`ssh-keygen -t ed25519 -N "" -f /tmp/k`), put `/tmp/k` in the `DEPLOY_SSH_KEY` secret and `/tmp/k.pub` in `infra/ci-deploy-key.pub` and the server's `~/.ssh/authorized_keys`, delete `/tmp/k`, remove the old line from `authorized_keys`. To stop automatic deploys at once: delete the `DEPLOY_HOST` variable (or the key's line on the server).
+Make a new key (`ssh-keygen -t ed25519 -N "" -f /tmp/k`), put `/tmp/k` in the `DEPLOY_SSH_KEY` secret and `/tmp/k.pub` in `infra/ci-deploy-key.pub` and the server's `/root/.ssh/authorized_keys`, delete `/tmp/k`, remove the old line from `authorized_keys`. To stop automatic deploys at once: delete the `DEPLOY_HOST` variable (or the key's line on the server).

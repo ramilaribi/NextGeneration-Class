@@ -30,7 +30,7 @@ R = does it · A = decides and approves · C = consulted · I = told after
 |---|---|---|---|
 | OVHcloud account (billing, VPS panel, reinstall, DNS zone, backups) | yes, only | no | The teammate asks the owner for anything in the panel. Do not share the OVHcloud password. |
 | Domain registration | yes | no | Renewal reminder in the owner's calendar |
-| Server SSH as `ubuntu` (sudo) | own key `~/.ssh/ngclass_ovh` | own key, added by the owner | One key per person; the teammate's line is removed from `~/.ssh/authorized_keys` when the mission ends. The GitHub pipeline has its own key (`infra/ci-deploy-key.pub`, `08-CI_DEPLOY.md`) |
+| Server SSH as `ubuntu` (sudo) | own key `~/.ssh/ngclass_ovh` | own key, added by the owner | One key per person; the teammate's line is removed from `~/.ssh/authorized_keys` when the mission ends. The GitHub pipeline has its own key (`infra/ci-deploy-key.pub`, `08-CI_DEPLOY.md`). Note 2026-11-18: this server has no `ubuntu` user; access and deploys are as `root` (keys only, no password) |
 | Server secrets (`/opt/ngclass/infra/.env`) | yes | technically yes (sudo) | Read only when needed; never copied off the server, never shown in a screen share |
 | GitHub repository | admin | collaborator (write) or fork + pull request | Only the owner merges into `main` |
 | GitHub secrets and variables | yes | no | Environment `production`: the pipeline's deploy key, the server's address and host key, the Cloudflare token (`08-CI_DEPLOY.md`). No application secret |
