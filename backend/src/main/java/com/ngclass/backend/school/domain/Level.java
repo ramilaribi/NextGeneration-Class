@@ -26,7 +26,11 @@ public class Level {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
-	@Column(nullable = false, unique = true, length = 40)
+	/** Null for the shared levels (the six years of the primary school); a teacher's own level otherwise (V17). */
+	private UUID teacherId;
+
+	/** Unique among the levels a teacher sees (case ignored). */
+	@Column(nullable = false, length = 40)
 	private String nameFr;
 
 	@Column(nullable = false, length = 60)
@@ -34,6 +38,11 @@ public class Level {
 
 	@Column(nullable = false)
 	private int position;
+
+	/** Added by a teacher, so she can rename or delete it; the shared ones are fixed. */
+	public boolean isOwn() {
+		return teacherId != null;
+	}
 
 	public LocalizedText name() {
 		return new LocalizedText(nameFr, nameAr);

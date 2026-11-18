@@ -23,7 +23,7 @@ import com.ngclass.backend.content.storage.FileStorage;
 import com.ngclass.backend.groups.service.GroupService;
 import com.ngclass.backend.quiz.repository.QuizRepository;
 import com.ngclass.backend.quiz.service.QuizRules;
-import com.ngclass.backend.school.repository.LevelRepository;
+import com.ngclass.backend.school.service.LevelService;
 import com.ngclass.backend.school.service.SubjectService;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -55,7 +55,7 @@ public class ContentService {
 	private final FileStorage storage;
 	private final FileInspector inspector;
 	private final SubjectService subjectService;
-	private final LevelRepository levels;
+	private final LevelService levelService;
 	private final GroupService groupService;
 	private final QuizRepository quizzes;
 	private final CurrentTeacher teacher;
@@ -241,7 +241,7 @@ public class ContentService {
 	/** Her subject, a level, and a chapter of that same subject and level when one is given. */
 	public void placement(UUID subjectId, UUID levelId, UUID chapterId) {
 		subjectService.own(subjectId);
-		levels.findById(levelId).orElseThrow(() -> ApiException.notFound("level_not_found"));
+		levelService.require(levelId);
 		if (chapterId != null) {
 			Chapter chapter = ownChapter(chapterId);
 			if (!chapter.getSubjectId().equals(subjectId) || !chapter.getLevelId().equals(levelId)) {

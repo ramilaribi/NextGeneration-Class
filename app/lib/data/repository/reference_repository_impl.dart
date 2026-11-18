@@ -28,5 +28,16 @@ class ReferenceRepositoryImpl implements ReferenceRepository {
   @override
   Future<void> deleteSubject(String id) => guard(() => _api.deleteSubject(id));
 
+  @override
+  Future<Level> createLevel(LevelDraft draft) => guard(() async => levelOf(await _api.createLevel(_levelJson(draft))));
+
+  @override
+  Future<Level> updateLevel(String id, LevelDraft draft) => guard(() async => levelOf(await _api.updateLevel(id, _levelJson(draft))));
+
+  @override
+  Future<void> deleteLevel(String id) => guard(() => _api.deleteLevel(id));
+
+  static Json _levelJson(LevelDraft draft) => {'nameFr': draft.nameFr.trim(), 'nameAr': draft.nameAr.trim()};
+
   static Json _json(SubjectDraft draft) => {'nameFr': draft.nameFr.trim(), 'nameAr': draft.nameAr.trim(), 'color': draft.color};
 }

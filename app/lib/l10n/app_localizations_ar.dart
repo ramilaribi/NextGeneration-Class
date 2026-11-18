@@ -1402,7 +1402,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get levelsNote =>
-      'السنوات الست من التعليم الابتدائي التونسي، بالفرنسية والعربية.';
+      'السنوات الست من التعليم الابتدائي متاحة للجميع. أضف مستوياتك الخاصة: لا يراها غيرك، ويمكنك تعديلها أو حذفها.';
 
   @override
   String get schoolYearTitle => 'السنة الدراسية';
@@ -4907,4 +4907,35 @@ class AppLocalizationsAr extends AppLocalizations {
   String sessionOverdueDay(String day) {
     return 'يجب إنهاؤها · حصة $day';
   }
+
+  @override
+  String get newLevel => 'مستوى جديد';
+
+  @override
+  String get editLevel => 'تعديل المستوى';
+
+  @override
+  String get addLevel => 'إضافة مستوى';
+
+  @override
+  String get yourLevels => 'مستوياتك';
+
+  @override
+  String get levelNameHint => 'مثال: Préparatoire، 7ème année';
+
+  @override
+  String get levelNameArExample => 'مثال: السنة التحضيرية';
+
+  @override
+  String get levelCreated => 'تمت إضافة المستوى.';
+
+  @override
+  String get levelUpdated => 'تم تعديل المستوى.';
+
+  @override
+  String get levelDeleted => 'تم حذف المستوى.';
+
+  @override
+  String get deleteLevelText =>
+      'لا يمكن حذف مستوى يستعمله تلميذ أو مجموعة أو وثيقة. هذا الحذف نهائي.';
 }

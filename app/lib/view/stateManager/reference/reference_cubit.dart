@@ -53,6 +53,34 @@ class ReferenceCubit extends Cubit<ReferenceState> {
     }
   }
 
+  /// A level the teacher just added or renamed: every level list sees it right away.
+  Future<(Level?, ApiFailure?)> createLevel(LevelDraft draft) => _changeLevel(() => _repository.createLevel(draft));
+
+  Future<(Level?, ApiFailure?)> updateLevel(String id, LevelDraft draft) => _changeLevel(() => _repository.updateLevel(id, draft));
+
+  /// Refused by the server (`level_in_use`, `level_has_contents`). Returns the failure, or null.
+  Future<ApiFailure?> deleteLevel(String id) async {
+    try {
+      await _repository.deleteLevel(id);
+      final reference = state.reference;
+      if (reference != null) emit(ReferenceState(status: LoadStatus.ready, reference: reference.withoutLevel(id)));
+      return null;
+    } on Object catch (error) {
+      return ApiFailure.from(error);
+    }
+  }
+
+  Future<(Level?, ApiFailure?)> _changeLevel(Future<Level> Function() change) async {
+    try {
+      final level = await change();
+      final reference = state.reference;
+      if (reference != null) emit(ReferenceState(status: LoadStatus.ready, reference: reference.withLevel(level)));
+      return (level, null);
+    } on Object catch (error) {
+      return (null, ApiFailure.from(error));
+    }
+  }
+
   Future<(Subject?, ApiFailure?)> _changeSubject(Future<Subject> Function() change) async {
     try {
       final subject = await change();

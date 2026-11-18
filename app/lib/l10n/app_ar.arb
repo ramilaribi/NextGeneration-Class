@@ -369,7 +369,7 @@
   "subjectDeleted": "تم حذف المادة.",
   "levelsTitle": "المستويات",
   "primarySchool": "ابتدائي",
-  "levelsNote": "السنوات الست من التعليم الابتدائي التونسي، بالفرنسية والعربية.",
+  "levelsNote": "السنوات الست من التعليم الابتدائي متاحة للجميع. أضف مستوياتك الخاصة: لا يراها غيرك، ويمكنك تعديلها أو حذفها.",
   "schoolYearTitle": "السنة الدراسية",
   "schoolYearRange": "من {start} إلى {end}",
   "noSubjectsYet": "لا توجد مواد حاليًا. أنشئ أول مادة.",
@@ -1249,5 +1249,15 @@
   "consentFilter": "موافقة في الانتظار",
   "andSeparator": " و",
   "sessionOverdueToday": "يجب إنهاؤها · النهاية المبرمجة على {time}",
-  "sessionOverdueDay": "يجب إنهاؤها · حصة {day}"
+  "sessionOverdueDay": "يجب إنهاؤها · حصة {day}",
+  "newLevel": "مستوى جديد",
+  "editLevel": "تعديل المستوى",
+  "addLevel": "إضافة مستوى",
+  "yourLevels": "مستوياتك",
+  "levelNameHint": "مثال: Préparatoire، 7ème année",
+  "levelNameArExample": "مثال: السنة التحضيرية",
+  "levelCreated": "تمت إضافة المستوى.",
+  "levelUpdated": "تم تعديل المستوى.",
+  "levelDeleted": "تم حذف المستوى.",
+  "deleteLevelText": "لا يمكن حذف مستوى يستعمله تلميذ أو مجموعة أو وثيقة. هذا الحذف نهائي."
 }

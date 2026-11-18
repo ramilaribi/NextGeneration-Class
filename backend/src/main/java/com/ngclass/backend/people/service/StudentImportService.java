@@ -22,7 +22,7 @@ import com.ngclass.backend.people.dto.StudentImportDtos.ImportedCredential;
 import com.ngclass.backend.people.repository.ParentRepository;
 import com.ngclass.backend.people.repository.StudentRepository;
 import com.ngclass.backend.school.domain.Level;
-import com.ngclass.backend.school.repository.LevelRepository;
+import com.ngclass.backend.school.service.LevelService;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +54,7 @@ public class StudentImportService {
 	private final StudentRepository students;
 	private final ParentRepository parents;
 	private final UserRepository users;
-	private final LevelRepository levels;
+	private final LevelService levelService;
 	private final CurrentTeacher teacher;
 
 	private enum Column { FIRST_NAME, LAST_NAME, LEVEL, GROUP, PHONE, PARENT_FIRST_NAME, PARENT_LAST_NAME, PARENT_PHONE }
@@ -65,7 +65,7 @@ public class StudentImportService {
 		if (groupId != null) {
 			groupService.require(groupId);
 		}
-		Level defaultLevel = levelId == null ? null : levels.findById(levelId).orElseThrow(() -> ApiException.notFound("level_not_found"));
+		Level defaultLevel = levelId == null ? null : levelService.require(levelId);
 		List<List<String>> rows = ImportFileReader.read(data, fileName);
 		if (rows.isEmpty()) {
 			throw ApiException.badRequest("import_file_empty");
@@ -81,7 +81,7 @@ public class StudentImportService {
 			throw ApiException.badRequest("import_file_empty");
 		}
 
-		List<Level> allLevels = levels.findAllByOrderByPositionAsc();
+		List<Level> allLevels = levelService.visible();
 		List<GroupResponse> groups = groupService.list();
 		Map<String, Parent> known = knownParents();
 		Set<String> existing = new HashSet<>();

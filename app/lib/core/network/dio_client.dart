@@ -25,6 +25,9 @@ class DioClient {
 
   /// Called when the server refuses the session (wired to AuthCubit in main).
   static void Function()? onSessionExpired;
+
+  /// Called after a token refresh with the account it answered for (wired to AuthCubit in main).
+  static void Function(String userId)? onSessionRefreshed;
 }
 
 class _LanguageInterceptor extends Interceptor {

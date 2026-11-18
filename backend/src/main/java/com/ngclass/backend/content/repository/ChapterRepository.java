@@ -22,4 +22,6 @@ public interface ChapterRepository extends JpaRepository<Chapter, UUID> {
 	int lastPosition(@Param("teacherId") UUID teacherId, @Param("subjectId") UUID subjectId, @Param("levelId") UUID levelId);
 
 	boolean existsBySubjectId(UUID subjectId);
+
+	boolean existsByLevelId(UUID levelId);
 }

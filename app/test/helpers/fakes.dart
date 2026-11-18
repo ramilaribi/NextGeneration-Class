@@ -108,6 +108,38 @@ class FakeReferenceRepository implements ReferenceRepository {
   final List<SubjectDraft> createdSubjects = [];
   final List<(String, SubjectDraft)> updatedSubjects = [];
   final List<String> deletedSubjects = [];
+  final List<LevelDraft> createdLevels = [];
+  final List<(String, LevelDraft)> updatedLevels = [];
+  final List<String> deletedLevels = [];
+
+  /// Thrown by [deleteLevel], e.g. `level_in_use`.
+  ApiFailure? deleteLevelFailure;
+
+  @override
+  Future<Level> createLevel(LevelDraft draft) async {
+    createdLevels.add(draft);
+    return Level(
+      id: 'new-level',
+      name: LocalizedText(fr: draft.nameFr, ar: draft.nameAr),
+      own: true,
+    );
+  }
+
+  @override
+  Future<Level> updateLevel(String id, LevelDraft draft) async {
+    updatedLevels.add((id, draft));
+    return Level(
+      id: id,
+      name: LocalizedText(fr: draft.nameFr, ar: draft.nameAr),
+      own: true,
+    );
+  }
+
+  @override
+  Future<void> deleteLevel(String id) async {
+    if (deleteLevelFailure != null) throw deleteLevelFailure!;
+    deletedLevels.add(id);
+  }
 
   @override
   Future<Reference> load() async => _reference ?? reference;

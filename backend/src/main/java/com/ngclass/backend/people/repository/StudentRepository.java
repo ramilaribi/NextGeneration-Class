@@ -11,6 +11,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface StudentRepository extends JpaRepository<Student, UUID> {
+	boolean existsByLevel_Id(UUID levelId);
+
+	long countByTeacherIdAndLevel_Id(UUID teacherId, UUID levelId);
+
 	Optional<Student> findByUser_Id(UUID userId);
 
 	@EntityGraph(attributePaths = {"user", "level"})

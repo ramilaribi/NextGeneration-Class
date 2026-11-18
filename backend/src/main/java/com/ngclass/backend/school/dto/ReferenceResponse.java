@@ -10,7 +10,8 @@ public record ReferenceResponse(List<SubjectItem> subjects, List<LevelItem> leve
 	public record SubjectItem(UUID id, LocalizedText name, String color) {
 	}
 
-	public record LevelItem(UUID id, LocalizedText name) {
+	/** [own]: added by the teacher, who can rename or delete it in Paramètres. */
+	public record LevelItem(UUID id, LocalizedText name, boolean own) {
 	}
 
 	public record SchoolYearItem(UUID id, String label, LocalDate startsOn, LocalDate endsOn) {

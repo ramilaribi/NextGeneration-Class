@@ -48,6 +48,7 @@ import '../../view/stateManager/library/library_cubit.dart';
 import '../platform/file_chooser.dart';
 import '../platform/document_printer.dart';
 import '../platform/file_opener.dart';
+import '../platform/session_channel.dart';
 import '../platform/photo_source.dart';
 import '../../data/files/scan_processor_impl.dart';
 import '../../data/files/worksheet_pdf.dart';
@@ -112,7 +113,7 @@ void configureDependencies(AppConfig config) {
   // ── Auth ──
   sl.registerLazySingleton<AuthApi>(() => AuthApi(sl.get<DioClient>().dio));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(api: sl.get(), tokens: sl.get()));
-  sl.registerLazySingleton<AuthCubit>(() => AuthCubit(sl.get()));
+  sl.registerLazySingleton<AuthCubit>(() => AuthCubit(sl.get(), channel: createSessionChannel()));
   sl.registerFactory<LoginCubit>(() => LoginCubit(sl.get(), sl.get()));
   sl.registerFactory<ChangePasswordCubit>(() => ChangePasswordCubit(sl.get()));
 
@@ -173,6 +174,7 @@ void configureDependencies(AppConfig config) {
 /// Links the session to the rest of the app, once at start.
 void startSession(AuthCubit auth, LanguageCubit language) {
   DioClient.onSessionExpired = auth.sessionExpired;
+  DioClient.onSessionRefreshed = auth.sessionRefreshed;
   // The server writes its own messages (push, email) in the user's last language.
   language.stream.listen((value) {
     if (auth.state is AuthSignedIn) sl.get<AuthRepository>().updateLanguage(value).ignore();

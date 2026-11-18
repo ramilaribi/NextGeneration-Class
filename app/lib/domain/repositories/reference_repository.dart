@@ -13,4 +13,13 @@ abstract interface class ReferenceRepository {
 
   /// Refused while a group uses the subject.
   Future<void> deleteSubject(String id);
+
+  /// A level of her own, after the six primary years.
+  Future<Level> createLevel(LevelDraft draft);
+
+  /// Only her own levels can be renamed.
+  Future<Level> updateLevel(String id, LevelDraft draft);
+
+  /// Refused while a pupil, a group or a document uses the level.
+  Future<void> deleteLevel(String id);
 }
