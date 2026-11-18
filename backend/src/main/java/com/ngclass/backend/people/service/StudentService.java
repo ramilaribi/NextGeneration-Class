@@ -46,7 +46,7 @@ import com.ngclass.backend.planning.repository.AttendanceRepository;
 import com.ngclass.backend.planning.repository.ClassSessionRepository;
 import com.ngclass.backend.planning.service.AttendanceStats;
 import com.ngclass.backend.school.domain.Level;
-import com.ngclass.backend.school.repository.LevelRepository;
+import com.ngclass.backend.school.service.LevelService;
 import java.text.Normalizer;
 import java.time.Clock;
 import java.time.Instant;
@@ -80,7 +80,7 @@ public class StudentService {
 	private final ParentRepository parents;
 	private final UserRepository users;
 	private final RefreshTokenRepository refreshTokens;
-	private final LevelRepository levels;
+	private final LevelService levelService;
 	private final ClassGroupRepository groups;
 	private final GroupMemberRepository members;
 	private final GroupService groupService;
@@ -508,7 +508,7 @@ public class StudentService {
 	}
 
 	private Level level(UUID id) {
-		return levels.findById(id).orElseThrow(() -> ApiException.notFound("level_not_found"));
+		return levelService.require(id);
 	}
 
 	private static Credential credential(User user, String temporary) {

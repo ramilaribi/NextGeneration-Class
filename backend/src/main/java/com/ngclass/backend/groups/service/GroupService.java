@@ -22,7 +22,7 @@ import com.ngclass.backend.planning.service.AttendanceStats;
 import com.ngclass.backend.school.domain.Level;
 import com.ngclass.backend.school.domain.SchoolYear;
 import com.ngclass.backend.school.domain.Subject;
-import com.ngclass.backend.school.repository.LevelRepository;
+import com.ngclass.backend.school.service.LevelService;
 import com.ngclass.backend.school.repository.SubjectRepository;
 import com.ngclass.backend.school.service.SchoolYearService;
 import java.time.Clock;
@@ -53,7 +53,7 @@ public class GroupService {
 	private final GroupMemberRepository members;
 	private final StudentRepository students;
 	private final SubjectRepository subjects;
-	private final LevelRepository levels;
+	private final LevelService levelService;
 	private final RecurrenceRuleRepository rules;
 	private final SchoolYearService schoolYears;
 	private final AttendanceStats attendance;
@@ -282,6 +282,6 @@ public class GroupService {
 	}
 
 	private Level level(UUID id) {
-		return levels.findById(id).orElseThrow(() -> ApiException.notFound("level_not_found"));
+		return levelService.require(id);
 	}
 }

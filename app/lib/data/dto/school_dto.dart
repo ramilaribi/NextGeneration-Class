@@ -32,7 +32,7 @@ class ReferenceDto {
     final year = json['currentSchoolYear'] as Json?;
     return Reference(
       subjects: [for (final s in jsonList(json['subjects'])) subjectOf(s)],
-      levels: [for (final l in jsonList(json['levels'])) Level(id: l['id'] as String, name: localizedText(l['name']))],
+      levels: [for (final l in jsonList(json['levels'])) levelOf(l)],
       currentYear: year == null
           ? null
           : SchoolYear(
@@ -46,6 +46,8 @@ class ReferenceDto {
 }
 
 Subject subjectOf(Json s) => Subject(id: s['id'] as String, name: localizedText(s['name']), color: s['color'] as String? ?? '#2B3990');
+
+Level levelOf(Json l) => Level(id: l['id'] as String, name: localizedText(l['name']), own: l['own'] as bool? ?? false);
 
 SessionMode sessionMode(Object? value) => value == 'ONLINE' ? SessionMode.online : SessionMode.inPerson;
 

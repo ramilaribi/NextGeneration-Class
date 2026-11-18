@@ -790,7 +790,7 @@
   "subjectDeleted": "Matière supprimée.",
   "levelsTitle": "Niveaux",
   "primarySchool": "Primaire",
-  "levelsNote": "Les six années du primaire tunisien, en français et en arabe.",
+  "levelsNote": "Les six années du primaire sont proposées à tous. Ajoutez vos propres niveaux : vous seule les voyez, et vous pouvez les modifier ou les supprimer.",
   "schoolYearTitle": "Année scolaire",
   "schoolYearRange": "du {start} au {end}",
   "@schoolYearRange": {
@@ -2782,5 +2782,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "newLevel": "Nouveau niveau",
+  "editLevel": "Modifier le niveau",
+  "addLevel": "Ajouter un niveau",
+  "yourLevels": "Vos niveaux",
+  "levelNameHint": "Ex. : Préparatoire, 7ème année",
+  "levelNameArExample": "مثال: السنة التحضيرية",
+  "levelCreated": "Niveau ajouté.",
+  "levelUpdated": "Niveau modifié.",
+  "levelDeleted": "Niveau supprimé.",
+  "deleteLevelText": "Un niveau utilisé par un élève, un groupe ou un document ne peut pas être supprimé. Cette suppression est définitive."
 }

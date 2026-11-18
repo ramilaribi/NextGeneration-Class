@@ -536,6 +536,8 @@ class FilterMenuButton<T> extends StatelessWidget {
     required this.value,
     required this.onChanged,
     this.icon = LucideIcons.listFilter,
+    this.actionLabel,
+    this.onAction,
   });
 
   final String label;
@@ -543,6 +545,10 @@ class FilterMenuButton<T> extends StatelessWidget {
   final T value;
   final ValueChanged<T> onChanged;
   final IconData icon;
+
+  /// An entry after the options, below a line ("Ajouter un niveau"), shown when [onAction] is given.
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -559,6 +565,15 @@ class FilterMenuButton<T> extends StatelessWidget {
             style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size(220, 42))),
             child: Text(option.label, style: text.style(14, FontWeight.w600)),
           ),
+        if (onAction != null && actionLabel != null) ...[
+          const Divider(height: 9, color: BrandColors.line),
+          MenuItemButton(
+            onPressed: onAction,
+            leadingIcon: const Icon(LucideIcons.plus, size: 16, color: BrandColors.indigo),
+            style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size(220, 42))),
+            child: Text(actionLabel!, style: text.style(14, FontWeight.w700, color: BrandColors.indigo)),
+          ),
+        ],
       ],
       builder: (context, controller, _) => Material(
         color: Colors.white,

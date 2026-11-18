@@ -46,13 +46,27 @@ class SubjectDraft extends Equatable {
 }
 
 class Level extends Equatable {
-  const Level({required this.id, required this.name});
+  const Level({required this.id, required this.name, this.own = false});
 
   final String id;
   final LocalizedText name;
 
+  /// Added by the teacher (Paramètres), so she can rename or delete it; the six primary years are fixed.
+  final bool own;
+
   @override
-  List<Object?> get props => [id, name];
+  List<Object?> get props => [id, name, own];
+}
+
+/// A level the teacher adds: French name, Arabic name (optional, the French one is shown instead).
+class LevelDraft extends Equatable {
+  const LevelDraft({required this.nameFr, this.nameAr = ''});
+
+  final String nameFr;
+  final String nameAr;
+
+  @override
+  List<Object?> get props => [nameFr, nameAr];
 }
 
 class SchoolYear extends Equatable {
@@ -90,6 +104,16 @@ class Reference extends Equatable {
 
   Reference withoutSubject(String id) =>
       Reference(subjects: subjects.where((s) => s.id != id).toList(), levels: levels, currentYear: currentYear);
+
+  /// A new level goes last (after the shared ones, as the server orders them); an edited one keeps its place.
+  Reference withLevel(Level level) => Reference(
+    subjects: subjects,
+    levels: levels.any((l) => l.id == level.id) ? [for (final l in levels) l.id == level.id ? level : l] : [...levels, level],
+    currentYear: currentYear,
+  );
+
+  Reference withoutLevel(String id) =>
+      Reference(subjects: subjects, levels: levels.where((l) => l.id != id).toList(), currentYear: currentYear);
 
   @override
   List<Object?> get props => [subjects, levels, currentYear];

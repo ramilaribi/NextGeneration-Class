@@ -19,6 +19,13 @@ class SchoolApi {
 
   Future<void> deleteSubject(String id) => _dio.delete<void>('/subjects/$id');
 
+  /// Teacher only: her own levels (the shared ones cannot change).
+  Future<Json> createLevel(Json body) async => (await _dio.post<Json>('/levels', data: body)).data!;
+
+  Future<Json> updateLevel(String id, Json body) async => (await _dio.put<Json>('/levels/$id', data: body)).data!;
+
+  Future<void> deleteLevel(String id) => _dio.delete<void>('/levels/$id');
+
   Future<List<Json>> groups() async => jsonList((await _dio.get<List<dynamic>>('/groups')).data);
 
   Future<Json> group(String id) async => (await _dio.get<Json>('/groups/$id')).data!;

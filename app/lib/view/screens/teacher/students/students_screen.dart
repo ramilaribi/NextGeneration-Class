@@ -20,6 +20,7 @@ import '../../../widgets/cards.dart';
 import '../../../widgets/classmates.dart';
 import '../../../widgets/controls.dart';
 import '../../../widgets/feedback.dart';
+import '../level_dialog.dart';
 import '../../../widgets/labels.dart';
 import '../../../widgets/page_frame.dart';
 import '../../../widgets/panels.dart';
@@ -215,6 +216,11 @@ class _LevelFilter extends StatelessWidget {
       value: levelId,
       onChanged: context.read<StudentsCubit>().filterLevel,
       options: [SelectOption(null, l10n.levelAll), for (final level in reference.levels) SelectOption(level.id, level.name.of(language))],
+      actionLabel: l10n.addLevel,
+      onAction: () async {
+        final level = await showLevelDialog(context);
+        if (level != null && context.mounted) showNotice(context, l10n.levelCreated);
+      },
     );
   }
 }

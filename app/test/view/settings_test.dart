@@ -255,4 +255,107 @@ void main() {
       expect(find.text(fr.subjectDeleteRule), findsNothing);
     });
   });
+
+  group('Paramètres: her own levels', () {
+    const prepa = Level(
+      id: 'prepa',
+      name: LocalizedText(fr: 'Préparatoire', ar: 'التحضيري'),
+      own: true,
+    );
+    late FakeReferenceRepository repository;
+
+    setUp(
+      () => repository = FakeReferenceRepository(
+        reference: Reference(subjects: const [], levels: [...referenceWithYear.levels, prepa], currentYear: referenceWithYear.currentYear),
+        usage: const [],
+      ),
+    );
+
+    Future<void> pumpSettings(WidgetTester tester, {AppLanguage language = AppLanguage.fr, Size size = const Size(1440, 1000)}) =>
+        pumpSignedIn(
+          tester,
+          BlocProvider(
+            create: (_) => SubjectsSettingsCubit(repository)..load(),
+            child: const Scaffold(body: SettingsView()),
+          ),
+          language: language,
+          size: size,
+          reference: repository,
+        );
+
+    testWidgets('the shared years stay chips; her own levels can be renamed and deleted', (tester) async {
+      final fr = l10nOf(AppLanguage.fr);
+      await pumpSettings(tester);
+
+      expect(find.text('4ème année'), findsOneWidget);
+      expect(find.text(fr.yourLevels), findsOneWidget);
+      expect(find.text('Préparatoire'), findsOneWidget);
+      expect(find.byTooltip(fr.edit), findsOneWidget, reason: 'only her own level can be changed');
+
+      await tester.tap(find.byTooltip(fr.edit));
+      await tester.pumpAndSettle();
+      expect(find.text(fr.editLevel), findsOneWidget);
+      await tester.enterText(find.widgetWithText(TextField, 'Préparatoire'), 'Classe préparatoire');
+      await tester.tap(find.text(fr.save));
+      await tester.pumpAndSettle();
+      expect(repository.updatedLevels.single.$2.nameAr, 'التحضيري');
+      expect(find.text('Classe préparatoire'), findsOneWidget);
+      expect(find.text(fr.levelUpdated), findsOneWidget);
+
+      await tester.tap(find.byTooltip(fr.delete));
+      await tester.pumpAndSettle();
+      expect(find.text(fr.deleteLevelText), findsOneWidget);
+      await tester.tap(find.text(fr.delete).last);
+      await tester.pumpAndSettle();
+      expect(repository.deletedLevels, ['prepa']);
+      expect(find.text(fr.yourLevels), findsNothing);
+    });
+
+    testWidgets('a level is added with "Ajouter un niveau"; a level in use stays with the server message', (tester) async {
+      final fr = l10nOf(AppLanguage.fr);
+      repository.deleteLevelFailure = const ApiFailure(code: 'level_in_use', message: 'Ce niveau est utilisé.', statusCode: 409);
+      await pumpSettings(tester);
+
+      await tester.tap(find.text(fr.addLevel));
+      await tester.pumpAndSettle();
+      expect(find.text(fr.newLevel), findsOneWidget);
+      await tester.tap(find.text(fr.save));
+      await tester.pumpAndSettle();
+      expect(find.text(fr.fieldRequired), findsOneWidget, reason: 'the French name is required');
+      await tester.enterText(find.byType(TextField).first, '7ème année');
+      await tester.tap(find.text(fr.save));
+      await tester.pumpAndSettle();
+      expect(repository.createdLevels.single.nameFr, '7ème année');
+      expect(find.text('7ème année'), findsOneWidget);
+      expect(find.text(fr.levelCreated), findsOneWidget);
+
+      await tester.tap(find.byTooltip(fr.delete).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(fr.delete).last);
+      await tester.pumpAndSettle();
+      expect(find.text('Ce niveau est utilisé.'), findsOneWidget);
+      expect(find.text('Préparatoire'), findsOneWidget);
+    });
+
+    testWidgets('in Arabic on a phone: right to left, nothing overflows', (tester) async {
+      final ar = l10nOf(AppLanguage.ar);
+      await pumpSettings(tester, language: AppLanguage.ar, size: const Size(390, 844));
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('التحضيري'), findsOneWidget);
+      expect(find.text(ar.addLevel), findsOneWidget);
+      expect(Directionality.of(tester.element(find.text(ar.yourLevels))), TextDirection.rtl);
+    });
+  });
+
+  test('ReferenceCubit: a new level goes last, a deleted one leaves every list', () async {
+    final repository = FakeReferenceRepository(reference: referenceWithYear);
+    final cubit = ReferenceCubit(repository);
+    await cubit.load();
+    final (level, _) = await cubit.createLevel(const LevelDraft(nameFr: 'Préparatoire'));
+    expect(level?.own, isTrue);
+    expect(cubit.state.reference!.levels.last.name.fr, 'Préparatoire');
+    expect(await cubit.deleteLevel(level!.id), isNull);
+    expect(cubit.state.reference!.levels.where((l) => l.own), isEmpty);
+  });
 }

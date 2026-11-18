@@ -18,6 +18,8 @@ public interface ContentItemRepository extends JpaRepository<ContentItem, UUID> 
 
 	boolean existsBySubjectId(UUID subjectId);
 
+	boolean existsByLevelId(UUID levelId);
+
 	/** A deleted chapter leaves its documents in "Sans chapitre". */
 	@Modifying
 	@Query("update ContentItem i set i.chapterId = null where i.chapterId = :chapterId")

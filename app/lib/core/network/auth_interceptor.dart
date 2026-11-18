@@ -63,6 +63,9 @@ class AuthInterceptor extends QueuedInterceptor {
         refreshToken: body['refreshToken'] as String? ?? refreshToken,
         userJson: jsonEncode(body['user']),
       );
+      // The saved session may belong to an account signed in later in another tab.
+      final userId = (body['user'] as Map<String, dynamic>?)?['id'] as String?;
+      if (userId != null) DioClient.onSessionRefreshed?.call(userId);
       return _Refresh.done;
     } on DioException catch (e) {
       final status = e.response?.statusCode;

@@ -20,10 +20,12 @@ import '../../../widgets/feedback.dart';
 import '../../../widgets/labels.dart';
 import '../../../widgets/page_frame.dart';
 import '../../../widgets/panels.dart';
+import '../../../widgets/school_widgets.dart';
+import '../level_dialog.dart';
 import '../subject_dialog.dart';
 
 /// "Paramètres" (design `r1/Parametres.png`, approved without its tabs on 2026-10-06): the teacher's
-/// subjects, the levels and the school year. Only the subjects can be changed here.
+/// subjects, the levels and the school year. The subjects and the teacher's own levels can be changed here.
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -244,12 +246,20 @@ class _UsagePill extends StatelessWidget {
 class _LevelsCard extends StatelessWidget {
   const _LevelsCard();
 
+  Future<void> _create(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final level = await showLevelDialog(context);
+    if (level == null || !context.mounted) return;
+    showNotice(context, l10n.levelCreated);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final text = AppText.of(context);
     final language = context.watch<LanguageCubit>().state;
     final reference = context.watch<ReferenceCubit>().state.reference;
+    final own = reference?.levels.where((l) => l.own).toList() ?? const <Level>[];
     return SectionCard(
       title: l10n.levelsTitle,
       trailing: Container(
@@ -266,7 +276,7 @@ class _LevelsCard extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    for (final level in reference.levels)
+                    for (final level in reference.levels.where((l) => !l.own))
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(color: BrandColors.chalk, borderRadius: BorderRadius.circular(AppRadii.pill)),
@@ -274,10 +284,74 @@ class _LevelsCard extends StatelessWidget {
                       ),
                   ],
                 ),
+                if (own.isNotEmpty) ...[
+                  const SizedBox(height: 18),
+                  Text(l10n.yourLevels, style: text.style(13, FontWeight.w700, color: BrandColors.body)),
+                  const SizedBox(height: 4),
+                  for (var i = 0; i < own.length; i++) _OwnLevelRow(level: own[i], first: i == 0),
+                ],
+                const SizedBox(height: 14),
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: SecondaryButton(label: l10n.addLevel, icon: LucideIcons.plus, height: 38, onPressed: () => _create(context)),
+                ),
                 const SizedBox(height: 14),
                 InfoNote(text: l10n.levelsNote),
               ],
             ),
+    );
+  }
+}
+
+/// A level the teacher added: renamed or deleted here (the server refuses a level still in use).
+class _OwnLevelRow extends StatelessWidget {
+  const _OwnLevelRow({required this.level, required this.first});
+
+  final Level level;
+  final bool first;
+
+  Future<void> _edit(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final saved = await showLevelDialog(context, editing: level);
+    if (saved == null || !context.mounted) return;
+    showNotice(context, l10n.levelUpdated);
+  }
+
+  Future<void> _delete(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final language = context.read<LanguageCubit>().state;
+    final confirmed = await confirmAction(
+      context,
+      title: l10n.deleteSubjectTitle(level.name.of(language)),
+      text: l10n.deleteLevelText,
+      confirmLabel: l10n.delete,
+      icon: LucideIcons.trash2,
+    );
+    if (!confirmed || !context.mounted) return;
+    final failure = await context.read<ReferenceCubit>().deleteLevel(level.id);
+    if (!context.mounted) return;
+    showNotice(context, failure == null ? l10n.levelDeleted : failureText(l10n, failure));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final text = AppText.of(context);
+    final language = context.watch<LanguageCubit>().state;
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        border: first ? null : const Border(top: BorderSide(color: BrandColors.rowDivider)),
+      ),
+      child: Row(
+        children: [
+          Expanded(child: WrittenName(level.name.of(language), style: text.rowTitle)),
+          const SizedBox(width: 12),
+          IconSquareButton(icon: LucideIcons.pencil, tooltip: l10n.edit, size: 38, onPressed: () => _edit(context)),
+          const SizedBox(width: 8),
+          IconSquareButton(icon: LucideIcons.x, tooltip: l10n.delete, danger: true, size: 38, onPressed: () => _delete(context)),
+        ],
+      ),
     );
   }
 }

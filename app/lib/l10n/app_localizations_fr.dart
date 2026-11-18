@@ -1382,7 +1382,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get levelsNote =>
-      'Les six années du primaire tunisien, en français et en arabe.';
+      'Les six années du primaire sont proposées à tous. Ajoutez vos propres niveaux : vous seule les voyez, et vous pouvez les modifier ou les supprimer.';
 
   @override
   String get schoolYearTitle => 'Année scolaire';
@@ -4796,4 +4796,35 @@ class AppLocalizationsFr extends AppLocalizations {
   String sessionOverdueDay(String day) {
     return 'À terminer · séance du $day';
   }
+
+  @override
+  String get newLevel => 'Nouveau niveau';
+
+  @override
+  String get editLevel => 'Modifier le niveau';
+
+  @override
+  String get addLevel => 'Ajouter un niveau';
+
+  @override
+  String get yourLevels => 'Vos niveaux';
+
+  @override
+  String get levelNameHint => 'Ex. : Préparatoire, 7ème année';
+
+  @override
+  String get levelNameArExample => 'مثال: السنة التحضيرية';
+
+  @override
+  String get levelCreated => 'Niveau ajouté.';
+
+  @override
+  String get levelUpdated => 'Niveau modifié.';
+
+  @override
+  String get levelDeleted => 'Niveau supprimé.';
+
+  @override
+  String get deleteLevelText =>
+      'Un niveau utilisé par un élève, un groupe ou un document ne peut pas être supprimé. Cette suppression est définitive.';
 }

@@ -4,11 +4,10 @@ import com.ngclass.backend.auth.service.CurrentTeacher;
 import com.ngclass.backend.config.AppProperties;
 import com.ngclass.backend.school.domain.SchoolYear;
 import com.ngclass.backend.school.dto.ReferenceResponse;
-import com.ngclass.backend.school.dto.ReferenceResponse.LevelItem;
 import com.ngclass.backend.school.dto.ReferenceResponse.SchoolYearItem;
 import com.ngclass.backend.school.dto.ReferenceResponse.SubjectItem;
-import com.ngclass.backend.school.repository.LevelRepository;
 import com.ngclass.backend.school.repository.SubjectRepository;
+import com.ngclass.backend.school.service.LevelService;
 import com.ngclass.backend.school.service.SchoolYearService;
 import java.time.Clock;
 import java.time.LocalDate;
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReferenceController {
 	private final SubjectRepository subjects;
 	private final CurrentTeacher teacher;
-	private final LevelRepository levels;
+	private final LevelService levelService;
 	private final SchoolYearService schoolYearService;
 	private final AppProperties properties;
 	private final Clock clock;
@@ -39,9 +38,8 @@ public class ReferenceController {
 				teacher.find().map(subjects::findByTeacherIdOrderByPositionAsc).orElse(List.of()).stream()
 						.map(subject -> new SubjectItem(subject.getId(), subject.name(), subject.getColor()))
 						.toList(),
-				levels.findAllByOrderByPositionAsc().stream()
-						.map(level -> new LevelItem(level.getId(), level.name()))
-						.toList(),
+				// The shared levels, then the ones the teacher added.
+				levelService.visible().stream().map(LevelService::item).toList(),
 				new SchoolYearItem(year.getId(), year.getLabel(), year.getStartsOn(), year.getEndsOn()));
 	}
 }

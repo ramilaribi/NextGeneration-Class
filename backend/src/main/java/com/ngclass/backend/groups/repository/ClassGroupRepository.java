@@ -29,6 +29,10 @@ public interface ClassGroupRepository extends JpaRepository<ClassGroup, UUID> {
 
 	boolean existsBySubject_Id(UUID subjectId);
 
+	boolean existsByLevel_Id(UUID levelId);
+
+	long countByTeacherIdAndLevel_Id(UUID teacherId, UUID levelId);
+
 	/** How many groups use each subject, archived ones included: they block a deletion too. */
 	@Query("select g.subject.id as subjectId, count(g) as groupCount from ClassGroup g group by g.subject.id")
 	List<SubjectUse> countGroupsBySubject();

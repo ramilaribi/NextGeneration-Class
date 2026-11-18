@@ -2320,7 +2320,7 @@ abstract class AppLocalizations {
   /// No description provided for @levelsNote.
   ///
   /// In fr, this message translates to:
-  /// **'Les six années du primaire tunisien, en français et en arabe.'**
+  /// **'Les six années du primaire sont proposées à tous. Ajoutez vos propres niveaux : vous seule les voyez, et vous pouvez les modifier ou les supprimer.'**
   String get levelsNote;
 
   /// No description provided for @schoolYearTitle.
@@ -7602,6 +7602,66 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'À terminer · séance du {day}'**
   String sessionOverdueDay(String day);
+
+  /// No description provided for @newLevel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau niveau'**
+  String get newLevel;
+
+  /// No description provided for @editLevel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier le niveau'**
+  String get editLevel;
+
+  /// No description provided for @addLevel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un niveau'**
+  String get addLevel;
+
+  /// No description provided for @yourLevels.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vos niveaux'**
+  String get yourLevels;
+
+  /// No description provided for @levelNameHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Préparatoire, 7ème année'**
+  String get levelNameHint;
+
+  /// No description provided for @levelNameArExample.
+  ///
+  /// In fr, this message translates to:
+  /// **'مثال: السنة التحضيرية'**
+  String get levelNameArExample;
+
+  /// No description provided for @levelCreated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Niveau ajouté.'**
+  String get levelCreated;
+
+  /// No description provided for @levelUpdated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Niveau modifié.'**
+  String get levelUpdated;
+
+  /// No description provided for @levelDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Niveau supprimé.'**
+  String get levelDeleted;
+
+  /// No description provided for @deleteLevelText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un niveau utilisé par un élève, un groupe ou un document ne peut pas être supprimé. Cette suppression est définitive.'**
+  String get deleteLevelText;
 }
 
 class _AppLocalizationsDelegate

@@ -1,7 +1,9 @@
 // Screenshots of the local web app, signed in, through headless Chrome and the DevTools protocol.
 // Usage: DEV_YAML=backend/src/main/resources/application-dev.yaml node infra/dev-tools/cdp-screens.mjs steps.json
 // Steps (JSON array, run in order): {"viewport":[w,h]} {"go":url} {"wait":ms} {"click":[x,y]} {"type":text}
-// {"key":"Enter"} (also Tab, Backspace, Escape, Delete, Home, End, arrows) {"eval":js} {"shot":"out.png"}, {"drag":[x1,y1,x2,y2]}, {"file":"/abs/path"} (answers the next file picker), and {"signin":"admin|teacher|student|parent","lang":"fr|ar"}, which signs in
+// {"key":"Enter"} (also Tab, Backspace, Escape, Delete, Home, End, arrows) {"eval":js} {"shot":"out.png"}, {"drag":[x1,y1,x2,y2]}, {"file":"/abs/path"} (answers the next file picker),
+// {"tab":n} (n = 0 is the first tab; a new n opens another tab of the same browser, which shares its saved session; the
+// following steps act there), and {"signin":"admin|teacher|student|parent","lang":"fr|ar"}, which signs in
 // on its own (at the size the login coordinates belong to), so any viewport can follow. A "type" value starting with "$" is read from DEV_YAML
 // by key ("$$" types one "$" as written): "$username" and "$password" (first match: the teacher), "$student-username", "$parent-phone",
 // "$admin.username" (key inside a block)...
@@ -22,14 +24,20 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let targets;
 for (let i = 0; i < 50; i++) { try { targets = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); break; } catch { await sleep(200); } }
 const page = targets.find((t) => t.type === 'page');
-const ws = new WebSocket(page.webSocketDebuggerUrl);
-await new Promise((r) => ws.addEventListener('open', r));
 let id = 0; const pending = new Map();
+let ws;
+const tabs = [];
+async function connect(url) {
+  const socket = new WebSocket(url);
+  await new Promise((r) => socket.addEventListener('open', r));
+  socket.addEventListener('message', onMessage);
+  return socket;
+}
 // Console errors and uncaught exceptions are printed (lines mentioning a password are dropped).
 const report = (text) => { if (!/password|mot de passe/i.test(text)) console.log('console', text.slice(0, 400)); };
 // A {"file": path} step answers the next file picker the page opens with that file.
 let nextFile = null;
-ws.addEventListener('message', (e) => {
+function onMessage(e) {
   const m = JSON.parse(e.data);
   if (m.id && pending.has(m.id)) { pending.get(m.id)(m); pending.delete(m.id); }
   if (m.method === 'Page.fileChooserOpened' && nextFile) {
@@ -38,7 +46,7 @@ ws.addEventListener('message', (e) => {
   }
   if (m.method === 'Runtime.exceptionThrown') report(m.params.exceptionDetails?.exception?.description ?? m.params.exceptionDetails?.text ?? '');
   if (m.method === 'Runtime.consoleAPICalled' && (['error', 'warning'].includes(m.params.type) || process.env.CDP_LOG)) report(m.params.args.map((a) => a.value ?? a.description ?? '').join(' '));
-});
+}
 const send = (method, params = {}) => new Promise((r) => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
 // Keys as a real keyboard sends them: the key code Chrome needs, and the character for Enter, so Flutter web
 // fields see a line break, a Tab moves the focus, a Backspace deletes.
@@ -74,7 +82,20 @@ const secrets = (() => {
 // "$key" reads a secret; "$$3/5$" types "$3/5$" as written (a formula in a table cell).
 const value = (v) => v.startsWith('$$') ? v.slice(1) : v.startsWith('$') ? secrets.get(v.slice(1)) : v;
 async function click(x, y) { for (const type of ['mousePressed', 'mouseReleased']) await send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1 }); }
+ws = await connect(page.webSocketDebuggerUrl);
+tabs.push(ws);
 await send('Runtime.enable');
+async function tab(n) {
+  if (!tabs[n]) {
+    const created = await (await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: 'PUT' })).json();
+    tabs[n] = await connect(created.webSocketDebuggerUrl);
+    ws = tabs[n];
+    await send('Runtime.enable');
+  }
+  ws = tabs[n];
+  // Shown, as a person switching to it: a hidden tab draws no frames.
+  await send('Page.bringToFront');
+}
 // The login screen centers its form: these points belong to a 1440 x 900 window, so sign-in always runs there.
 const accounts = { admin: ['$admin.username', '$admin.password'], teacher: ['$username', '$password'], student: ['$student-username', '$student-password'], parent: ['$parent-phone', '$parent-password'] };
 async function signin(role, lang = 'fr') {
@@ -94,6 +115,7 @@ async function signin(role, lang = 'fr') {
   console.log(at.includes('connexion') ? `signin ${role} FAILED (still on the login screen)` : `signin ${role} ok ${at}`);
 }
 for (const s of steps) {
+  if (s.tab !== undefined) await tab(s.tab);
   if (s.signin) await signin(s.signin, s.lang);
   if (s.file) { nextFile = s.file; await send('Page.enable'); await send('Page.setInterceptFileChooserDialog', { enabled: true }); }
   if (s.viewport) await send('Emulation.setDeviceMetricsOverride', { width: s.viewport[0], height: s.viewport[1], deviceScaleFactor: 1, mobile: false });
@@ -120,4 +142,5 @@ for (const s of steps) {
   if (s.eval) { const r = await send('Runtime.evaluate', { expression: s.eval, awaitPromise: true, returnByValue: true }); console.log('eval', JSON.stringify(r.result?.result?.value)); }
   if (s.shot) { const r = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); writeFileSync(s.shot, Buffer.from(r.result.data, 'base64')); console.log('shot', s.shot); }
 }
-ws.close(); chrome.kill();
+for (const t of tabs) t.close();
+chrome.kill();

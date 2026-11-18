@@ -28,7 +28,11 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<AppUser?> restoreSession() async {
     final refreshToken = await _tokens.readRefreshToken();
-    if (refreshToken == null) return null;
+    if (refreshToken == null) {
+      // Signed out (here or in another tab): forget the access token this tab still holds.
+      await _tokens.clear();
+      return null;
+    }
     try {
       return await _open(await _api.refresh(refreshToken));
     } on DioException catch (e) {
