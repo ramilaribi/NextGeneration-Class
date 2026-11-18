@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/network/api_failure.dart';
+import '../../../domain/model/meet_link.dart';
 import '../../../domain/model/group.dart';
 import '../../../domain/repositories/group_repository.dart';
 
@@ -92,12 +93,12 @@ class GroupFormCubit extends Cubit<GroupFormState> {
 
   Future<void> submit() async {
     if (state.submitting) return;
-    final url = state.meetUrl.trim();
+    final url = cleanMeetLink(state.meetUrl);
     final errors = {
       if (state.name.trim().isEmpty) GroupFormError.name,
       if (state.subjectId == null) GroupFormError.subject,
       if (state.levelId == null) GroupFormError.level,
-      if (url.isNotEmpty && !url.startsWith('https://')) GroupFormError.meetUrl,
+      if (url.isNotEmpty && !isValidMeetLink(url)) GroupFormError.meetUrl,
     };
     if (errors.isNotEmpty) {
       emit(state.copyWith(errors: errors));

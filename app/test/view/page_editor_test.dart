@@ -148,6 +148,17 @@ void main() {
       expect(tester.widget<Text>(find.byKey(const Key('page-facts'))).data, contains(fr.pageSavedNow));
     });
 
+    testWidgets('the sheet header: logo at the start, title in the middle of the page, level at the end', (tester) async {
+      await pumpSignedIn(tester, editorScreen);
+      final title = tester.getRect(find.byKey(const Key('sheet-title')));
+      final level = tester.getRect(find.byKey(const Key('sheet-level')));
+      final sheet = tester.getRect(find.ancestor(of: find.byKey(const Key('sheet-title')), matching: find.byType(Row)).first);
+      expect(title.center.dx, moreOrLessEquals(sheet.center.dx, epsilon: 1), reason: 'the title is centred on the sheet');
+      expect(level.right, moreOrLessEquals(sheet.right, epsilon: 1), reason: 'the level ends at the sheet\'s end');
+      final levelText = tester.widget<Text>(find.byKey(const Key('sheet-level')));
+      expect(levelText.textAlign, TextAlign.end);
+    });
+
     testWidgets('ƒx Formule: typed in simple notation, previewed, inserted at the cursor', (tester) async {
       final fr = l10nOf(AppLanguage.fr);
       await pumpSignedIn(tester, editorScreen);

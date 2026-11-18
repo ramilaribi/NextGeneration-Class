@@ -1648,7 +1648,7 @@ abstract class AppLocalizations {
   /// No description provided for @meetLinkInvalid.
   ///
   /// In fr, this message translates to:
-  /// **'Le lien doit commencer par https://'**
+  /// **'Ce lien ne semble pas valide. Exemple : https://meet.google.com/abc-defg-hij'**
   String get meetLinkInvalid;
 
   /// No description provided for @addMembers.
@@ -1936,7 +1936,7 @@ abstract class AppLocalizations {
   /// No description provided for @openMeet.
   ///
   /// In fr, this message translates to:
-  /// **'Ouvrir Meet'**
+  /// **'Ouvrir la visio'**
   String get openMeet;
 
   /// No description provided for @everyWeekdayUntil.

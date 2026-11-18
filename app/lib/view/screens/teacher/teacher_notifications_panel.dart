@@ -72,7 +72,14 @@ class _TeacherNotificationsPanelState extends State<TeacherNotificationsPanel> {
               if (state.unreadCount > 0) ...[
                 const SizedBox(width: 8),
                 // On the narrowest phones the link takes two lines rather than pushing the title out.
-                Flexible(child: CardLink(label: l10n.markAllRead, onPressed: context.read<NotificationsCubit>().markAllRead)),
+                // Aligned to the end, next to the close button: a Flexible beside the Expanded title would otherwise
+                // leave it in the middle of its half.
+                Flexible(
+                  child: Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: CardLink(label: l10n.markAllRead, onPressed: context.read<NotificationsCubit>().markAllRead),
+                  ),
+                ),
               ],
               IconButton(
                 tooltip: l10n.close,

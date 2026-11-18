@@ -516,7 +516,7 @@
   "color": "Couleur",
   "defaultMeetLink": "Lien Meet par défaut",
   "meetLinkHint": "https://meet.google.com/…",
-  "meetLinkInvalid": "Le lien doit commencer par https://",
+  "meetLinkInvalid": "Ce lien ne semble pas valide. Exemple : https://meet.google.com/abc-defg-hij",
   "addMembers": "Ajouter des élèves",
   "groupMembersTitle": "Élèves du groupe",
   "usualSchedule": "Horaire habituel",
@@ -609,7 +609,7 @@
   "sessionUpdated": "Séance modifiée.",
   "startSession": "Démarrer la séance",
   "resumeSession": "Reprendre la séance",
-  "openMeet": "Ouvrir Meet",
+  "openMeet": "Ouvrir la visio",
   "everyWeekdayUntil": "Chaque {weekday}, jusqu'au {date}",
   "@everyWeekdayUntil": {
     "placeholders": {
