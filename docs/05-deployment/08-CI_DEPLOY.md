@@ -22,10 +22,10 @@ No application secret is in GitHub: `DB_PASSWORD`, `JWT_SECRET` and the accounts
 | `DEPLOY_HOST` | variable | `2.25.10.142` | 2026-11-17 |
 | `DEPLOY_KNOWN_HOSTS` | variable | The server's ed25519 host key (`ssh-keyscan -t ed25519 2.25.10.142`): any other key is refused | 2026-11-17 |
 | `DEPLOY_USER` | variable | `root`: this server has no `ubuntu` user, the platform was set up and is deployed as root (`ubuntu` when not set) | 2026-11-18 |
-| `CLOUDFLARE_API_TOKEN` | secret | A Cloudflare API token from the template "Edit Cloudflare Workers", limited to this account | **to do (owner)** |
-| `CLOUDFLARE_ACCOUNT_ID` | variable | The account id (Cloudflare dashboard, Workers & Pages, right column) | **to do (owner)** |
+| `CLOUDFLARE_API_TOKEN` | secret | A Cloudflare API token from the template "Edit Cloudflare Workers", limited to this account | 2026-11-18 |
+| `CLOUDFLARE_ACCOUNT_ID` | variable (repository) | The account id (Cloudflare dashboard, Workers & Pages, right column) | 2026-11-18 |
 
-A job whose settings are missing is skipped: without `DEPLOY_HOST` no server deploy, without `CLOUDFLARE_ACCOUNT_ID` no web deploy.
+A job whose settings are missing is skipped: without `DEPLOY_HOST` no server deploy, without `CLOUDFLARE_ACCOUNT_ID` no web deploy. **These two must also be repository variables** (Settings › Secrets and variables › Actions › Variables): GitHub decides whether to start a job before it opens the `production` environment, so a variable kept only there looks empty to that decision. Both are set at repository level since 2026-11-18.
 
 ## Still to do once
 
