@@ -142,6 +142,32 @@ class TeachersCubit extends Cubit<TeachersState> {
     }
   }
 
+  /// A closed account deleted with its whole space: it leaves the list and the totals.
+  Future<ApiFailure?> deleteTeacher(TeacherAccount teacher) async {
+    try {
+      await _repository.deleteTeacher(teacher.id);
+      if (!isClosed) {
+        final t = state.totals;
+        final rest = state.teachers.where((x) => x.id != teacher.id).toList();
+        emit(
+          state.copyWith(
+            teachers: rest,
+            totals: TeachersTotals(
+              teachers: rest.length,
+              activeTeachers: rest.where((x) => x.active).length,
+              students: t.students - teacher.students,
+              parents: t.parents - teacher.parents,
+              groups: t.groups - teacher.groups,
+            ),
+          ),
+        );
+      }
+      return null;
+    } on Object catch (error) {
+      return ApiFailure.from(error);
+    }
+  }
+
   void _replace(String id, TeacherAccount Function(TeacherAccount) change) =>
       emit(state.copyWith(teachers: [for (final t in state.teachers) t.id == id ? change(t) : t]));
 }

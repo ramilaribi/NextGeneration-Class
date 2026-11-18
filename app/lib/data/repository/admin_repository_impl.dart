@@ -39,6 +39,9 @@ class AdminRepositoryImpl implements AdminRepository {
 
   @override
   Future<void> setActive(String teacherId, {required bool active}) => guard(() => _api.setActive(teacherId, active: active));
+
+  @override
+  Future<void> deleteTeacher(String teacherId) => guard(() => _api.deleteTeacher(teacherId));
 }
 
 TeacherAccount teacherOf(Json json) => TeacherAccount(

@@ -7662,6 +7662,36 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Un niveau utilisé par un élève, un groupe ou un document ne peut pas être supprimé. Cette suppression est définitive.'**
   String get deleteLevelText;
+
+  /// No description provided for @deleteTeacher.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer définitivement'**
+  String get deleteTeacher;
+
+  /// No description provided for @deleteTeacherTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer définitivement {name} ?'**
+  String deleteTeacherTitle(String name);
+
+  /// No description provided for @deleteTeacherText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Son compte et tout son espace seront effacés : ses élèves et leurs parents avec leurs comptes, ses groupes, séances, contenus, fichiers et devoirs. Cette suppression est définitive, rien ne pourra être récupéré.'**
+  String get deleteTeacherText;
+
+  /// No description provided for @deleteTeacherConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour confirmer, tapez son identifiant : {username}'**
+  String deleteTeacherConfirm(String username);
+
+  /// No description provided for @teacherDeletedNotice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte de {name} supprimé, avec tout son espace.'**
+  String teacherDeletedNotice(String name);
 }
 
 class _AppLocalizationsDelegate

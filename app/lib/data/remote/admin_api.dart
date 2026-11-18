@@ -15,4 +15,6 @@ class AdminApi {
   Future<Json> resetPassword(String id) async => (await _dio.post<Json>('/admin/teachers/$id/reset-password')).data!;
 
   Future<void> setActive(String id, {required bool active}) => _dio.post<void>('/admin/teachers/$id/${active ? 'enable' : 'disable'}');
+
+  Future<void> deleteTeacher(String id) => _dio.delete<void>('/admin/teachers/$id');
 }

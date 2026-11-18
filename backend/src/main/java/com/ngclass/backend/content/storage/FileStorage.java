@@ -14,4 +14,7 @@ public interface FileStorage {
 	void put(String key, byte[] data);
 
 	Optional<byte[]> read(String key);
+
+	/** Removes the file under [key] and the files derived from it (rendered pages); nothing if it is gone. */
+	void delete(String key);
 }

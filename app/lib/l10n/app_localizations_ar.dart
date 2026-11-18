@@ -4939,4 +4939,26 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get deleteLevelText =>
       'لا يمكن حذف مستوى يستعمله تلميذ أو مجموعة أو وثيقة. هذا الحذف نهائي.';
+
+  @override
+  String get deleteTeacher => 'حذف نهائي';
+
+  @override
+  String deleteTeacherTitle(String name) {
+    return 'حذف $name نهائيًا؟';
+  }
+
+  @override
+  String get deleteTeacherText =>
+      'سيُحذف حسابه وكل فضائه: تلاميذه وأولياؤهم مع حساباتهم، ومجموعاته وحصصه ومحتوياته وملفاته وفروضه. هذا الحذف نهائي ولا يمكن استرجاع أي شيء.';
+
+  @override
+  String deleteTeacherConfirm(String username) {
+    return 'للتأكيد، اكتب معرّفه: $username';
+  }
+
+  @override
+  String teacherDeletedNotice(String name) {
+    return 'تم حذف حساب $name وكل فضائه.';
+  }
 }

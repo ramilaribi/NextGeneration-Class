@@ -21,6 +21,7 @@ import '../../widgets/labels.dart';
 import '../../widgets/page_frame.dart';
 import '../../widgets/panels.dart';
 import '../../widgets/school_widgets.dart';
+import '../../widgets/text_field.dart';
 import '../teacher/students/credentials_dialog.dart';
 import 'new_teacher_panel.dart';
 
@@ -485,6 +486,19 @@ class _Actions extends StatelessWidget {
     );
   }
 
+  Future<void> _delete(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final cubit = context.read<TeachersCubit>();
+    final deleted = await showAppDialog<bool>(
+      context,
+      builder: (_) => BlocProvider.value(
+        value: cubit,
+        child: _DeleteTeacherDialog(teacher: teacher),
+      ),
+    );
+    if (deleted == true && context.mounted) showNotice(context, l10n.teacherDeletedNotice(teacher.fullName));
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -507,12 +521,91 @@ class _Actions extends StatelessWidget {
             onPressed: () => _setActive(context, active: true),
             child: Text(l10n.enableAccess),
           ),
+        // Only a closed account can be deleted: closing first signs her out and leaves time to change one's mind.
+        if (!teacher.active)
+          MenuItemButton(
+            key: const Key('delete-teacher'),
+            leadingIcon: Icon(LucideIcons.trash2, size: 16, color: Accent.red.onSoft),
+            onPressed: () => _delete(context),
+            child: Text(l10n.deleteTeacher, style: TextStyle(color: Accent.red.onSoft)),
+          ),
       ],
       builder: (context, controller, _) => IconButton(
         tooltip: l10n.teacherActions,
         onPressed: () => controller.isOpen ? controller.close() : controller.open(),
         icon: const Icon(LucideIcons.ellipsis, size: 20, color: BrandColors.slate),
       ),
+    );
+  }
+}
+
+/// "Supprimer définitivement": says what goes, and the button stays off until the owner types the teacher's
+/// username, so a slip of the finger never deletes a space.
+class _DeleteTeacherDialog extends StatefulWidget {
+  const _DeleteTeacherDialog({required this.teacher});
+
+  final TeacherAccount teacher;
+
+  @override
+  State<_DeleteTeacherDialog> createState() => _DeleteTeacherDialogState();
+}
+
+class _DeleteTeacherDialogState extends State<_DeleteTeacherDialog> {
+  String _typed = '';
+  bool _deleting = false;
+  String? _error;
+
+  bool get _confirmed => _typed.trim().toLowerCase() == widget.teacher.username.toLowerCase();
+
+  Future<void> _delete() async {
+    setState(() {
+      _deleting = true;
+      _error = null;
+    });
+    final l10n = AppLocalizations.of(context);
+    final failure = await context.read<TeachersCubit>().deleteTeacher(widget.teacher);
+    if (!mounted) return;
+    if (failure == null) {
+      Navigator.of(context).pop(true);
+    } else {
+      setState(() {
+        _deleting = false;
+        _error = failureText(l10n, failure);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return AppDialog(
+      icon: LucideIcons.trash2,
+      accent: Accent.red,
+      title: l10n.deleteTeacherTitle(widget.teacher.fullName),
+      subtitle: l10n.deleteTeacherText,
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (_error != null) ...[ErrorBanner(message: _error!), const SizedBox(height: 16)],
+          FormInput(
+            key: const Key('delete-teacher-confirm'),
+            label: l10n.deleteTeacherConfirm(widget.teacher.username),
+            hint: widget.teacher.username,
+            autofocus: true,
+            textDirection: TextDirection.ltr,
+            onChanged: (value) => setState(() => _typed = value),
+          ),
+        ],
+      ),
+      actions: [
+        GhostButton(label: l10n.back, onPressed: _deleting ? null : () => Navigator.of(context).pop(false)),
+        DangerButton(
+          label: l10n.deleteTeacher,
+          icon: LucideIcons.trash2,
+          filled: true,
+          onPressed: _confirmed && !_deleting ? _delete : null,
+        ),
+      ],
     );
   }
 }

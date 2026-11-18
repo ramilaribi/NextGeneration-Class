@@ -2792,5 +2792,31 @@
   "levelCreated": "Niveau ajouté.",
   "levelUpdated": "Niveau modifié.",
   "levelDeleted": "Niveau supprimé.",
-  "deleteLevelText": "Un niveau utilisé par un élève, un groupe ou un document ne peut pas être supprimé. Cette suppression est définitive."
+  "deleteLevelText": "Un niveau utilisé par un élève, un groupe ou un document ne peut pas être supprimé. Cette suppression est définitive.",
+  "deleteTeacher": "Supprimer définitivement",
+  "deleteTeacherTitle": "Supprimer définitivement {name} ?",
+  "@deleteTeacherTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteTeacherText": "Son compte et tout son espace seront effacés : ses élèves et leurs parents avec leurs comptes, ses groupes, séances, contenus, fichiers et devoirs. Cette suppression est définitive, rien ne pourra être récupéré.",
+  "deleteTeacherConfirm": "Pour confirmer, tapez son identifiant : {username}",
+  "@deleteTeacherConfirm": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "teacherDeletedNotice": "Compte de {name} supprimé, avec tout son espace.",
+  "@teacherDeletedNotice": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }
