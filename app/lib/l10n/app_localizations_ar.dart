@@ -956,7 +956,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get meetLinkHint => 'https://meet.google.com/…';
 
   @override
-  String get meetLinkInvalid => 'يجب أن يبدأ الرابط بـ https://';
+  String get meetLinkInvalid =>
+      'هذا الرابط غير صالح. مثال: https://meet.google.com/abc-defg-hij';
 
   @override
   String get addMembers => 'إضافة تلاميذ';
@@ -1135,7 +1136,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get resumeSession => 'استئناف الحصة';
 
   @override
-  String get openMeet => 'فتح Meet';
+  String get openMeet => 'فتح الحصة عن بعد';
 
   @override
   String everyWeekdayUntil(String weekday, String date) {

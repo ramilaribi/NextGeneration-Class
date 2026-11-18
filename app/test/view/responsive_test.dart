@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -687,6 +689,12 @@ void main() {
           size: size,
         );
         expect(tester.takeException(), isNull);
+        // The header lines up with the cards: its end button ends where they end, however wide the window
+        // (bug 2026-11-18: the buttons stopped two thirds of the way across).
+        final pad = isPhone(tester.element(find.byType(SessionModeView))) ? 14.0 : 32.0;
+        final side = pad + math.max(0.0, (size.width - 2 * pad - 1300) / 2);
+        final endButton = tester.getRect(find.byKey(const Key('end-session')));
+        expect(language == AppLanguage.ar ? endButton.left : size.width - endButton.right, moreOrLessEquals(side, epsilon: 0.5));
         // "Fin de séance" (Release 4).
         await tester.tap(find.byKey(const Key('end-session')));
         await tester.pumpAndSettle();

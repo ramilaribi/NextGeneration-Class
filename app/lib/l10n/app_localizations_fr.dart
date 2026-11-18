@@ -946,7 +946,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get meetLinkHint => 'https://meet.google.com/…';
 
   @override
-  String get meetLinkInvalid => 'Le lien doit commencer par https://';
+  String get meetLinkInvalid =>
+      'Ce lien ne semble pas valide. Exemple : https://meet.google.com/abc-defg-hij';
 
   @override
   String get addMembers => 'Ajouter des élèves';
@@ -1120,7 +1121,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get resumeSession => 'Reprendre la séance';
 
   @override
-  String get openMeet => 'Ouvrir Meet';
+  String get openMeet => 'Ouvrir la visio';
 
   @override
   String everyWeekdayUntil(String weekday, String date) {

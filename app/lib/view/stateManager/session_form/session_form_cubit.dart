@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/l10n/tunis_time.dart';
 import '../../../core/network/api_failure.dart';
+import '../../../domain/model/meet_link.dart';
 import '../../../domain/model/clock_time.dart';
 import '../../../domain/model/group.dart';
 import '../../../domain/model/session.dart';
@@ -235,11 +236,11 @@ class SessionFormCubit extends Cubit<SessionFormState> {
   /// [scope] matters only when editing a session of a series.
   Future<void> submit({EditScope scope = EditScope.one}) async {
     if (state.submitting) return;
-    final url = state.meetUrl.trim();
+    final url = cleanMeetLink(state.meetUrl);
     final errors = {
       if (state.groupId == null) SessionFormError.group,
       if (!state.end.isAfter(state.start)) SessionFormError.time,
-      if (url.isNotEmpty && !url.startsWith('https://')) SessionFormError.meetUrl,
+      if (url.isNotEmpty && !isValidMeetLink(url)) SessionFormError.meetUrl,
       if (state.repeatWeekly && !state.isEditing && state.repeatUntil.isBefore(state.date)) SessionFormError.repeatUntil,
     };
     if (errors.isNotEmpty) {

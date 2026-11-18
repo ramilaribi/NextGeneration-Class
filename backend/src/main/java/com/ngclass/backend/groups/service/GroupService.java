@@ -37,6 +37,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -241,16 +243,29 @@ public class GroupService {
 		return out.toString();
 	}
 
-	/** Online links must be real web addresses; Meet by default but any https link works. */
+	private static final Pattern LINK_SCHEME = Pattern.compile("^([a-zA-Z]+):/*");
+
+	/**
+	 * Online links must be real web addresses; Meet by default but any https link works. The link is cleaned
+	 * first, as the app does (bug 2026-11-18): a phone keyboard adds spaces ("https: //www.whatsapp.com") and
+	 * capitals ("Https://"), and links are pasted without "https://". A web address has no space, so every
+	 * space goes; a missing "https://" is added and "http://" becomes "https://".
+	 */
 	public static String meetUrl(String url) {
 		if (url == null || url.isBlank()) {
 			return null;
 		}
-		String trimmed = url.trim();
-		if (!trimmed.startsWith("https://") || trimmed.length() < 12 || trimmed.contains(" ")) {
+		String link = url.replaceAll("\\s+", "");
+		Matcher scheme = LINK_SCHEME.matcher(link);
+		if (!scheme.find()) {
+			link = "https://" + link;
+		} else if (scheme.group(1).equalsIgnoreCase("https") || scheme.group(1).equalsIgnoreCase("http")) {
+			link = "https://" + link.substring(scheme.end());
+		}
+		if (!link.startsWith("https://") || link.length() < 12 || !link.contains(".") || link.length() > 500) {
 			throw ApiException.badRequest("invalid_meet_url");
 		}
-		return trimmed;
+		return link;
 	}
 
 	private static ScheduleItem schedule(RecurrenceRule rule) {

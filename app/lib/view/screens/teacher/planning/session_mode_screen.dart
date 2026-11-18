@@ -38,7 +38,8 @@ class SessionModeScreen extends StatelessWidget {
   final String sessionId;
 
   @override
-  Widget build(BuildContext context) => BlocProvider(create: (_) => SessionModeCubit(sl.get(), sessionId)..open(), child: const SessionModeView());
+  Widget build(BuildContext context) =>
+      BlocProvider(create: (_) => SessionModeCubit(sl.get(), sessionId)..open(), child: const SessionModeView());
 }
 
 class SessionModeView extends StatelessWidget {
@@ -161,7 +162,10 @@ class _HeaderState extends State<_Header> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(LucideIcons.arrowLeftDir, size: 16, color: Colors.white),
-              if (!compact) ...[const SizedBox(width: 8), Text(l10n.navTeacherHome, style: text.style(13, FontWeight.w700, color: Colors.white))],
+              if (!compact) ...[
+                const SizedBox(width: 8),
+                Text(l10n.navTeacherHome, style: text.style(13, FontWeight.w700, color: Colors.white)),
+              ],
             ],
           ),
         ),
@@ -234,40 +238,90 @@ class _HeaderState extends State<_Header> {
         bottom: false,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: phone ? 14 : 32, vertical: 14),
-          child: Row(
-            children: [
-              back,
-              const SizedBox(width: 16),
-              Expanded(
-                child: session == null
-                    ? const SizedBox.shrink()
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            session.group.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: text.style(phone ? 17 : 20, FontWeight.w800, color: Colors.white),
+          // The same width as the cards below, so the back button lines up with their start and the end
+          // button with their end, however wide the window.
+          child: Align(
+            alignment: AlignmentDirectional.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: _contentWidth),
+              child: Row(
+                children: [
+                  back,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: session == null
+                        ? const SizedBox.shrink()
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                session.group.name,
+                                overflow: TextOverflow.ellipsis,
+                                style: text.style(phone ? 17 : 20, FontWeight.w800, color: Colors.white),
+                              ),
+                              Text(
+                                '${timeRangeLabel(l10n, session.startsAt, session.endsAt)}${l10n.dotSeparator}${placeLabel(l10n, session.mode, session.location)}',
+                                overflow: TextOverflow.ellipsis,
+                                style: text.style(13, FontWeight.w500, color: Colors.white.withValues(alpha: 0.75)),
+                              ),
+                            ],
                           ),
-                          Text(
-                            '${timeRangeLabel(l10n, session.startsAt, session.endsAt)}${l10n.dotSeparator}${placeLabel(l10n, session.mode, session.location)}',
-                            overflow: TextOverflow.ellipsis,
-                            style: text.style(13, FontWeight.w500, color: Colors.white.withValues(alpha: 0.75)),
-                          ),
-                        ],
-                      ),
+                  ),
+                  // Not Flexible: next to the Expanded title, a Flexible would take half of the free space and leave
+                  // it empty after the buttons.
+                  if (session != null && !compact) ...[
+                    ConstrainedBox(constraints: const BoxConstraints(maxWidth: 320), child: live),
+                    const SizedBox(width: 12),
+                  ],
+                  if (session != null && session.mode == SessionMode.online && session.meetUrl != null && !done) ...[
+                    _MeetButton(label: compact ? null : l10n.openMeet, onPressed: () => sl.get<LinkOpener>().open(session.meetUrl!)),
+                    const SizedBox(width: 12),
+                  ],
+                  endButton,
+                ],
               ),
-              if (session != null && !compact) ...[Flexible(child: live), const SizedBox(width: 12)],
-              if (session != null && session.mode == SessionMode.online && session.meetUrl != null && !done) ...[
-                IconButton(
-                  tooltip: l10n.openMeet,
-                  onPressed: () => sl.get<LinkOpener>().open(session.meetUrl!),
-                  icon: const Icon(LucideIcons.video, color: Colors.white),
-                ),
-                const SizedBox(width: 6),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The width of the header and of the cards: they line up on wide screens.
+const double _contentWidth = 1300;
+
+/// Opens the visio link: an outlined white button with its label on wide screens, the icon alone on phones
+/// and tablets (the tooltip says what it does, to a screen reader too).
+class _MeetButton extends StatelessWidget {
+  const _MeetButton({required this.label, required this.onPressed});
+
+  final String? label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final text = AppText.of(context);
+    return Tooltip(
+      message: l10n.openMeet,
+      child: Material(
+        color: Colors.white.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppRadii.md),
+          onTap: onPressed,
+          child: Container(
+            height: 46,
+            padding: EdgeInsets.symmetric(horizontal: label == null ? 12 : 16),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(LucideIcons.video, size: 18, color: Colors.white),
+                if (label != null) ...[const SizedBox(width: 8), Text(label!, style: text.style(15, FontWeight.w700, color: Colors.white))],
               ],
-              endButton,
-            ],
+            ),
           ),
         ),
       ),
@@ -286,7 +340,7 @@ class _Body extends StatelessWidget {
       child: Align(
         alignment: AlignmentDirectional.topCenter,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1300),
+          constraints: const BoxConstraints(maxWidth: _contentWidth),
           child: const PairedBlocks(
             equalHeight: false,
             startFlex: 6,
@@ -363,7 +417,8 @@ class _AttendanceCard extends StatelessWidget {
                             width: width,
                             child: AttendanceTile(
                               name: r.fullName,
-                              initials: '${r.firstName.isEmpty ? '' : r.firstName[0]}${r.lastName.isEmpty ? '' : r.lastName[0]}'.toUpperCase(),
+                              initials: '${r.firstName.isEmpty ? '' : r.firstName[0]}${r.lastName.isEmpty ? '' : r.lastName[0]}'
+                                  .toUpperCase(),
                               status: state.markOf(r.studentId),
                               onTap: () => cubit.tap(r.studentId),
                             ),
@@ -450,14 +505,20 @@ class _PreviousNote extends StatelessWidget {
         children: [
           Text(
             text.upper(
-              previous == null ? l10n.lastSessionOn(l10n.noValue) : l10n.lastSessionOn(weekdayName(TunisTime.day(previous.startsAt), language)),
+              previous == null
+                  ? l10n.lastSessionOn(l10n.noValue)
+                  : l10n.lastSessionOn(weekdayName(TunisTime.day(previous.startsAt), language)),
             ),
             style: text.overline(color: Accent.amber.onSoft),
           ),
           if (chips.isNotEmpty) ...[const SizedBox(height: 10), Wrap(spacing: 8, runSpacing: 8, children: chips)],
           if (seen.isNotEmpty) ...[
             const SizedBox(height: 10),
-            Text(seen.join(l10n.dotSeparator), textDirection: writtenDirection(seen.join(' ')), style: text.style(14, FontWeight.w600, height: 1.5)),
+            Text(
+              seen.join(l10n.dotSeparator),
+              textDirection: writtenDirection(seen.join(' ')),
+              style: text.style(14, FontWeight.w600, height: 1.5),
+            ),
           ],
           const SizedBox(height: 10),
           if (note != null || previous == null || previous.isEmpty)
@@ -593,7 +654,9 @@ class _DayContentCard extends StatelessWidget {
         ],
       );
     }
-    final chip = chapter == null ? null : StatusChip(label: '${l10n.chapter}${l10n.dotSeparator}${isolated(chapter.title)}', accent: Accent.indigo);
+    final chip = chapter == null
+        ? null
+        : StatusChip(label: '${l10n.chapter}${l10n.dotSeparator}${isolated(chapter.title)}', accent: Accent.indigo);
     // The chapter sits beside the title on a wide card (design `SessionMode.png`), under it on a narrow one.
     return LayoutBuilder(
       builder: (context, constraints) {

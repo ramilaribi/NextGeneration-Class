@@ -662,30 +662,40 @@ class _Sheet extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(bottom: 8),
             decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: BrandColors.indigo, width: 2))),
+            // Three parts, as on the printed sheet: the logo at the start, the title in the middle of the page,
+            // the level at the end. The two sides share the same width, so the title stays centred (bug
+            // 2026-11-18: a Flexible level took half of the free space and sat in the middle of the sheet).
             child: Row(
               children: [
-                Image.asset('assets/brand/symbol.png', height: 20, excludeFromSemantics: true),
+                Expanded(
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Image.asset('assets/brand/symbol.png', height: 20, excludeFromSemantics: true),
+                  ),
+                ),
                 const SizedBox(width: 10),
                 Expanded(
+                  flex: 3,
                   child: Text(
                     corrige ? '${document.title}${l10n.dotSeparator}${l10n.tagCorrige}' : document.title,
+                    key: const Key('sheet-title'),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: text.style(phone ? 15 : 19, FontWeight.w800),
                   ),
                 ),
-                if (level != null) ...[
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: Text(
-                      level.name.of(language),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: text.style(13, FontWeight.w600, color: BrandColors.slate),
-                    ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    level?.name.of(language) ?? '',
+                    key: const Key('sheet-level'),
+                    textAlign: TextAlign.end,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: text.style(13, FontWeight.w600, color: BrandColors.slate),
                   ),
-                ],
+                ),
               ],
             ),
           ),
